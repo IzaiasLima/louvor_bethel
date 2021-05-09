@@ -1,4 +1,4 @@
-# Cifras do Louvor Bethel
+# Louvor Bethel
 
 Este aplicativo se propõe ser a ferramenta de gestão das apresentações, dos ensaios e das partituras e letras (lyrics) das músicas da equipe de louvor de nossa comunidade cristã.
 
