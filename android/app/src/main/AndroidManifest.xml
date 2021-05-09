@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.izaias.louvor_bethel.louvor_bethel">
    <application
-        android:label="louvor_bethel"
+        android:label="Louvor Bethel"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
