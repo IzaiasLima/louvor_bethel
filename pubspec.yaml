@@ -1,5 +1,5 @@
 name: louvor_bethel
-description: A new Flutter project.
+description: Aplicativo para Android gestor das apresentações, ensaios, partituras e letras de músicas da equipe de louvor de uma comunidade cristã.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
