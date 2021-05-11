@@ -119,7 +119,7 @@ class _CardItens extends StatelessWidget {
           height: 0,
           indent: 16,
           endIndent: 16,
-          color: hasNext ? Colors.grey : Colors.transparent,
+          color: hasNext ? Colors.red : Colors.transparent,
         ),
       ],
     );
