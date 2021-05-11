@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:louvor_bethel/common/string_helper.dart';
 
+import 'package:louvor_bethel/common/string_helper.dart';
+import 'package:louvor_bethel/common/theme.dart';
 import 'package:louvor_bethel/models/worship.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,58 +13,116 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final Worship meetings = Worship.adoracao();
-    final DateFormat dia = DateFormat().addPattern("EEEE H'h'm");
-    final capitalize = StringHelper.capitalize;
+    final Worship adoracao = Worship.adoracao();
+    final Worship oferta = Worship.oferta();
 
     return Scaffold(
       drawer: Drawer(),
       appBar: AppBar(
         actions: [
-          Icon(Icons.home),
-        ],
-      ),
-      body: Column(
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Semana 21/03 a 26/03'),
-            Divider(color: Colors.black, height: 2),
-          ]),
-          Row(
-            children: [
-              Text(capitalize(dia.format(meetings.dateTime))),
-              SizedBox(width: 8),
-              Text(meetings.description),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: circle(adoracao.userAvatar),
           ),
-          Card(child: _CardItens(meetings.lyrics)),
         ],
+        title: Text(
+          'LOUVOR BETHEL',
+          style: AppTheme.theme().textTheme.headline1,
+        ),
+        titleSpacing: 0,
       ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(26, 26, 26, 0),
+              child: Column(
+                children: [
+                  Text('Semana 21/03 a 26/03'),
+                  Divider(color: Colors.black),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+            _Card(adoracao),
+            _Card(oferta),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget circle(String url) {
+    return CircleAvatar(
+      radius: 22,
+      backgroundImage: NetworkImage(url),
     );
   }
 }
 
-// Container(
-//   height: 1000,
-//   child: Padding(
-//     padding: const EdgeInsets.all(20.0),
+class _Card extends StatelessWidget {
+  final Worship worship;
+  final capitalize = StringHelper.capitalize;
+  final DateFormat dia = DateFormat().addPattern("EEEE H'h'm");
+
+  _Card(this.worship);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage(worship.userAvatar),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  capitalize(dia.format(worship.dateTime)),
+                  style: AppTheme.theme().textTheme.headline2,
+                ),
+                SizedBox(width: 8),
+                Text(worship.description),
+              ],
+            ),
+            Icon(Icons.more_vert),
+          ],
+        ),
+        SizedBox(height: 20),
+        Card(
+          margin: EdgeInsets.all(0),
+          child: _CardItens(worship.songs),
+        ),
+      ]),
+    );
+  }
+}
 
 class _CardItens extends StatelessWidget {
-  final lyrics;
+  final List<Song> songs;
 
-  _CardItens(this.lyrics);
+  _CardItens(this.songs);
 
   Widget _buildItem(BuildContext context, int index) {
+    final bool hasNext = (index + 1) < this.songs.length;
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Text(
-            lyrics[index].title,
-            style: TextStyle(color: Colors.deepPurple),
-          ),
-        )
+          padding: const EdgeInsets.all(16),
+          child: Text(songs[index].title),
+        ),
+        Divider(
+          height: 0,
+          indent: 16,
+          endIndent: 16,
+          color: hasNext ? Colors.grey : Colors.transparent,
+        ),
       ],
     );
   }
@@ -71,9 +130,10 @@ class _CardItens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: _buildItem,
-      itemCount: lyrics.length,
+      itemCount: songs.length,
     );
   }
 }

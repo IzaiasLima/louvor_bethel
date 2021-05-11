@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Louvor Bethel',
-      theme: appTheme,
+      theme: AppTheme.theme(),
       home: HomePage(),
     );
   }
