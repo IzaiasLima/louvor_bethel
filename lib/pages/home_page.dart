@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:louvor_bethel/common/custom_drawer.dart';
 
 import 'package:louvor_bethel/common/string_helper.dart';
-import 'package:louvor_bethel/common/theme.dart';
 import 'package:louvor_bethel/models/worship.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,20 +17,20 @@ class _HomePageState extends State<HomePage> {
     final Worship oferta = Worship.oferta();
 
     return Scaffold(
-      drawer: Drawer(),
+      drawer: CustomDrawer(),
       appBar: AppBar(
         actions: [_circleAvatar(adoracao.userAvatar)],
         title: Text(
           'LOUVOR BETHEL',
-          style: AppTheme.theme().textTheme.headline1,
+          //style: AppTheme.theme().textTheme.headline1,
         ),
-        titleSpacing: 0,
+        titleSpacing: 0.0,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(26, 26, 26, 0),
+              padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
               child: Column(
                 children: [
                   Text('Semana 21/03 a 26/03'),
@@ -49,9 +49,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget _circleAvatar(String url) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: CircleAvatar(
-        radius: 22,
+        radius: 22.0,
         backgroundImage: NetworkImage(url),
       ),
     );
@@ -68,7 +68,7 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
       child: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,21 +79,23 @@ class _Card extends StatelessWidget {
                   radius: 20,
                   backgroundImage: NetworkImage(worship.userAvatar),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 8.0),
                 Text(
                   capitalize(dia.format(worship.dateTime)),
-                  style: AppTheme.theme().textTheme.headline2,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  //style: Theme.of(context).textTheme.headline1,
+                  //style: AppTheme.theme().textTheme.headline2,
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 8.0),
                 Text(worship.description),
               ],
             ),
             Icon(Icons.more_vert),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 20.0),
         Card(
-          margin: EdgeInsets.all(0),
+          margin: EdgeInsets.all(0.0),
           child: _CardItens(worship.songs),
         ),
       ]),
@@ -112,14 +114,14 @@ class _CardItens extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Text(songs[index].title),
         ),
         Divider(
           height: 0,
-          indent: 16,
-          endIndent: 16,
-          color: hasNext ? Colors.red : Colors.transparent,
+          indent: 16.0,
+          endIndent: 16.0,
+          color: hasNext ? Colors.grey[400] : Colors.transparent,
         ),
       ],
     );
