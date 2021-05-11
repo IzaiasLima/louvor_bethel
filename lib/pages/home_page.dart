@@ -19,12 +19,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: Drawer(),
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: circle(adoracao.userAvatar),
-          ),
-        ],
+        actions: [_circleAvatar(adoracao.userAvatar)],
         title: Text(
           'LOUVOR BETHEL',
           style: AppTheme.theme().textTheme.headline1,
@@ -52,10 +47,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget circle(String url) {
-    return CircleAvatar(
-      radius: 22,
-      backgroundImage: NetworkImage(url),
+  Widget _circleAvatar(String url) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: CircleAvatar(
+        radius: 22,
+        backgroundImage: NetworkImage(url),
+      ),
     );
   }
 }
