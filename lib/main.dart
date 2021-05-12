@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:louvor_bethel/pages/home_page.dart';
 import 'package:louvor_bethel/pages/login_page.dart';
+import 'package:louvor_bethel/pages/render_page.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),
-        '/sair': (context) => HomePage(),
+        '/render': (context) => RenderPage(),
+        '/sair': (context) => LoginPage(),
       },
     );
   }

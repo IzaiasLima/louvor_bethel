@@ -20,11 +20,8 @@ class _HomePageState extends State<HomePage> {
       drawer: CustomDrawer(),
       appBar: AppBar(
         actions: [_circleAvatar(adoracao.userAvatar)],
-        title: Text(
-          'LOUVOR BETHEL',
-          //style: AppTheme.theme().textTheme.headline1,
-        ),
         titleSpacing: 0.0,
+        title: Text('LOUVOR BETHEL'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -113,15 +110,23 @@ class _CardItens extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          child: Text(songs[index].title),
-        ),
-        Divider(
-          height: 0,
-          indent: 16.0,
-          endIndent: 16.0,
-          color: hasNext ? Colors.grey[400] : Colors.transparent,
+        InkWell(
+          onTap: () => Navigator.popAndPushNamed(context, '/render'),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 12.0),
+                child: Text(songs[index].title),
+              ),
+              Divider(
+                height: 0,
+                indent: 16.0,
+                endIndent: 16.0,
+                color: hasNext ? Colors.grey[400] : Colors.transparent,
+              ),
+            ],
+          ),
         ),
       ],
     );
