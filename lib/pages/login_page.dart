@@ -13,7 +13,6 @@ class LoginPage extends StatelessWidget {
               children: [
                 TextFormField(
                   autocorrect: false,
-                  autofocus: true,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email',
@@ -21,7 +20,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 TextFormField(
-                  // controller: _controller,
                   autocorrect: false,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -52,6 +50,9 @@ class LoginPage extends StatelessWidget {
                           Navigator.pushReplacementNamed(context, '/home'),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 60,
                 ),
               ],
             ),
