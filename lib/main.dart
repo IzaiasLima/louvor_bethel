@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Louvor Bethel',
       theme: _theme,
       home: HomePage(),
-      initialRoute: '/login',
+      initialRoute: '/render',
       routes: {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),

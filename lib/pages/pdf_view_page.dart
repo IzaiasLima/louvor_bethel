@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:louvor_bethel/models/worship.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PDFViewPage extends StatefulWidget {
@@ -13,13 +14,48 @@ class PDFViewPage extends StatefulWidget {
 }
 
 class _PDFViewPageState extends State<PDFViewPage> {
+  ScrollController _scrollController = new ScrollController(
+    initialScrollOffset: 0.0,
+    keepScrollOffset: true,
+  );
+
+  final Worship adoracao = Worship.adoracao();
+
   String urlPDFPath = '';
   bool exists = true;
-  int _totalPages = 0;
-  int _currentPage = 0;
   bool pdfReady = false;
-  PDFViewController _pdfViewController;
   bool loaded = false;
+  // int _totalPages = 0;
+  // int _currentPage = 0;
+  PDFViewController _pdfViewController;
+
+  bool scroll = false;
+  int speedFactor = 80;
+
+  _toggleScrolling() {
+    setState(() {
+      scroll = !scroll;
+    });
+
+    if (scroll) {
+      _scroll();
+    } else {
+      _scrollController.animateTo(_scrollController.offset,
+          duration: Duration(seconds: 1), curve: Curves.linear);
+    }
+  }
+
+  _scroll() {
+    if (_scrollController.hasClients) {
+      double maxExtent = _scrollController.position.maxScrollExtent;
+      double distanceDifference = maxExtent - _scrollController.offset;
+      double durationDouble = distanceDifference / speedFactor;
+
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: durationDouble.toInt()),
+          curve: Curves.linear);
+    }
+  }
 
   Future<String> getFileFromUrl(String url, {name}) async {
     var fileName = 'testonline';
@@ -40,10 +76,6 @@ class _PDFViewPageState extends State<PDFViewPage> {
       throw Exception('Error opening url file');
     }
   }
-
-  // void requestPersmission() async {
-  //   await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-  // }
 
   @override
   void initState() {
@@ -67,41 +99,74 @@ class _PDFViewPageState extends State<PDFViewPage> {
     super.initState();
   }
 
+  Widget _circleAvatar(String url) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: CircleAvatar(
+        radius: 22.0,
+        backgroundImage: NetworkImage(url),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scroll());
+    final screen = MediaQuery.of(context).size;
+    final aspect = MediaQuery.of(context).devicePixelRatio;
+
     print(urlPDFPath);
     if (loaded) {
       return Scaffold(
-        body: PDFView(
-          filePath: urlPDFPath,
-          autoSpacing: false,
-          enableSwipe: true,
-          pageFling: true,
-          pageSnap: true,
-          swipeHorizontal: false,
-          fitEachPage: true,
-          fitPolicy: FitPolicy.WIDTH,
-          nightMode: false,
-          onError: (e) {
-            //Show some error message or UI
-          },
-          onRender: (_pages) {
-            setState(() {
-              _totalPages = _pages;
-              pdfReady = true;
-            });
-          },
-          onViewCreated: (PDFViewController vc) {
-            setState(() {
-              _pdfViewController = vc;
-            });
-          },
-          onPageChanged: (int page, int total) {
-            setState(() {
-              _currentPage = page;
-            });
-          },
-          onPageError: (page, e) {},
+        // appBar: AppBar(
+        //   actions: [
+        //     IconButton(
+        //       icon: Icon(Icons.play_arrow),
+        //       onPressed: () => _toggleScrolling(),
+        //     ),
+        //     _circleAvatar(adoracao.userAvatar)
+        //   ],
+        //   titleSpacing: 0.0,
+        //   title: Text('LOUVOR BETHEL'),
+        // ),
+        body: SingleChildScrollView(
+          controller: _scrollController,
+          child: SafeArea(
+            child: Container(
+              height: screen.height * 0.9,
+              width: screen.width * 0.9,
+              child: PDFView(
+                filePath: urlPDFPath,
+                autoSpacing: false,
+                enableSwipe: true,
+                swipeHorizontal: false,
+                fitEachPage: true,
+                fitPolicy: FitPolicy.WIDTH,
+                nightMode: false,
+                onError: (e) {
+                  //Show some error message or UI
+                },
+                onRender: (_pages) {
+                  setState(() {
+                    //_totalPages = _pages;
+                    pdfReady = true;
+                  });
+                },
+                onViewCreated: (PDFViewController vc) {
+                  setState(() {
+                    _pdfViewController = vc;
+                  });
+                },
+
+                // onPageChanged: (int page, int total) {
+                //   setState(() {
+                //     _currentPage = page;
+                //   });
+                // },
+                onPageError: (page, e) {},
+              ),
+            ),
+          ),
         ),
         // floatingActionButton: Row(
         //   mainAxisAlignment: MainAxisAlignment.end,
