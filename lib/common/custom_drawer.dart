@@ -60,7 +60,7 @@ class CustomDrawer extends StatelessWidget {
                 _listtile(context, Icon(Icons.home), 'Início', '/home'),
                 _listtile(context, Icon(Icons.security), 'Login', '/login'),
                 _listtile(context, Icon(Icons.picture_as_pdf), 'Renderizar PDF',
-                    '/render'),
+                    '/jk'),
                 _listtile(context, Icon(Icons.exit_to_app), 'Sair', '/sair'),
               ],
             ),

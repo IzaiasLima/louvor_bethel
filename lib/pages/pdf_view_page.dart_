@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+//import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:louvor_bethel/models/worship.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -47,6 +47,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
 
   _scroll() {
     if (_scrollController.hasClients) {
+      print('play');
       double maxExtent = _scrollController.position.maxScrollExtent;
       double distanceDifference = maxExtent - _scrollController.offset;
       double durationDouble = distanceDifference / speedFactor;
@@ -118,92 +119,98 @@ class _PDFViewPageState extends State<PDFViewPage> {
     print(urlPDFPath);
     if (loaded) {
       return Scaffold(
-        // appBar: AppBar(
-        //   actions: [
-        //     IconButton(
-        //       icon: Icon(Icons.play_arrow),
-        //       onPressed: () => _toggleScrolling(),
-        //     ),
-        //     _circleAvatar(adoracao.userAvatar)
-        //   ],
-        //   titleSpacing: 0.0,
-        //   title: Text('LOUVOR BETHEL'),
-        // ),
-        body: SingleChildScrollView(
-          controller: _scrollController,
-          child: SafeArea(
-            child: Container(
-              height: screen.height * 0.9,
-              width: screen.width * 0.9,
-              child: PDFView(
-                filePath: urlPDFPath,
-                autoSpacing: false,
-                enableSwipe: true,
-                swipeHorizontal: false,
-                fitEachPage: true,
-                fitPolicy: FitPolicy.WIDTH,
-                nightMode: false,
-                onError: (e) {
-                  //Show some error message or UI
-                },
-                onRender: (_pages) {
-                  setState(() {
-                    //_totalPages = _pages;
-                    pdfReady = true;
-                  });
-                },
-                onViewCreated: (PDFViewController vc) {
-                  setState(() {
-                    _pdfViewController = vc;
-                  });
-                },
+          // appBar: AppBar(
+          //   actions: [
+          //     IconButton(
+          //       icon: Icon(Icons.play_arrow),
+          //       onPressed: () => _toggleScrolling(),
+          //     ),
+          //     _circleAvatar(adoracao.userAvatar)
+          //   ],
+          //   titleSpacing: 0.0,
+          //   title: Text('LOUVOR BETHEL'),
+          // ),
+          body: SingleChildScrollView(
+            controller: _scrollController,
+            child: SafeArea(
+              child: Container(
+                height: screen.height * 0.9,
+                width: screen.width * 0.9,
+                child: PDFView(
+                  filePath: urlPDFPath,
+                  autoSpacing: false,
+                  enableSwipe: true,
+                  swipeHorizontal: false,
+                  fitEachPage: true,
+                  fitPolicy: FitPolicy.WIDTH,
+                  nightMode: false,
+                  onError: (e) {
+                    //Show some error message or UI
+                  },
+                  onRender: (_pages) {
+                    setState(() {
+                      //_totalPages = _pages;
+                      pdfReady = true;
+                    });
+                  },
+                  onViewCreated: (PDFViewController vc) {
+                    setState(() {
+                      _pdfViewController = vc;
+                    });
+                  },
 
-                // onPageChanged: (int page, int total) {
-                //   setState(() {
-                //     _currentPage = page;
-                //   });
-                // },
-                onPageError: (page, e) {},
+                  // onPageChanged: (int page, int total) {
+                  //   setState(() {
+                  //     _currentPage = page;
+                  //   });
+                  // },
+                  onPageError: (page, e) {},
+                ),
               ),
             ),
           ),
-        ),
-        // floatingActionButton: Row(
-        //   mainAxisAlignment: MainAxisAlignment.end,
-        //   children: <Widget>[
-        //     IconButton(
-        //       icon: Icon(Icons.chevron_left),
-        //       iconSize: 50,
-        //       color: Colors.black,
-        //       onPressed: () {
-        //         setState(() {
-        //           if (_currentPage > 0) {
-        //             _currentPage--;
-        //             _pdfViewController.setPage(_currentPage);
-        //           }
-        //         });
-        //       },
-        //     ),
-        //     Text(
-        //       '${_currentPage + 1}/$_totalPages',
-        //       style: TextStyle(color: Colors.black, fontSize: 20),
-        //     ),
-        //     IconButton(
-        //       icon: Icon(Icons.chevron_right),
-        //       iconSize: 50,
-        //       color: Colors.black,
-        //       onPressed: () {
-        //         setState(() {
-        //           if (_currentPage < _totalPages - 1) {
-        //             _currentPage++;
-        //             _pdfViewController.setPage(_currentPage);
-        //           }
-        //         });
-        //       },
-        //     ),
-        //   ],
-        // ),
-      );
+          floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.play_arrow,
+            ),
+            onPressed: () => _toggleScrolling(),
+          )
+          // floatingActionButton: Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: <Widget>[
+          //     IconButton(
+          //       icon: Icon(Icons.chevron_left),
+          //       iconSize: 50,
+          //       color: Colors.black,
+          //       onPressed: () {
+          //         setState(() {
+          //           if (_currentPage > 0) {
+          //             _currentPage--;
+          //             _pdfViewController.setPage(_currentPage);
+          //           }
+          //         });
+          //       },
+          //     ),
+          //     Text(
+          //       '${_currentPage + 1}/$_totalPages',
+          //       style: TextStyle(color: Colors.black, fontSize: 20),
+          //     ),
+          //     IconButton(
+          //       icon: Icon(Icons.chevron_right),
+          //       iconSize: 50,
+          //       color: Colors.black,
+          //       onPressed: () {
+          //         setState(() {
+          //           if (_currentPage < _totalPages - 1) {
+          //             _currentPage++;
+          //             _pdfViewController.setPage(_currentPage);
+          //           }
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
+          );
     } else {
       if (exists) {
         //Replace with your loading UI

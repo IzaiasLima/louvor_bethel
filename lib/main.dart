@@ -3,7 +3,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:louvor_bethel/pages/home_page.dart';
 import 'package:louvor_bethel/pages/login_page.dart';
-import 'package:louvor_bethel/pages/pdf_view_page.dart';
+import 'package:louvor_bethel/pages/pdf_jk_page.dart';
+import 'package:louvor_bethel/pages/render_page.dart';
+//import 'package:louvor_bethel/pages/pdf_view_page.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
@@ -19,11 +21,12 @@ class MyApp extends StatelessWidget {
       title: 'Louvor Bethel',
       theme: _theme,
       home: HomePage(),
-      initialRoute: '/render',
+      initialRoute: '/jk',
       routes: {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),
-        '/render': (context) => PDFViewPage(),
+        '/render': (context) => RenderPage(),
+        '/jk': (context) => JKHomePage(),
         '/sair': (context) => LoginPage(),
       },
     );
