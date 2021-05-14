@@ -27,31 +27,24 @@ class _RenderPageState extends State<RenderPage> {
   @override
   void initState() {
     super.initState();
-    loadDocument(0);
+    loadDocument();
   }
 
-  loadDocument(value) async {
+  loadDocument() async {
     setState(() {
       _isLoading = true;
       title = "Loading";
     });
-    if (value == 1) {
-      document = await PDFDocument.fromURL(
-          "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
-    } else {
-      document = await PDFDocument.fromAsset('assets/sample.pdf');
-    }
+    document = await PDFDocument.fromURL(
+        'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf');
+
     setState(() {
-      title = (value == 1) ? "Loaded From Url" : "Loaded From Assets";
       _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final url =
-        'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
-
     final Size screen = MediaQuery.of(context).size;
     WidgetsBinding.instance.addPostFrameCallback((_) => _scroll());
 
