@@ -194,17 +194,17 @@ class _PDFScreenState extends State<PDFScreen> {
             Completer<PDFViewController>();
         return PDFView(
           filePath: widget.path,
+          defaultPage: 0,
           fitEachPage: true,
-          fitPolicy: FitPolicy.WIDTH,
-          dualPageMode: false,
-          displayAsBook: false,
-          dualPageWithBreak: false,
+          fitPolicy: FitPolicy.BOTH,
           enableSwipe: true,
+          displayAsBook: false,
+          dualPageMode: false,
+          dualPageWithBreak: false,
           swipeHorizontal: false,
           autoSpacing: false,
-          pageFling: false,
-          defaultPage: 0,
-          pageSnap: false,
+          pageFling: true,
+          pageSnap: true,
           backgroundColor: bgcolors.WHITE,
           onRender: (_pages) {
             print("OK RENDERED!!!!!");

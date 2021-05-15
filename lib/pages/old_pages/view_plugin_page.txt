@@ -17,56 +17,59 @@ class _MyAppState extends State<ViewPluginPage> {
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/teste.pdf';
+    return directory.path;
   }
 
-  Future<bool> _existsFile() async {
-    var filePath = await _localPath;
-    final file = File(filePath);
-    return file.exists();
-  }
+  // Future<File> get _localFile async {
+  //   final path = await _localPath;
+  //   return File('$path/temp.pdf');
+  // }
 
-  _fetchPost() async {
-    var filePath = await _localPath;
+  _load() async {
+    final _path = await _localPath;
+    final file = '$_path/temp.pdf';
+
     final String url =
         'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
-    Dio().download(url, filePath);
+    _download1(url, file);
+    setState(() {});
   }
 
-  void _loadPdf() async {
-    await _fetchPost();
-    await _existsFile();
-    path = await _localPath;
+  Future _download1(String url, savePath) async {
+    Dio dio = Dio();
 
-    if (!mounted) return;
-
-    setState(() {});
+    try {
+      await dio.download(
+        url,
+        savePath,
+      );
+      path = savePath;
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // final Size screen = MediaQuery.of(context).size;
+
     return Scaffold(
       drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('Plugin example app'),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            if (path != null)
-              Container(
-                height: 300.0,
-                child: PdfView(
+      body: SingleChildScrollView(
+        child: Container(
+          height: 1000,
+          width: 500,
+          child: (path != null)
+              ? PdfView(
                   path: path,
+                )
+              : ElevatedButton(
+                  child: Text("Load pdf"),
+                  onPressed: _load,
                 ),
-              )
-            else
-              Text("Pdf is not Loaded"),
-            ElevatedButton(
-              child: Text("Load pdf"),
-              onPressed: _loadPdf,
-            ),
-          ],
         ),
       ),
     );

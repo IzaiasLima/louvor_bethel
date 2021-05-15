@@ -1,0 +1,50 @@
+class EmployeeViewModel {
+  EmployeeModel _employeeModel = EmployeeModel();
+
+   String fname;   
+                                                                                                                              void downloadFile(BuildContext context, String fileUrl, String fileName, ProgressListener listener) async {
+
+    String _filePath = '';
+
+    if (Platform.isAndroid) {
+      String _directory = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
+      print(_directory);
+      _filePath = '$_directory/$fileName';
+      //todo getting file name here
+      print("file name" + fileName);
+      fname = fileName;
+      print("file fname" + fname);
+      //APIKey.FILE_NAME: fileName;
+    } else if (Platform.isIOS) {
+      Directory _directory = await getApplicationDocumentsDirectory();
+      _filePath = '${_directory.path}/$fileName';
+
+      print("file name" + fileName);
+      //log(fileName);
+      debugPrint(_directory.path);
+      print("directory path" + _directory.path);
+    }
+
+    var response = await Dio().downloadUri(Uri().resolve(fileUrl), _filePath);
+
+    if (response.statusCode == 200) {
+      listener.isProcessing(false);
+      AlertMessageDialog(context,  UtilString.downloadCompleted, UtilString.downloadCompletedMessage, UtilString.open, AlertMessageDialogActionHandler());
+    } else {
+      listener.isProcessing(false);
+      UtilAction.showSnackBar(context, response.statusMessage);
+    }
+  }                                                                                                  class AlertMessageDialogActionHandler implements AlertMessageDialogListener {
+
+  @override
+  Future<void> onPositiveButtonClick() async {
+    String _filePath = '';
+    String fileName;
+    String _directory = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
+    //todo geeting right directory path here
+    print("directory" + _directory);
+    _filePath = '$_directory/$fileName';
+    print("file path" + _filePath);
+   // print("filename" + fileName);
+
+    OpenFile.open("/storage/emulated/0/Download/GA55-Estimated-SHRIGOPAL-VERMA-2020-2021.pdf");  }}
