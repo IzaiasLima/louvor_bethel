@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-// import 'package:louvor_bethel/pages/animation.dart';
+import 'package:louvor_bethel/pages/SfPluginPpdfPage.dart';
 import 'package:louvor_bethel/pages/home_page.dart';
 import 'package:louvor_bethel/pages/login_page.dart';
-import 'package:louvor_bethel/pages/pdf_flutter_page.dart';
 import 'package:louvor_bethel/pages/scroll_page.dart';
+// import 'package:louvor_bethel/pages/pdf_flutter_page.dart';
+// import 'package:louvor_bethel/pages/animation.dart';
 // import 'package:louvor_bethel/pages/full_view_page.dart';
 // import 'package:louvor_bethel/pages/lp_page.dart';
 // import 'package:louvor_bethel/pages/pdf_render_page.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/animation': (context) => ScrollPage(),
         '/login': (context) => LoginPage(),
-        '/pdf': (context) => PdfFlutterPage(),
+        '/pdf': (context) => SfPluginPdfPage(),
         '/sair': (context) => LoginPage(),
         // '/full': (context) => FullViewPage(),
         // '/render': (context) => RenderPage(),
@@ -75,6 +76,16 @@ class MyApp extends StatelessWidget {
         onPrimary: Colors.white,
         onSurface: Colors.grey,
       ),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.blueGrey,
+    ),
+    sliderTheme: SliderThemeData(
+      activeTrackColor: Colors.blueGrey,
+      inactiveTrackColor: Colors.brown,
+      trackShape: RoundedRectSliderTrackShape(),
+      thumbColor: Colors.blueGrey,
+      trackHeight: 3.5,
     ),
   );
 }

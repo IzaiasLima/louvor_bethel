@@ -66,12 +66,12 @@ class CustomDrawer extends StatelessWidget {
                               context, Icon(Icons.home), 'Início', '/home'),
                           _listtile(
                               context, Icon(Icons.security), 'Login', '/login'),
-                          _listtile(context, Icon(Icons.security), 'Animação',
-                              '/animation'),
-                          _listtile(context, Icon(Icons.security),
-                              'PDF Flutter', '/pdf'),
+                          _listtile(
+                              context, Icon(Icons.play_arrow), 'PDF', '/pdf'),
                           _listtile(context, Icon(Icons.exit_to_app), 'Sair',
                               '/sair'),
+                          // _listtile(context, Icon(Icons.security), 'Animação',
+                          // '/animation'),
                           // _listtile(context, Icon(Icons.security), 'Lp PDF', '/lp'),
                           // _listtile(context, Icon(Icons.picture_as_pdf), 'PDF JK', '/jk'),
                           // _listtile(context, Icon(Icons.picture_as_pdf), 'Simple PDF',
