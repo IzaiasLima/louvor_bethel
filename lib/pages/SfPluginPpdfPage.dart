@@ -10,6 +10,11 @@ class SfPluginPdfPage extends StatefulWidget {
 
 class _HomePage extends State<SfPluginPdfPage> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+  ScrollController _scrollController = new ScrollController(
+    initialScrollOffset: 0.0,
+    keepScrollOffset: true,
+  );
+
   PdfViewerController pdfViewerController;
   SfPdfViewer pdf;
   Stopwatch timeController;
@@ -35,46 +40,83 @@ class _HomePage extends State<SfPluginPdfPage> {
     super.dispose();
   }
 
+  // _playOrPause() {
+  //   if (isStoped) {
+  //     play();
+  //   } else {
+  //     pause();
+  //   }
+  //   setState(() {
+  //     isStoped = !isStoped;
+  //   });
+  // }
+
+  // _play() {
+  //   double duration = 110 - speed;
+  //   timeController.start();
+  //   timer = Timer.periodic(Duration(milliseconds: duration.toInt()), scroolPdf);
+  // }
+
+  pause() {
+    // timeController.stop();
+    // timer.cancel();
+    print('pause');
+    _scrollController.animateTo(_scrollController.offset,
+        duration: Duration(seconds: 1), curve: Curves.linear);
+  }
+
+  // _scroolPdf(_) {
+  //   if (timeController.isRunning) {
+  //     double scrollOffset = pdfViewerController.scrollOffset.dy;
+
+  //     setState(() {
+  //       pdfViewerController.jumpTo(
+  //         yOffset: pdfViewerController.scrollOffset.dy + 1,
+  //       );
+  //       if (scrollOffset == pdfViewerController.scrollOffset.dy) {
+  //         isStoped = true;
+  //         pause();
+  //       }
+  //     });
+  //   }
+  // }
+
   playOrPause() {
     if (isStoped) {
-      play();
+      // pause();
     } else {
-      pause();
+      // play();
     }
     setState(() {
       isStoped = !isStoped;
     });
+
+    print('**********## $isStoped *##**********');
   }
 
   play() {
-    double duration = 110 - speed;
-    timeController.start();
-    timer = Timer.periodic(Duration(milliseconds: duration.toInt()), scroolPdf);
-  }
+    if (_scrollController.hasClients) {
+      if (isStoped) {
+        print('pause');
+        _scrollController.animateTo(_scrollController.offset,
+            duration: Duration(seconds: 1), curve: Curves.linear);
+      } else {
+        print('play');
+        double maxExtent = _scrollController.position.maxScrollExtent;
+        double distanceDifference = maxExtent - _scrollController.offset;
+        double durationDouble = distanceDifference / speed;
 
-  pause() {
-    timeController.stop();
-    timer.cancel();
-  }
-
-  scroolPdf(_) {
-    if (timeController.isRunning) {
-      double scrollOffset = pdfViewerController.scrollOffset.dy;
-
-      setState(() {
-        pdfViewerController.jumpTo(
-          yOffset: pdfViewerController.scrollOffset.dy + 1,
-        );
-        if (scrollOffset == pdfViewerController.scrollOffset.dy) {
-          isStoped = true;
-          pause();
-        }
-      });
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+            duration: Duration(seconds: durationDouble.toInt()),
+            curve: Curves.linear);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => play());
+
     String url;
     url =
         // 'https://www.singing-bell.com/wp-content/uploads/2021/01/Baby-Bumblebee_Lyrics_pdf.pdf';
@@ -113,16 +155,22 @@ class _HomePage extends State<SfPluginPdfPage> {
         ],
       ),
       body: SafeArea(
-        child: SfPdfViewer.network(
-          url,
-          key: _pdfViewerKey,
-          initialScrollOffset: Offset.zero,
-          controller: pdfViewerController,
-          canShowPaginationDialog: false,
-          canShowScrollHead: false,
-          canShowScrollStatus: true,
-          interactionMode: PdfInteractionMode.pan,
-          pageSpacing: 0.0,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: SfPdfViewer.network(
+            url,
+            key: _pdfViewerKey,
+            initialScrollOffset: Offset.zero,
+            controller: pdfViewerController,
+            canShowPaginationDialog: false,
+            canShowScrollHead: false,
+            canShowScrollStatus: false,
+            interactionMode: PdfInteractionMode.pan,
+            pageSpacing: 0.0,
+            // onDocumentLoaded: (_) {
+            //   _scroll();
+            // },
+          ),
         ),
       ),
     );
