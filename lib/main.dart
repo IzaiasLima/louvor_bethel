@@ -4,17 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:louvor_bethel/pages/SfPluginPpdfPage.dart';
 import 'package:louvor_bethel/pages/home_page.dart';
 import 'package:louvor_bethel/pages/login_page.dart';
-import 'package:louvor_bethel/pages/scroll_page.dart';
-// import 'package:louvor_bethel/pages/pdf_flutter_page.dart';
-// import 'package:louvor_bethel/pages/animation.dart';
-// import 'package:louvor_bethel/pages/full_view_page.dart';
-// import 'package:louvor_bethel/pages/lp_page.dart';
-// import 'package:louvor_bethel/pages/pdf_render_page.dart';
-// import 'package:louvor_bethel/pages/pdf_jk_page.dart';
-// import 'package:louvor_bethel/pages/pdf_view2.dart';
-// import 'package:louvor_bethel/pages/render_page.dart';
-// import 'package:louvor_bethel/pages/simple_pdf_page.dart';
-// import 'package:louvor_bethel/pages/view_plugin_page.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
@@ -33,17 +22,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/home',
       routes: {
         '/home': (context) => HomePage(),
-        '/animation': (context) => ScrollPage(),
         '/login': (context) => LoginPage(),
-        '/pdf': (context) => SfPluginPdfPage(),
+        '/pdf': (context) => PdfViewPage(),
         '/sair': (context) => LoginPage(),
-        // '/full': (context) => FullViewPage(),
-        // '/render': (context) => RenderPage(),
-        // '/jk': (context) => JKHomePage(),
-        // '/plugin': (context) => ViewPluginPage(),
-        // '/simple': (context) => SimplePdfPage(),
-        // '/lp': (context) => LpPage(),
-        // '/pdfview2': (context) => PDFView2(),
       },
     );
   }

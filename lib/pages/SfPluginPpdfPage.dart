@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'dart:async';
 
-/// Represents Homepage for Navigation
-class SfPluginPdfPage extends StatefulWidget {
+class PdfViewPage extends StatefulWidget {
   @override
-  _HomePage createState() => _HomePage();
+  _PdfViewPageState createState() => _PdfViewPageState();
 }
 
-class _HomePage extends State<SfPluginPdfPage> {
+class _PdfViewPageState extends State<PdfViewPage> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   ScrollController _scrollController = new ScrollController(
     initialScrollOffset: 0.0,
@@ -40,68 +39,12 @@ class _HomePage extends State<SfPluginPdfPage> {
     super.dispose();
   }
 
-  // _playOrPause() {
-  //   if (isStoped) {
-  //     play();
-  //   } else {
-  //     pause();
-  //   }
-  //   setState(() {
-  //     isStoped = !isStoped;
-  //   });
-  // }
-
-  // _play() {
-  //   double duration = 110 - speed;
-  //   timeController.start();
-  //   timer = Timer.periodic(Duration(milliseconds: duration.toInt()), scroolPdf);
-  // }
-
-  pause() {
-    // timeController.stop();
-    // timer.cancel();
-    print('pause');
-    _scrollController.animateTo(_scrollController.offset,
-        duration: Duration(seconds: 1), curve: Curves.linear);
-  }
-
-  // _scroolPdf(_) {
-  //   if (timeController.isRunning) {
-  //     double scrollOffset = pdfViewerController.scrollOffset.dy;
-
-  //     setState(() {
-  //       pdfViewerController.jumpTo(
-  //         yOffset: pdfViewerController.scrollOffset.dy + 1,
-  //       );
-  //       if (scrollOffset == pdfViewerController.scrollOffset.dy) {
-  //         isStoped = true;
-  //         pause();
-  //       }
-  //     });
-  //   }
-  // }
-
-  playOrPause() {
-    if (isStoped) {
-      // pause();
-    } else {
-      // play();
-    }
-    setState(() {
-      isStoped = !isStoped;
-    });
-
-    print('**********## $isStoped *##**********');
-  }
-
   play() {
     if (_scrollController.hasClients) {
       if (isStoped) {
-        print('pause');
         _scrollController.animateTo(_scrollController.offset,
             duration: Duration(seconds: 1), curve: Curves.linear);
       } else {
-        print('play');
         double maxExtent = _scrollController.position.maxScrollExtent;
         double distanceDifference = maxExtent - _scrollController.offset;
         double durationDouble = distanceDifference / speed;
@@ -116,13 +59,8 @@ class _HomePage extends State<SfPluginPdfPage> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => play());
-
-    String url;
-    url =
-        // 'https://www.singing-bell.com/wp-content/uploads/2021/01/Baby-Bumblebee_Lyrics_pdf.pdf';
-
-        url =
-            'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
+    String url =
+        'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -149,7 +87,7 @@ class _HomePage extends State<SfPluginPdfPage> {
               mini: true,
               child: Icon(isStoped ? Icons.play_arrow : Icons.pause,
                   size: 30, color: Colors.white),
-              onPressed: () => playOrPause(),
+              onPressed: () => setState(() => isStoped = !isStoped),
             ),
           ),
         ],
@@ -167,9 +105,6 @@ class _HomePage extends State<SfPluginPdfPage> {
             canShowScrollStatus: false,
             interactionMode: PdfInteractionMode.pan,
             pageSpacing: 0.0,
-            // onDocumentLoaded: (_) {
-            //   _scroll();
-            // },
           ),
         ),
       ),
