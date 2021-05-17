@@ -68,22 +68,8 @@ class CustomDrawer extends StatelessWidget {
                               context, Icon(Icons.security), 'Login', '/login'),
                           _listtile(
                               context, Icon(Icons.play_arrow), 'PDF', '/pdf'),
-                          _listtile(context, Icon(Icons.exit_to_app), 'Sair',
+                          _logout(context, Icon(Icons.exit_to_app), 'Sair',
                               '/sair'),
-                          // _listtile(context, Icon(Icons.security), 'Animação',
-                          // '/animation'),
-                          // _listtile(context, Icon(Icons.security), 'Lp PDF', '/lp'),
-                          // _listtile(context, Icon(Icons.picture_as_pdf), 'PDF JK', '/jk'),
-                          // _listtile(context, Icon(Icons.picture_as_pdf), 'Simple PDF',
-                          // '/simple'),
-                          // _listtile(context, Icon(Icons.picture_as_pdf),
-                          // 'Full PDF', '/full'),
-                          // _listtile(context, Icon(Icons.picture_as_pdf),
-                          // 'PDF plugin', '/plugin'),
-                          // _listtile(context, Icon(Icons.picture_as_pdf), 'PDF Render',
-                          // '/render'),
-                          // _listtile(context, Icon(Icons.picture_as_pdf), 'PDF View2',
-                          // '/pdfview2'),
                         ],
                       ),
                     ),
@@ -98,6 +84,18 @@ class CustomDrawer extends StatelessWidget {
   Widget _listtile(context, Icon icon, String text, String page) {
     return InkWell(
       onTap: () => Navigator.of(context).popAndPushNamed(page),
+      child: ListTile(
+        horizontalTitleGap: 0.0,
+        dense: true,
+        leading: icon,
+        title: Text(text),
+      ),
+    );
+  }
+
+  Widget _logout(context, Icon icon, String text, String page) {
+    return InkWell(
+      onTap: () => Navigator.of(context).popAndPushNamed('/sair'),
       child: ListTile(
         horizontalTitleGap: 0.0,
         dense: true,

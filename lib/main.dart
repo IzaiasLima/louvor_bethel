@@ -1,15 +1,39 @@
-import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
-import 'package:louvor_bethel/pages/SfPluginPpdfPage.dart';
-import 'package:louvor_bethel/pages/home_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter/material.dart';
+import 'package:louvor_bethel/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 import 'package:louvor_bethel/pages/login_page.dart';
+import 'package:louvor_bethel/pages/home_page.dart';
+import 'package:louvor_bethel/pages/pdf_view_page.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
   initializeDateFormatting();
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
+
+// FutureBuilder(
+// future: Provider.of<AuthService>(context).getUser(),
+// builder: (context, AsyncSnapshot snapshot) {
+// if (snapshot.connectionState == ConnectionState.done) {
+// return snapshot.hasData ? HomePage() : LoginPage();
+// } else {
+// return Container(color: Colors.white);
 
 class MyApp extends StatelessWidget {
   @override
@@ -18,8 +42,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Louvor Bethel',
       theme: _theme,
-      home: HomePage(),
-      initialRoute: '/home',
+      home: StreamBuilder(
+        stream: Provider.of<AuthProvider>(context, listen: false).user,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData || snapshot.data == Status.Waitting) {
+            return LoginPage();
+          } else {
+            return snapshot.data == Status.Authenticated
+                ? HomePage()
+                : LoginPage();
+          }
+        },
+      ),
       routes: {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),
@@ -66,7 +100,7 @@ class MyApp extends StatelessWidget {
       inactiveTrackColor: Colors.brown,
       trackShape: RoundedRectSliderTrackShape(),
       thumbColor: Colors.blueGrey,
-      trackHeight: 3.5,
+      trackHeight: 4.0,
     ),
   );
 }

@@ -14,7 +14,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
     keepScrollOffset: true,
   );
 
-  PdfViewerController pdfViewerController;
+  // PdfViewerController pdfViewerController;
   SfPdfViewer pdf;
   Stopwatch timeController;
   Timer timer;
@@ -24,7 +24,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
   @override
   void initState() {
     super.initState();
-    pdfViewerController = PdfViewerController();
+    // pdfViewerController = PdfViewerController();
     timeController = Stopwatch();
   }
 
@@ -32,9 +32,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
   void dispose() {
     timeController.stop();
     timeController = null;
-    timer.cancel();
-    timer = null;
-    pdfViewerController = null;
+    // pdfViewerController = null;
     pdf = null;
     super.dispose();
   }
@@ -61,6 +59,8 @@ class _PdfViewPageState extends State<PdfViewPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => play());
     String url =
         'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
+
+    String file = '/assets/AoErguermosAsMaos2.pdf';
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -99,7 +99,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
             url,
             key: _pdfViewerKey,
             initialScrollOffset: Offset.zero,
-            controller: pdfViewerController,
+            // controller: pdfViewerController,
             canShowPaginationDialog: false,
             canShowScrollHead: false,
             canShowScrollStatus: false,

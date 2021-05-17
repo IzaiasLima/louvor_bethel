@@ -111,8 +111,9 @@ class _CardItens extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () => Navigator.popAndPushNamed(context, '/render'),
-          child: Row(
+          onTap: () => Navigator.pushNamed(context, '/pdf'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -123,7 +124,7 @@ class _CardItens extends StatelessWidget {
                 height: 0,
                 indent: 16.0,
                 endIndent: 16.0,
-                color: hasNext ? Colors.grey[400] : Colors.transparent,
+                color: hasNext ? Colors.grey[600] : Colors.transparent,
               ),
             ],
           ),
