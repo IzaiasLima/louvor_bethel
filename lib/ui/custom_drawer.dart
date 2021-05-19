@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/models/auth_model.dart';
+import 'package:louvor_bethel/ui/base_view.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseView<AuthModel>(
+      builder: (context, model, __) => SafeArea(
         left: true,
         top: true,
         right: true,
@@ -63,13 +66,11 @@ class CustomDrawer extends StatelessWidget {
                       child: Column(
                         children: [
                           _listtile(
-                              context, Icon(Icons.home), 'Início', '/home'),
+                              context, Icon(Icons.home), 'Início', 'landing'),
                           _listtile(
-                              context, Icon(Icons.security), 'Login', '/login'),
-                          _listtile(
-                              context, Icon(Icons.play_arrow), 'PDF', '/pdf'),
-                          _logout(context, Icon(Icons.exit_to_app), 'Sair',
-                              '/sair'),
+                              context, Icon(Icons.play_arrow), 'PDF', 'pdf'),
+                          _logout(
+                              context, Icon(Icons.exit_to_app), 'Sair', model),
                         ],
                       ),
                     ),
@@ -78,7 +79,9 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _listtile(context, Icon icon, String text, String page) {
@@ -93,9 +96,9 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  Widget _logout(context, Icon icon, String text, String page) {
+  Widget _logout(context, Icon icon, String text, AuthModel model) {
     return InkWell(
-      onTap: () => Navigator.of(context).popAndPushNamed('/sair'),
+      onTap: () => model.logOut(),
       child: ListTile(
         horizontalTitleGap: 0.0,
         dense: true,

@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:louvor_bethel/models/user.dart';
-import 'package:louvor_bethel/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:louvor_bethel/providers/auth_provider.dart';
+import 'package:louvor_bethel/models/user.dart';
 
 class AuthWidgetBuilder extends StatelessWidget {
   final Widget Function(BuildContext, AsyncSnapshot<UserModel>) builder;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:louvor_bethel/ui/custom_drawer.dart';
 import 'dart:async';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewPage extends StatefulWidget {
   @override
@@ -60,9 +61,13 @@ class _PdfViewPageState extends State<PdfViewPage> {
     String url =
         'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
 
-    String file = '/assets/AoErguermosAsMaos2.pdf';
+    // String file = '/assets/AoErguermosAsMaos2.pdf';
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [],
+      ),
+      drawer: CustomDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(
         alignment: Alignment.bottomRight,

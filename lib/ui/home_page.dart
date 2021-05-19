@@ -1,44 +1,44 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:louvor_bethel/ui/custom_drawer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
+import 'package:louvor_bethel/ui/custom_drawer.dart';
 import 'package:louvor_bethel/common/string_helper.dart';
+import 'package:louvor_bethel/ui/base_view.dart';
+import 'package:louvor_bethel/models/auth_model.dart';
 import 'package:louvor_bethel/models/worship.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Worship adoracao = Worship.adoracao();
     final Worship oferta = Worship.oferta();
 
-    return Scaffold(
-      drawer: CustomDrawer(),
-      appBar: AppBar(
-        actions: [_circleAvatar(adoracao.userAvatar)],
-        titleSpacing: 0.0,
-        title: Text('LOUVOR BETHEL'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
-              child: Column(
-                children: [
-                  Text('Semana 21/03 a 26/03'),
-                  Divider(color: Colors.black),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return BaseView<AuthModel>(
+      builder: (context, model, __) => Scaffold(
+        drawer: CustomDrawer(),
+        appBar: AppBar(
+          actions: [_circleAvatar(adoracao.userAvatar)],
+          titleSpacing: 0.0,
+          title: Text('LOUVOR BETHEL'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
+                child: Column(
+                  children: [
+                    Text('Semana 21/03 a 26/03'),
+                    Divider(color: Colors.black),
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
               ),
-            ),
-            _Card(adoracao),
-            _Card(oferta),
-          ],
+              _Card(adoracao),
+              _Card(oferta),
+            ],
+          ),
         ),
       ),
     );
@@ -111,7 +111,7 @@ class _CardItens extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () => Navigator.pushNamed(context, '/pdf'),
+          onTap: () => Navigator.pushNamed(context, 'pdf'),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

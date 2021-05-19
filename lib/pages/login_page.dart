@@ -28,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider login = Provider.of<AuthProvider>(context);
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
