@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Login Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Louvor Bethel',
       theme: _theme,
       initialRoute: 'landing',
       onGenerateRoute: Routers.generateRoute,
@@ -60,11 +61,14 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.blueGrey,
     ),
     sliderTheme: SliderThemeData(
-      activeTrackColor: Colors.blueGrey,
+      activeTrackColor: Colors.brown,
       inactiveTrackColor: Colors.brown,
       trackShape: RoundedRectSliderTrackShape(),
+      trackHeight: 2.0,
       thumbColor: Colors.blueGrey,
-      trackHeight: 4.0,
+      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+      overlayColor: Colors.yellow.withAlpha(32),
+      overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
     ),
   );
 }
