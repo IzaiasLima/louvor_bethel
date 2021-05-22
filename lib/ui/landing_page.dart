@@ -17,7 +17,7 @@ class LandingPage extends StatelessWidget {
       builder: (context, authModel, child) => StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          return (snapshot.hasData)
+          return (snapshot.hasData && snapshot.data != null)
               ? HomePage()
               : LoginPage(
                   emailController: emailController,

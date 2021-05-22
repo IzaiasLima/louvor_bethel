@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:louvor_bethel/ui/pdf_view_page.dart';
 import 'package:louvor_bethel/ui/home_page.dart';
 import 'package:louvor_bethel/ui/landing_page.dart';
+import 'package:louvor_bethel/ui/user_page.dart';
 
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -14,6 +15,8 @@ class Routers {
         return MaterialPageRoute(builder: (_) => LandingPage());
       case 'pdf':
         return MaterialPageRoute(builder: (_) => PdfViewPage());
+      case 'user':
+        return MaterialPageRoute(builder: (_) => UserPage());
       default:
         return MaterialPageRoute(builder: (_) {
           return Scaffold(

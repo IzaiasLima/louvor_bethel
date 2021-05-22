@@ -24,6 +24,8 @@ class LoginPage extends StatelessWidget {
 
     return BaseView<AuthStateModel>(
       builder: (context, authStateModel, __) {
+        // authStateModel.setState(authModel, AuthState.SignIn);
+
         return Scaffold(
           body: Form(
             key: formKey,
@@ -35,11 +37,15 @@ class LoginPage extends StatelessWidget {
                     children: [
                       _emailTextField(),
                       _passwordFormField(),
-                      _newPassword(authModel),
+                      _newPasswordButtom(authModel),
                       authModel.viewState == ViewState.Busy
                           ? CircularProgressIndicator()
-                          : _actionButton(context, formKey, authStateModel),
-                      _switchState(authStateModel),
+                          : _loginActionButton(
+                              context,
+                              formKey,
+                              authStateModel,
+                            ),
+                      _switchStateButtom(authStateModel),
                       SizedBox(
                         height: 40,
                       ),
@@ -88,7 +94,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _actionButton(context, formKey, AuthStateModel authStateModel) {
+  Widget _loginActionButton(context, formKey, AuthStateModel authStateModel) {
     if (authModel.viewState == ViewState.Refused) {
       _showToast('Email ou senha não confere.');
     }
@@ -108,7 +114,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _switchState(AuthStateModel authStateModel) {
+  Widget _switchStateButtom(AuthStateModel authStateModel) {
     return InkWell(
       onTap: () {
         authStateModel.switchAuthState(authModel);
@@ -117,7 +123,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _newPassword(AuthModel authModel) {
+  Widget _newPasswordButtom(AuthModel authModel) {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(

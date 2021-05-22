@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:louvor_bethel/locator.dart';
 import 'package:louvor_bethel/routes/routers.dart';
+import 'package:louvor_bethel/utils/constants.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
@@ -16,12 +17,13 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final String title = 'LOUVOR BETHEL';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Louvor Bethel',
+      title: Constants.title,
       theme: _theme,
       initialRoute: 'landing',
       onGenerateRoute: Routers.generateRoute,

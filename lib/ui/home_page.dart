@@ -2,11 +2,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:louvor_bethel/utils/constants.dart';
 import 'package:louvor_bethel/utils/string_helper.dart';
-import 'package:louvor_bethel/ui/custom_drawer.dart';
+import 'package:louvor_bethel/ui/drawer.dart';
 import 'package:louvor_bethel/ui/base_view.dart';
 import 'package:louvor_bethel/models/auth_model.dart';
 import 'package:louvor_bethel/models/worship.dart';
+import 'package:louvor_bethel/utils/widgets.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -18,38 +20,32 @@ class HomePage extends StatelessWidget {
       builder: (context, model, __) => Scaffold(
         drawer: CustomDrawer(),
         appBar: AppBar(
-          actions: [_circleAvatar(adoracao.userAvatar)],
+          actions: [circleAvatar(adoracao.userAvatar)],
           titleSpacing: 0.0,
-          title: Text('LOUVOR BETHEL'),
+          title: Text(Constants.title), //Text('***LOUVOR BETHEL'),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
+        body: (model.user == null)
+            ? expiredSessionCard(model)
+            : SingleChildScrollView(
                 child: Column(
                   children: [
-                    Text('Semana 21/03 a 26/03'),
-                    Divider(color: Colors.black),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
+                      child: Column(
+                        children: [
+                          Text('Semana 21/03 a 26/03'),
+                          Text('Nome: ${model.user?.name}'),
+                          Text('Email: ${model.user?.email}'),
+                          Divider(color: Colors.black),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    ),
+                    _Card(adoracao),
+                    _Card(oferta),
                   ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
                 ),
               ),
-              _Card(adoracao),
-              _Card(oferta),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _circleAvatar(String url) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: CircleAvatar(
-        radius: 22.0,
-        backgroundImage: NetworkImage(url),
       ),
     );
   }
@@ -80,8 +76,6 @@ class _Card extends StatelessWidget {
                 Text(
                   capitalize(dia.format(worship.dateTime)),
                   style: TextStyle(fontWeight: FontWeight.bold),
-                  //style: Theme.of(context).textTheme.headline1,
-                  //style: AppTheme.theme().textTheme.headline2,
                 ),
                 SizedBox(width: 8.0),
                 Text(worship.description),

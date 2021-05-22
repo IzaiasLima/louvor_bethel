@@ -68,9 +68,11 @@ class CustomDrawer extends StatelessWidget {
                           _listtile(
                               context, Icon(Icons.home), 'Início', 'landing'),
                           _listtile(
+                              context, Icon(Icons.person), 'Perfil', 'user'),
+                          _listtile(
                               context, Icon(Icons.play_arrow), 'PDF', 'pdf'),
-                          _logout(
-                              context, Icon(Icons.exit_to_app), 'Sair', model),
+                          _logout(context, Icon(Icons.exit_to_app), 'Sair',
+                              'landing', model),
                         ],
                       ),
                     ),
@@ -96,9 +98,12 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  Widget _logout(context, Icon icon, String text, AuthModel model) {
+  Widget _logout(context, icon, text, page, model) {
     return InkWell(
-      onTap: () => model.logOut(),
+      onTap: () {
+        model.logOut();
+        Navigator.of(context).popAndPushNamed(page);
+      },
       child: ListTile(
         horizontalTitleGap: 0.0,
         dense: true,
