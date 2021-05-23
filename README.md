@@ -6,7 +6,7 @@ Provavelmente, este aplicativo não será publicado na Play Store por ser muito 
 
 ## Por onde começar
 
-Este projeto é um aplicativo Flutter não trivial, já que usa a autenticação e persistência do Firebase. Então, se você tiver dificuldade de entender o código, aqui estão alguns recursos por onde você pode começar, se este for seu primeiro contato com o Flutter:
+Este projeto é um aplicativo Flutter não trivial, já que usa autenticação e persistência de dados do Firebase. Então, se você for um iniciante como eu, aqui estão alguns recursos por onde você pode começar seus primeiros contatos com o Flutter:
 
 - [Lab: Escreva sua primeira aplicação em Flutter](https://flutter.dev/docs/get-started/codelab)
 - [Cookbook: Exemplos úteis em Flutter](https://flutter.dev/docs/cookbook)
