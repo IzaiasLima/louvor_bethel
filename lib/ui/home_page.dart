@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:louvor_bethel/models/worship_provider.dart';
 
 import 'package:louvor_bethel/utils/constants.dart';
 import 'package:louvor_bethel/utils/string_helper.dart';
@@ -10,17 +11,29 @@ import 'package:louvor_bethel/models/auth_model.dart';
 import 'package:louvor_bethel/models/worship.dart';
 import 'package:louvor_bethel/utils/widgets.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Worship adoracao = Worship.adoracao();
-    final Worship oferta = Worship.oferta();
-
     return BaseView<AuthModel>(
       builder: (context, model, __) => Scaffold(
         drawer: CustomDrawer(),
         appBar: AppBar(
-          actions: [circleAvatar(adoracao.userAvatar)],
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: userAvatar(model, 22),
+            )
+          ],
           titleSpacing: 0.0,
           title: Text(Constants.title), //Text('***LOUVOR BETHEL'),
         ),
@@ -34,15 +47,31 @@ class HomePage extends StatelessWidget {
                       child: Column(
                         children: [
                           Text('Semana 21/03 a 26/03'),
-                          Text('Nome: ${model.user?.name}'),
-                          Text('Email: ${model.user?.email}'),
                           Divider(color: Colors.black),
                         ],
                         crossAxisAlignment: CrossAxisAlignment.start,
                       ),
                     ),
-                    _Card(adoracao),
-                    _Card(oferta),
+                    FutureBuilder(
+                      future: WorshipProvider.adoracao(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return _Card(snapshot.data);
+                        } else {
+                          return Container(height: 0.0);
+                        }
+                      },
+                    ),
+                    FutureBuilder(
+                      future: WorshipProvider.oferta(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return _Card(snapshot.data);
+                        } else {
+                          return Container(height: 0.0);
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -68,10 +97,7 @@ class _Card extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(worship.userAvatar),
-                ),
+                circleAvatar(worship.userAvatar, 20),
                 SizedBox(width: 8.0),
                 Text(
                   capitalize(dia.format(worship.dateTime)),

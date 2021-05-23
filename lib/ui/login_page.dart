@@ -86,7 +86,12 @@ class LoginPage extends StatelessWidget {
       controller: passwordController,
       autocorrect: false,
       obscureText: true,
-      validator: (value) => value.isEmpty ? 'Informe a senha.' : null,
+      validator: (value) {
+        if (value.isEmpty || value.length < 6) {
+          return 'A senha dever ter seis caracteres ou mais.';
+        }
+        return null;
+      },
       decoration: InputDecoration(
         labelText: 'Senha',
         floatingLabelBehavior: FloatingLabelBehavior.auto,

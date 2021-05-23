@@ -1,73 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/locator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:louvor_bethel/ui/drawer.dart';
+import 'package:louvor_bethel/locator.dart';
+import 'package:louvor_bethel/models/user.dart';
 import 'package:louvor_bethel/utils/constants.dart';
 import 'package:louvor_bethel/utils/widgets.dart';
+import 'package:louvor_bethel/ui/drawer.dart';
 import 'package:louvor_bethel/ui/base_view.dart';
 import 'package:louvor_bethel/models/auth_state_model.dart';
 import 'package:louvor_bethel/models/auth_model.dart';
 
 // ignore: must_be_immutable
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  @override
+  _UserPageState createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
   TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController urlPhotoController = TextEditingController();
-  // final AuthModel authModel;
+
+  String urlPhoto;
+  bool changedPhoto = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     AuthStateModel authStateModel = locator<AuthStateModel>();
 
     return BaseView<AuthModel>(
-      builder: (context, AuthModel model, child) => Scaffold(
-        drawer: CustomDrawer(),
-        appBar: AppBar(
-          actions: [],
-          titleSpacing: 0.0,
-          title: Text(Constants.title), //Text('***LOUVOR BETHEL'),
-        ),
-        body: (model.user == null)
-            ? expiredSessionCard(model)
-            : Form(
-                key: formKey,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Dados do usuário',
-                            style: Theme.of(context).textTheme.headline1,
-                          ),
-                          _emailTextField(model.user.email),
-                          _namedFormField(model.user.name),
-                          // _urlPhotoFormField(model.user.photoUrl),
-                          _updateButton(
-                            context,
-                            formKey,
-                            authStateModel,
-                            model,
-                          ),
-                          ElevatedButton(
-                            onPressed: () => _uploadImage(model.user.id),
-                            child: Text(
-                              'Foto',
+      builder: (context, AuthModel model, child) {
+        return Scaffold(
+          drawer: CustomDrawer(),
+          appBar: AppBar(
+            actions: [],
+            titleSpacing: 0.0,
+            title: Text(Constants.title), //Text('***LOUVOR BETHEL'),
+          ),
+          body: (model.user == null)
+              ? expiredSessionCard(model)
+              : Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            avatar(model),
+                            Text(
+                              'Dados do usuário',
+                              style: Theme.of(context).textTheme.headline1,
                             ),
-                          ),
-                        ],
+                            _emailTextField(model.user.email),
+                            _namedFormField(model.user.name),
+                            _urlPhotoFormField(),
+                            _updateButton(
+                              context,
+                              formKey,
+                              authStateModel,
+                              model,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+        );
+      },
+    );
+  }
+
+  Widget avatar(AuthModel model) {
+    UserModel user = model.user;
+    urlPhoto = changedPhoto ? urlPhoto : user.photoUrl;
+
+    return InkWell(
+      onTap: () => user == null ? {} : _uploadImage(model.user.id),
+      child: Center(
+        child: Padding(
+            padding: const EdgeInsets.only(bottom: 30.0),
+            child: circleAvatar(urlPhoto, 80)),
       ),
     );
   }
@@ -98,17 +123,16 @@ class UserPage extends StatelessWidget {
     );
   }
 
-  // Widget _urlPhotoFormField(String urlPhoto) {
-  //   urlPhotoController.text = urlPhoto;
-  //   return TextFormField(
-  //     controller: urlPhotoController,
-  //     autocorrect: false,
-  //     decoration: InputDecoration(
-  //       labelText: 'Foto',
-  //       floatingLabelBehavior: FloatingLabelBehavior.auto,
-  //     ),
-  //   );
-  // }
+  Widget _urlPhotoFormField() {
+    return TextFormField(
+      controller: urlPhotoController,
+      autocorrect: false,
+      enabled: false,
+      decoration: InputDecoration(
+        labelText: 'Url da foto',
+      ),
+    );
+  }
 
   Widget _updateButton(context, formKey, authStateModel, authModel) {
     return Padding(
@@ -118,7 +142,8 @@ class UserPage extends StatelessWidget {
           child: Text('ATALIZAR'),
           onPressed: () {
             if (formKey.currentState.validate()) {
-              authStateModel.updateProfiler(authModel, nameController);
+              authStateModel.updateProfiler(
+                  authModel, nameController, urlPhotoController);
               Navigator.popAndPushNamed(context, 'home');
             } else {
               return;
@@ -130,17 +155,24 @@ class UserPage extends StatelessWidget {
   }
 
   Future _uploadImage(String uid) async {
+    String url;
+
     if (uid != null) {
       PickedFile pickedFile = await _imagePicker();
       FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref = storage.ref().child('users/$uid}');
+      Reference ref = storage.ref().child('users/$uid');
 
       UploadTask uploadTask = ref.putData(await pickedFile.readAsBytes());
 
       uploadTask.whenComplete(() async {
         TaskSnapshot snapshot = uploadTask.snapshot;
-        var url = await snapshot.ref.getDownloadURL();
-        print(url.toString());
+        url = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          changedPhoto = true;
+          urlPhotoController.text = url;
+          urlPhoto = url;
+        });
       });
     }
   }
@@ -149,7 +181,9 @@ class UserPage extends StatelessWidget {
     ImagePicker imagePicker = ImagePicker();
     PickedFile compressedImage = await imagePicker.getImage(
       source: ImageSource.gallery,
-      imageQuality: 85,
+      maxHeight: 400.0,
+      maxWidth: 400.0,
+      imageQuality: 90,
     );
     return compressedImage;
   }

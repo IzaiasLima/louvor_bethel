@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:louvor_bethel/enum/states.dart';
 import 'package:louvor_bethel/models/base_model.dart';
@@ -19,13 +20,15 @@ class AuthModel extends BaseModel {
     }
   }
 
-  updateProfiler(String name) async {
+  updateProfiler(String name, String urlPhoto) async {
+    urlPhoto = urlPhoto ?? '';
+
     await firebaseAuth.currentUser
-        .updateProfile(displayName: name, photoURL: 'null');
+        .updateProfile(displayName: name, photoURL: urlPhoto);
 
     await firebaseAuth.currentUser
         .reload()
-        .then((value) => setUser(UserModel.fromAuth(firebaseAuth.currentUser)));
+        .then((_) => setUser(UserModel.fromAuth(firebaseAuth.currentUser)));
   }
 
   passwordReset(String email) async {
@@ -43,7 +46,13 @@ class AuthModel extends BaseModel {
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      setUser(UserModel.fromAuth(firebaseAuth.currentUser));
+      UserModel user = UserModel.fromAuth(firebaseAuth.currentUser);
+      if (user.photoUrl.isNotEmpty) {
+        user.photo = Image.network(user.photoUrl).image;
+      } else {
+        user.photo = Image.asset('assets/images/user_avatar.png').image;
+      }
+      setUser(user);
       setViewState(ViewState.Ready);
     } on Exception catch (_) {
       setViewState(ViewState.Refused);

@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 
 class UserModel {
   String id;
   String email;
   String name;
   String photoUrl;
+  ImageProvider<Object> photo;
 
   UserModel({this.id, this.email, this.name, this.photoUrl});
 

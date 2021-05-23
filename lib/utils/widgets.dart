@@ -3,14 +3,26 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:louvor_bethel/models/auth_model.dart';
+import 'package:louvor_bethel/models/user.dart';
 
-Widget circleAvatar(String urlphoto) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-    child: CircleAvatar(
-      radius: 22.0,
-      backgroundImage: NetworkImage(urlphoto),
-    ),
+Widget userAvatar(AuthModel model, double radius) {
+  UserModel user = model.user;
+  String photoUrl = '';
+  if (user != null) photoUrl = user.photoUrl;
+  return circleAvatar(photoUrl, radius);
+}
+
+Widget circleAvatar(String urlPhoto, double radius) {
+  ImageProvider<Object> photo;
+  photo = Image.asset('assets/images/user_avatar.png').image;
+
+  try {
+    if (urlPhoto.isNotEmpty) photo = Image.network(urlPhoto).image;
+  } catch (_) {}
+
+  return CircleAvatar(
+    radius: radius,
+    backgroundImage: photo,
   );
 }
 

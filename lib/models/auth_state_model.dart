@@ -5,10 +5,6 @@ import 'package:louvor_bethel/models/base_model.dart';
 import 'package:louvor_bethel/models/auth_model.dart';
 
 class AuthStateModel extends BaseModel {
-  // setState(AuthModel authModel, AuthState authState) {
-  //   authModel.setAuthState(authState);
-  // }
-
   switchAuthState(AuthModel authModel) {
     authModel.authState == AuthState.SignIn
         ? authModel.setAuthState(AuthState.SignUp)
@@ -28,8 +24,9 @@ class AuthStateModel extends BaseModel {
           );
   }
 
-  updateProfiler(AuthModel authModel, TextEditingController nameController) {
-    authModel.updateProfiler(nameController.text);
+  updateProfiler(AuthModel authModel, TextEditingController nameController,
+      TextEditingController urlController) {
+    authModel.updateProfiler(nameController.text, urlController.text);
     authModel.firebaseAuth.currentUser.reload();
   }
 
