@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:louvor_bethel/src/models/auth_model.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
-import 'package:louvor_bethel/src/models/worship_provider.dart';
+import 'package:louvor_bethel/src/models/worship_controller.dart';
 import 'package:louvor_bethel/src/shared/constants.dart';
 import 'package:louvor_bethel/src/shared/string_helper.dart';
 import 'package:louvor_bethel/src/ui/shared/base_view.dart';
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     FutureBuilder(
-                      future: WorshipProvider.adoracao(),
+                      future: WorshipController.adoracao(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return _Card(snapshot.data);
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     FutureBuilder(
-                      future: WorshipProvider.oferta(),
+                      future: WorshipController.oferta(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return _Card(snapshot.data);
