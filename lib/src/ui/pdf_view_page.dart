@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/ui/shared/drawer.dart';
+import 'package:louvor_bethel/src/shared/ui/app_bar.dart';
+import 'package:louvor_bethel/src/shared/ui/drawer.dart';
 
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -51,13 +52,12 @@ class _PdfViewPageState extends State<PdfViewPage> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => play());
+
     String url =
         'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
     // String file = '/assets/AoErguermosAsMaos2.pdf';
     return Scaffold(
-      appBar: AppBar(
-        actions: [],
-      ),
+      appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(

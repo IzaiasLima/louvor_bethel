@@ -7,12 +7,12 @@ import 'package:louvor_bethel/src/models/auth_state_model.dart';
 import 'package:louvor_bethel/src/shared/ui/base_view.dart';
 import 'package:louvor_bethel/src/shared/ui/widgets.dart';
 
-class LoginPage extends StatelessWidget {
+class LyricPage extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final AuthModel authModel;
 
-  LoginPage({
+  LyricPage({
     @required this.emailController,
     @required this.passwordController,
     @required this.authModel,

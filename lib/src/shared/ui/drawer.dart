@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/models/auth_model.dart';
-import 'package:louvor_bethel/src/ui/shared/base_view.dart';
+import 'package:louvor_bethel/src/shared/ui/base_view.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override

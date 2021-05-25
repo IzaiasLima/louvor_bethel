@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/locator.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
-import 'package:louvor_bethel/src/shared/constants.dart';
+import 'package:louvor_bethel/src/shared/utils/constants.dart';
 
 class MyApp extends StatelessWidget {
   @override
