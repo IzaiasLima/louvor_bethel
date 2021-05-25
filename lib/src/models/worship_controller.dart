@@ -1,7 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:louvor_bethel/models/worship.dart';
+import 'package:louvor_bethel/src/models/worship.dart';
 
-class WorshipProvider {
+class WorshipController {
   static Future<String> urlPhoto(String uid) async {
     String url;
     try {

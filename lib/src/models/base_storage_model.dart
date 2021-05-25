@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:louvor_bethel/enum/states.dart';
+import 'package:louvor_bethel/src/enum/states.dart';
 
 class BaseStorageModel extends ChangeNotifier {
   ImageProvider<Object> _image;

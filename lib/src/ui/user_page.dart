@@ -3,14 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:louvor_bethel/locator.dart';
-import 'package:louvor_bethel/models/user.dart';
-import 'package:louvor_bethel/utils/constants.dart';
-import 'package:louvor_bethel/utils/widgets.dart';
-import 'package:louvor_bethel/ui/drawer.dart';
-import 'package:louvor_bethel/ui/base_view.dart';
-import 'package:louvor_bethel/models/auth_state_model.dart';
-import 'package:louvor_bethel/models/auth_model.dart';
+import 'package:louvor_bethel/src/locator.dart';
+import 'package:louvor_bethel/src/models/auth_model.dart';
+import 'package:louvor_bethel/src/models/auth_state_model.dart';
+import 'package:louvor_bethel/src/models/user.dart';
+import 'package:louvor_bethel/src/shared/constants.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
+import 'package:louvor_bethel/src/ui/shared/drawer.dart';
+import 'package:louvor_bethel/src/ui/shared/widgets.dart';
 
 // ignore: must_be_immutable
 class UserPage extends StatefulWidget {
@@ -47,43 +47,47 @@ class _UserPageState extends State<UserPage> {
           ),
           body: (model.user == null)
               ? expiredSessionCard(model)
-              : Form(
-                  key: formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 26.0),
-                    child: Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            avatar(model),
-                            Text(
-                              'Dados do usuário',
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
-                            _emailTextField(model.user.email),
-                            _namedFormField(model.user.name),
-                            _urlPhotoFormField(),
-                            _updateButton(
-                              context,
-                              formKey,
-                              authStateModel,
-                              model,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              : _updateForm(formKey, model, authStateModel),
         );
       },
     );
   }
 
-  Widget avatar(AuthModel model) {
+  Widget _updateForm(formKey, model, authStateModel) {
+    return Form(
+      key: formKey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 26.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _circleUserPhoto(model),
+                Text(
+                  'Dados do usuário',
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                _emailTextField(model.user.email),
+                _namedFormField(model.user.name),
+                _urlPhotoFormField(),
+                _updateButton(
+                  context,
+                  formKey,
+                  authStateModel,
+                  model,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _circleUserPhoto(AuthModel model) {
     UserModel user = model.user;
     urlPhoto = changedPhoto ? urlPhoto : user.photoUrl;
 

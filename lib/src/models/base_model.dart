@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:louvor_bethel/enum/states.dart';
-import 'package:louvor_bethel/models/user.dart';
+import 'package:louvor_bethel/src/enum/states.dart';
+import 'package:louvor_bethel/src/models/user.dart';
 
 class BaseModel extends ChangeNotifier {
   UserModel _user;

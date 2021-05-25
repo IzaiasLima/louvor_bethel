@@ -1,15 +1,15 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/models/worship_provider.dart';
 
-import 'package:louvor_bethel/utils/constants.dart';
-import 'package:louvor_bethel/utils/string_helper.dart';
-import 'package:louvor_bethel/ui/drawer.dart';
-import 'package:louvor_bethel/ui/base_view.dart';
-import 'package:louvor_bethel/models/auth_model.dart';
-import 'package:louvor_bethel/models/worship.dart';
-import 'package:louvor_bethel/utils/widgets.dart';
+import 'package:louvor_bethel/src/models/auth_model.dart';
+import 'package:louvor_bethel/src/models/worship.dart';
+import 'package:louvor_bethel/src/models/worship_provider.dart';
+import 'package:louvor_bethel/src/shared/constants.dart';
+import 'package:louvor_bethel/src/shared/string_helper.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
+import 'package:louvor_bethel/src/ui/shared/drawer.dart';
+import 'package:louvor_bethel/src/ui/shared/widgets.dart';
 
 class HomePage extends StatefulWidget {
   @override

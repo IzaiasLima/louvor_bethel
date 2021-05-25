@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:louvor_bethel/models/auth_model.dart';
-import 'package:louvor_bethel/models/user.dart';
+import 'package:louvor_bethel/src/models/auth_model.dart';
+import 'package:louvor_bethel/src/models/user.dart';
 
 Widget userAvatar(AuthModel model, double radius) {
-  UserModel user = model.user;
+  UserModel user = UserModel.fromAuth(model.firebaseAuth.currentUser);
   String photoUrl = '';
   if (user != null) photoUrl = user.photoUrl;
   return circleAvatar(photoUrl, radius);

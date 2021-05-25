@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'package:louvor_bethel/enum/states.dart';
-import 'package:louvor_bethel/models/base_model.dart';
-import 'package:louvor_bethel/models/auth_model.dart';
+import 'package:louvor_bethel/src/enum/states.dart';
+import 'package:louvor_bethel/src/models/auth_model.dart';
+import 'package:louvor_bethel/src/models/base_model.dart';
 
 class AuthStateModel extends BaseModel {
   switchAuthState(AuthModel authModel) {

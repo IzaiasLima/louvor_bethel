@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/models/auth_model.dart';
-import 'package:louvor_bethel/ui/base_view.dart';
+import 'package:louvor_bethel/src/models/auth_model.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<AuthModel>(
       builder: (context, model, __) => SafeArea(
-        left: true,
-        top: true,
-        right: true,
-        bottom: true,
         child: Drawer(
           child: Container(
             color: Theme.of(context).scaffoldBackgroundColor,
-            padding: EdgeInsets.zero,
+            // padding: EdgeInsets.zero,
             child: Column(
               children: [
                 DrawerHeader(

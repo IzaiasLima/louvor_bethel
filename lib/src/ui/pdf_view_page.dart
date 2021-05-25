@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/ui/drawer.dart';
+import 'package:louvor_bethel/src/ui/shared/drawer.dart';
+
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewPage extends StatefulWidget {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:louvor_bethel/enum/states.dart';
-import 'package:louvor_bethel/ui/base_view.dart';
-import 'package:louvor_bethel/models/auth_model.dart';
-import 'package:louvor_bethel/models/auth_state_model.dart';
+import 'package:louvor_bethel/src/enum/states.dart';
+import 'package:louvor_bethel/src/models/auth_model.dart';
+import 'package:louvor_bethel/src/models/auth_state_model.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
+import 'package:louvor_bethel/src/ui/shared/widgets.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController;
@@ -24,39 +24,41 @@ class LoginPage extends StatelessWidget {
 
     return BaseView<AuthStateModel>(
       builder: (context, authStateModel, __) {
-        // authStateModel.setState(authModel, AuthState.SignIn);
-
         return Scaffold(
           body: Form(
             key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _emailTextField(),
-                      _passwordFormField(),
-                      _newPasswordButtom(authModel),
-                      authModel.viewState == ViewState.Busy
-                          ? CircularProgressIndicator()
-                          : _loginActionButton(
-                              context,
-                              formKey,
-                              authStateModel,
-                            ),
-                      _switchStateButtom(authStateModel),
-                      SizedBox(
-                        height: 40,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            child: _loginForm(formKey, context, authStateModel),
           ),
         );
       },
+    );
+  }
+
+  Widget _loginForm(formKey, context, authStateModel) {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _emailTextField(),
+              _passwordFormField(),
+              _newPassTextButtom(authModel),
+              authModel.viewState == ViewState.Busy
+                  ? CircularProgressIndicator()
+                  : _loginButton(
+                      context,
+                      formKey,
+                      authStateModel,
+                    ),
+              _switchStateButtom(authStateModel),
+              SizedBox(
+                height: 40,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -99,9 +101,9 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginActionButton(context, formKey, AuthStateModel authStateModel) {
+  Widget _loginButton(context, formKey, AuthStateModel authStateModel) {
     if (authModel.viewState == ViewState.Refused) {
-      _showToast('Email ou senha não confere.');
+      showToast('Email ou senha não confere.');
     }
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -128,26 +130,16 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _newPasswordButtom(AuthModel authModel) {
+  Widget _newPassTextButtom(AuthModel authModel) {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
           authModel.passwordReset(emailController.text);
-          _showToast('Enviamos um email para você, verifique.');
+          showToast('Enviamos um email para você, verifique.');
         },
         child: Text('Esqueci minha senha'),
       ),
     );
-  }
-
-  _showToast(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 }

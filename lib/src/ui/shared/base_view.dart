@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:louvor_bethel/src/locator.dart';
 import 'package:provider/provider.dart';
-
-import '../models/base_model.dart';
-import '../locator.dart';
+import 'package:louvor_bethel/src/models/base_model.dart';
 
 class BaseView<T extends BaseModel> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget child) builder;
