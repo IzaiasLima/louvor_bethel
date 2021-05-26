@@ -7,9 +7,9 @@ import 'package:louvor_bethel/src/locator.dart';
 import 'package:louvor_bethel/src/models/auth_model.dart';
 import 'package:louvor_bethel/src/models/auth_state_model.dart';
 import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/shared/ui/base_view.dart';
-import 'package:louvor_bethel/src/shared/ui/drawer.dart';
-import 'package:louvor_bethel/src/shared/ui/widgets.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
+import 'package:louvor_bethel/src/ui/shared/drawer.dart';
+import 'package:louvor_bethel/src/ui/shared/widgets.dart';
 import 'package:louvor_bethel/src/shared/utils/constants.dart';
 
 // ignore: must_be_immutable

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/models/auth_model.dart';
-import 'package:louvor_bethel/src/shared/ui/base_view.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -63,6 +63,8 @@ class CustomDrawer extends StatelessWidget {
                         children: [
                           _listtile(
                               context, Icon(Icons.home), 'Início', 'landing'),
+                          _listtile(
+                              context, Icon(Icons.person), 'Músicas', 'lyric'),
                           _listtile(
                               context, Icon(Icons.person), 'Perfil', 'user'),
                           _listtile(

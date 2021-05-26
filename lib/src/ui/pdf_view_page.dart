@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/shared/ui/app_bar.dart';
-import 'package:louvor_bethel/src/shared/ui/drawer.dart';
+import 'package:louvor_bethel/src/ui/shared/app_bar.dart';
+import 'package:louvor_bethel/src/ui/shared/drawer.dart';
 
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 

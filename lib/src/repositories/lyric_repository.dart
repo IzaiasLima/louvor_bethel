@@ -1,28 +1,51 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:louvor_bethel/src/enum/states.dart';
+import 'package:louvor_bethel/src/models/base_model.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/repositories/interfaces/ILyricRepository.dart';
 
-class LyricRepository extends Disposable implements ILyricRepository {
+class LyricRepository extends BaseModel implements ILyricRepository {
   FirebaseFirestore firestore;
+  List<LyricModel> _lyrics;
 
-  LyricRepository({@required this.firestore});
-  @override
-  Future delete(LyricModel model) {
-    return model.id.delete();
+  LyricRepository(this.firestore) {
+    setViewState(ViewState.Busy);
   }
 
+  get lyric {
+    return LyricModel.fromJson({
+      'title': 'Ele é exaltado',
+      'tone': 'G#+',
+      'style': ['ADORAÇÃO'],
+      'stanza': 'Ele é exaltado, o Rei é exaltado nos céus',
+      'chorus': 'Ele é o Senhor, Sua verdade vai sempre reinar',
+      'pdfUrl': 'none',
+      'videoUrl': 'none',
+      'userId': 'eci5UOc0KJTO7lBV7uwpiwABfO62'
+    });
+  }
+
+  get lyrics => _lyrics;
+
   @override
-  Future<Stream<List<Iterable<LyricModel>>>> get() {
-    return firestore
-        .collection('lyrics')
-        .orderBy('title')
-        .snapshots()
-        .map((query) => query.docs.map((doc) => LyricModel.fromDocument(doc)))
-        .toList();
+  void get() {
+    setViewState(ViewState.Busy);
+    try {
+      var snap = firestore.collection('lyrics').orderBy('title').snapshots();
+
+      snap.map((query) {
+        query.docs.map((doc) {
+          print('************** $doc **************8');
+          return LyricModel.fromDocument(doc);
+        }).toList();
+      });
+      setViewState(ViewState.Ready);
+    } catch (e) {
+      print('Erro: $e');
+      setViewState(ViewState.Error);
+    }
   }
 
   @override
@@ -35,5 +58,7 @@ class LyricRepository extends Disposable implements ILyricRepository {
   }
 
   @override
-  FutureOr onDispose() {}
+  Future delete(LyricModel model) {
+    return model.id.delete();
+  }
 }

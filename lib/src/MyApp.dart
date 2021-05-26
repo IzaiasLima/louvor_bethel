@@ -1,18 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/locator.dart';
+import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
 import 'package:louvor_bethel/src/shared/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    setupLocator();
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: Constants.title,
-      theme: _theme,
-      initialRoute: 'landing',
-      onGenerateRoute: Routers.generateRoute,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => LyricRepository(FirebaseFirestore.instance)),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: Constants.title,
+        theme: _theme,
+        initialRoute: 'landing',
+        onGenerateRoute: Routers.generateRoute,
+      ),
     );
   }
 

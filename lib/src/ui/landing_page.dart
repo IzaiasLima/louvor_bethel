@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:louvor_bethel/src/models/auth_model.dart';
-import 'package:louvor_bethel/src/shared/ui/base_view.dart';
+import 'package:louvor_bethel/src/ui/shared/base_view.dart';
 import 'package:louvor_bethel/src/ui/home_page.dart';
 import 'package:louvor_bethel/src/ui/login_page.dart';
 

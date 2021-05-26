@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LyricModel {
-  String id;
+  DocumentReference id;
   String title;
   String tone;
   List<String> style;
@@ -23,7 +23,7 @@ class LyricModel {
       this.userId});
 
   LyricModel.fromDocument(DocumentSnapshot docs) {
-    id = docs['id'];
+    id = docs.reference;
     title = docs['title'];
     tone = docs['tone'];
     style = docs['style'].cast<String>();

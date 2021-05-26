@@ -2,7 +2,7 @@
     package="dev.izaias.louvor_bethel.louvor_bethel">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     
-   <application
+    <application
         android:label="Louvor Bethel"
         android:icon="@mipmap/ic_launcher">
         
