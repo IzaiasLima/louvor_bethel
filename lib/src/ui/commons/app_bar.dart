@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/locator.dart';
-import 'package:louvor_bethel/src/models/auth_model.dart';
-import 'package:louvor_bethel/src/ui/shared/widgets.dart';
-import 'package:louvor_bethel/src/shared/utils/constants.dart';
+import 'package:louvor_bethel/src/commons/constants.dart';
+import 'package:louvor_bethel/src/ui/commons/components.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -10,12 +8,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthModel model = locator<AuthModel>();
     return AppBar(
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
-          child: userAvatar(model, 20),
+          child: circleAvatar('', 20), // userAvatar(model, 20),
         )
       ],
       titleSpacing: 0.0,

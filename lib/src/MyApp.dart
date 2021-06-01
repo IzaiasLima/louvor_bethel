@@ -1,17 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
-import 'package:louvor_bethel/src/shared/utils/constants.dart';
 import 'package:provider/provider.dart';
+
+import 'package:louvor_bethel/src/models/user_manager.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (context) => LyricRepository(FirebaseFirestore.instance)),
+        ChangeNotifierProvider(create: (_) => UserManager()),
+        ChangeNotifierProvider(create: (_) => LyricRepository()),
+        ChangeNotifierProvider(create: (_) => WorshipRepository()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
 
   final _theme = ThemeData(
     primaryColor: const Color.fromRGBO(98, 95, 90, 1),
-    accentColor: Colors.black26,
+    secondaryHeaderColor: Colors.black26,
     primarySwatch: Colors.grey,
     scaffoldBackgroundColor: const Color.fromRGBO(243, 240, 240, 1),
     backgroundColor: const Color.fromRGBO(98, 94, 90, 0.8),
@@ -47,6 +50,7 @@ class MyApp extends StatelessWidget {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         primary: const Color.fromRGBO(98, 95, 90, 1),
         onPrimary: Colors.white,
         onSurface: Colors.grey,
@@ -54,6 +58,11 @@ class MyApp extends StatelessWidget {
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: Colors.blueGrey,
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.zero,
+      ),
     ),
     sliderTheme: SliderThemeData(
       activeTrackColor: Colors.brown,

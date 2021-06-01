@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class LyricModel {
-  DocumentReference id;
+  String id;
   String title;
   String tone;
   List<String> style;
@@ -22,23 +20,23 @@ class LyricModel {
       this.videoUrl,
       this.userId});
 
-  LyricModel.fromDocument(DocumentSnapshot docs) {
-    id = docs.reference;
-    title = docs['title'];
-    tone = docs['tone'];
-    style = docs['style'].cast<String>();
-    stanza = docs['stanza'];
-    chorus = docs['chorus'];
-    pdfUrl = docs['pdfUrl'];
-    videoUrl = docs['videoUrl'];
-    userId = docs['userId'];
-  }
+  // LyricModel.fromDocument(DocumentSnapshot docs) {
+  //   id = docs.reference;
+  //   title = docs['title'];
+  //   tone = docs['tone'];
+  //   style = docs['style'].cast<String>();
+  //   stanza = docs['stanza'];
+  //   chorus = docs['chorus'];
+  //   pdfUrl = docs['pdfUrl'];
+  //   videoUrl = docs['videoUrl'];
+  //   userId = docs['userId'];
+  // }
 
   LyricModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     tone = json['tone'];
-    style = json['style'].cast<String>();
+    style = json['style']?.cast<String>();
     stanza = json['stanza'];
     chorus = json['chorus'];
     pdfUrl = json['pdfUrl'];
@@ -58,5 +56,15 @@ class LyricModel {
     data['videoUrl'] = this.videoUrl;
     data['userId'] = this.userId;
     return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'title': this.title,
+      'stanza': this.stanza,
+      'chorus': this.chorus,
+      'tone': this.tone,
+    };
   }
 }

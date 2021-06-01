@@ -1,17 +1,15 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:louvor_bethel/src/enum/states.dart';
+import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/models/base_model.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
-import 'package:louvor_bethel/src/repositories/interfaces/ILyricRepository.dart';
 
-class LyricRepository extends BaseModel implements ILyricRepository {
-  FirebaseFirestore firestore;
-  List<LyricModel> _lyrics;
+class LyricRepository extends BaseModel {
+  // FirebaseFirestore db = FirebaseFirestore.instance;
+  final reference = FirebaseFirestore.instance.collection('lyrics');
+  List _lyrics = [];
 
-  LyricRepository(this.firestore) {
-    setViewState(ViewState.Busy);
+  LyricRepository() {
+    _load();
   }
 
   get lyric {
@@ -29,36 +27,34 @@ class LyricRepository extends BaseModel implements ILyricRepository {
 
   get lyrics => _lyrics;
 
-  @override
-  void get() {
-    setViewState(ViewState.Busy);
+  void _load() async {
+    viewState = ViewState.Busy;
     try {
-      var snap = firestore.collection('lyrics').orderBy('title').snapshots();
-
-      snap.map((query) {
-        query.docs.map((doc) {
-          print('************** $doc **************8');
-          return LyricModel.fromDocument(doc);
-        }).toList();
+      await reference.get().then((value) {
+        for (DocumentSnapshot doc in value.docs) {
+          _lyrics.add(LyricModel.fromJson(doc.data()));
+        }
       });
-      setViewState(ViewState.Ready);
+      viewState = ViewState.Ready;
     } catch (e) {
-      print('Erro: $e');
-      setViewState(ViewState.Error);
+      viewState = ViewState.Error;
     }
   }
 
-  @override
-  Future save(LyricModel model) async {
-    if (model.id == null) {
-      model.id = await firestore.collection('lyrics').add(model.toJson());
-    } else {
-      model.id.update(model.toJson());
-    }
-  }
+  Future<void> save(
+      {LyricModel newLyric, Function onSucess, Function onError}) async {
+    viewState = ViewState.Busy;
 
-  @override
-  Future delete(LyricModel model) {
-    return model.id.delete();
+    newLyric.userId = user.id ?? '';
+
+    try {
+      await reference.add(newLyric.toMap());
+
+      onSucess();
+    } on FirebaseException catch (e) {
+      onError(e);
+      viewState = ViewState.Error;
+    }
+    viewState = ViewState.Ready;
   }
 }

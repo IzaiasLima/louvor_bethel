@@ -1,27 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
-
 class UserModel {
   String id;
-  String email;
   String name;
-  String photoUrl;
-  ImageProvider<Object> photo;
+  String email;
+  String password;
+  String confirmPass;
 
-  UserModel({this.id, this.email, this.name, this.photoUrl});
+  UserModel(
+      {this.id = '', this.name = '', this.email = '', this.password = ''});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    email = json['email'];
-    name = json['name'];
-    photoUrl = json['photoUrl'];
+  Map<String, dynamic> toMap() {
+    return {
+      'name': this.name,
+      'email': this.email,
+    };
   }
 
-  UserModel.fromAuth(User user) {
-    id = user.uid;
-    email = user.email;
-    name = user.displayName;
-    photoUrl = user.photoURL;
+  UserModel.fromJson(Map<String, dynamic> json) {
+    email = json['email'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +25,6 @@ class UserModel {
     data['id'] = this.id;
     data['email'] = this.email;
     data['name'] = this.name;
-    data['photoUrl'] = this.photoUrl;
     return data;
   }
 }

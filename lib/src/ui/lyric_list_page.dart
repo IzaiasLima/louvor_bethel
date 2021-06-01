@@ -7,7 +7,7 @@ import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/ui/lyric_item.dart';
 
-class LyricPage extends StatelessWidget {
+class LyricListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<LyricRepository>(
@@ -24,12 +24,12 @@ class LyricPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Detalhe'),
+                      Text('Músicas cadastradas'),
                       Divider(color: Colors.black),
                       SizedBox(height: 20.0),
                       Card(
                         margin: EdgeInsets.all(0.0),
-                        child: Text('Detalhe'),
+                        child: LyricItem(lyrics, page: 'lyric'),
                       ),
                     ],
                   ),

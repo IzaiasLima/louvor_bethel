@@ -1,30 +1,22 @@
-import 'package:flutter/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:louvor_bethel/src/models/auth_model.dart';
-import 'package:louvor_bethel/src/ui/shared/base_view.dart';
+import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/ui/home_page.dart';
+import 'package:provider/provider.dart';
+
+import 'package:splashscreen/splashscreen.dart';
 import 'package:louvor_bethel/src/ui/login_page.dart';
 
-// ignore: must_be_immutable
 class LandingPage extends StatelessWidget {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    return BaseView<AuthModel>(
-      builder: (context, authModel, child) => StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          return (snapshot.hasData && snapshot.data != null)
-              ? HomePage()
-              : LoginPage(
-                  emailController: emailController,
-                  passwordController: passwordController,
-                  authModel: authModel,
-                );
-        },
+    return Consumer<UserManager>(
+      builder: (context, userManager, __) => SplashScreen(
+        seconds: 4,
+        imageBackground: Image.asset(
+          'assets/images/bethel_background.png',
+        ).image,
+        loaderColor: Colors.transparent,
+        navigateAfterSeconds: userManager.loggedIn ? HomePage() : LoginPage(),
       ),
     );
   }

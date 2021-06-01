@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-import 'package:louvor_bethel/src/locator.dart';
-import 'package:louvor_bethel/src/models/auth_model.dart';
-import 'package:louvor_bethel/src/models/auth_state_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/ui/shared/base_view.dart';
-import 'package:louvor_bethel/src/ui/shared/drawer.dart';
-import 'package:louvor_bethel/src/ui/shared/widgets.dart';
-import 'package:louvor_bethel/src/shared/utils/constants.dart';
+import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
+import 'package:louvor_bethel/src/ui/commons/components.dart';
+import 'package:louvor_bethel/src/ui/commons/drawer.dart';
+
+// import 'package:image_picker/image_picker.dart';
 
 // ignore: must_be_immutable
 class UserPage extends StatefulWidget {
@@ -34,52 +31,37 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    AuthStateModel authStateModel = locator<AuthStateModel>();
 
-    return BaseView<AuthModel>(
-      builder: (context, AuthModel model, child) {
-        return Scaffold(
-          drawer: CustomDrawer(),
-          appBar: AppBar(
-            actions: [],
-            titleSpacing: 0.0,
-            title: Text(Constants.title), //Text('***LOUVOR BETHEL'),
-          ),
-          body: (model.user == null)
-              ? expiredSessionCard(model)
-              : _updateForm(formKey, model, authStateModel),
-        );
-      },
-    );
-  }
-
-  Widget _updateForm(formKey, model, authStateModel) {
-    return Form(
-      key: formKey,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 26.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _circleUserPhoto(model),
-                Text(
-                  'Dados do usuário',
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-                _emailTextField(model.user.email),
-                _namedFormField(model.user.name),
-                _urlPhotoFormField(),
-                _updateButton(
-                  context,
-                  formKey,
-                  authStateModel,
-                  model,
-                ),
-              ],
+    return Scaffold(
+      drawer: CustomDrawer(),
+      appBar: CustomAppBar(), //Text('***LOUVOR BETHEL'),
+      body: Form(
+        key: formKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 26.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // _circleUserPhoto(model),
+                  Text(
+                    'Dados do usuário',
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
+                  // _emailTextField(model.user.email),
+                  // _namedFormField(model.user.name),
+                  _urlPhotoFormField(),
+                  _updateButton(
+                    context,
+                    formKey,
+                    // authStateModel,
+                    // model,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -87,12 +69,12 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Widget _circleUserPhoto(AuthModel model) {
-    UserModel user = model.user;
-    urlPhoto = changedPhoto ? urlPhoto : user.photoUrl;
+  Widget circleUserPhoto() {
+    UserModel user = new UserModel(); //model.user;
+    urlPhoto = null; // changedPhoto ? urlPhoto : user.photoUrl;
 
     return InkWell(
-      onTap: () => user == null ? {} : _uploadImage(model.user.id),
+      onTap: () => user == null ? {} : _uploadImage(user.id),
       child: Center(
         child: Padding(
             padding: const EdgeInsets.only(bottom: 30.0),
@@ -101,7 +83,7 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Widget _namedFormField(String name) {
+  Widget namedFormField(String name) {
     nameController.text = name;
     return TextFormField(
       controller: nameController,
@@ -114,7 +96,7 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Widget _emailTextField(String email) {
+  Widget emailTextField(String email) {
     emailController.text = email;
     return TextFormField(
       controller: emailController,
@@ -138,7 +120,7 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Widget _updateButton(context, formKey, authStateModel, authModel) {
+  Widget _updateButton(context, formKey) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
@@ -146,8 +128,8 @@ class _UserPageState extends State<UserPage> {
           child: Text('ATALIZAR'),
           onPressed: () {
             if (formKey.currentState.validate()) {
-              authStateModel.updateProfiler(
-                  authModel, nameController, urlPhotoController);
+              // authStateModel.updateProfiler(
+              //     authModel, nameController, urlPhotoController);
               Navigator.popAndPushNamed(context, 'home');
             } else {
               return;
