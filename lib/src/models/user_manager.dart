@@ -85,9 +85,10 @@ class UserManager extends BaseModel {
           .doc(currentUser.uid)
           .get();
 
-      this.user =
+      UserModel tmp =
           doc.data() != null ? UserModel.fromJson(doc.data()) : new UserModel();
-      this.user.id = currentUser.uid;
+      tmp.id = currentUser.uid;
+      this.user = tmp;
     }
     viewState = ViewState.Ready;
   }

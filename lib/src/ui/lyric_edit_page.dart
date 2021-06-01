@@ -58,7 +58,7 @@ class LyricEditPage extends StatelessWidget {
                                       color: Theme.of(context).primaryColor,
                                     ));
                                     Navigator.of(context)
-                                        .popAndPushNamed('lyrics');
+                                        .popAndPushNamed('lyric_list');
                                   },
                                   onError: (e) => ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar(e)),

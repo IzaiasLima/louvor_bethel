@@ -6,6 +6,16 @@ class LyricItem extends StatelessWidget {
 
   LyricItem(this.lyrics, {this.page = 'pdf'});
 
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: lyrics.length,
+      itemBuilder: _buildItem,
+    );
+  }
+
   Widget _buildItem(BuildContext context, int index) {
     final bool hasNext = (index + 1) < this.lyrics.length;
     return Column(
@@ -31,16 +41,6 @@ class LyricItem extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: _buildItem,
-      itemCount: lyrics.length,
     );
   }
 }
