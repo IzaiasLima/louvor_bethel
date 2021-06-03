@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: Constants.title,
         theme: _theme,
-        initialRoute: 'video',
+        initialRoute: 'landing',
         routes: {LyricPage.routeName: (context) => LyricPage()},
         onGenerateRoute: Routers.generateRoute,
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
@@ -104,18 +103,15 @@ class LyricPage extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pushNamed('pdf'),
                 child: Text('CIFRA')),
             SizedBox(width: 15.0),
-            Link(
-              url: 'https://music.youtube.com/watch?v=RlIgI0YhYZ8',
-              child: ElevatedButton(
-                onPressed: () {
-                  // https://music.youtube.com/watch?v=RlIgI0YhYZ8
-                },
-                child: Text('LINK'),
-                style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 210, 20, 45),
-                ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('video');
+                // https://music.youtube.com/watch?v=RlIgI0YhYZ8
+              },
+              child: Text('LINK'),
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 210, 20, 45),
               ),
-              onError: () => 
             ),
           ],
         ),
