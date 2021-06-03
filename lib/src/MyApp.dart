@@ -3,6 +3,7 @@ import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
+import 'package:louvor_bethel/src/ui/lyric_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/models/user_manager.dart';
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: Constants.title,
         theme: _theme,
-        initialRoute: 'landing',
+        initialRoute: 'video',
+        routes: {LyricPage.routeName: (context) => LyricPage()},
         onGenerateRoute: Routers.generateRoute,
       ),
     );
@@ -35,9 +37,12 @@ class MyApp extends StatelessWidget {
     fontFamily: 'Nunito',
     textTheme: TextTheme(
       headline1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+      headline2: TextStyle(fontSize: 11.0, color: Colors.grey),
+      headline5: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
       headline6: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-      bodyText1: TextStyle(fontSize: 14.0),
+      bodyText1: TextStyle(fontSize: 13.0),
       bodyText2: TextStyle(fontSize: 14.0),
+      subtitle2: TextStyle(fontSize: 11.5),
     ),
     appBarTheme: AppBarTheme(
       textTheme: TextTheme(
@@ -50,7 +55,7 @@ class MyApp extends StatelessWidget {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
         primary: const Color.fromRGBO(98, 95, 90, 1),
         onPrimary: Colors.white,
         onSurface: Colors.grey,

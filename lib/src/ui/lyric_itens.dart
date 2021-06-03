@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/route_args.dart';
 
-class LyricItem extends StatelessWidget {
+class LyricItens extends StatelessWidget {
   final List lyrics;
   final String page;
 
-  LyricItem(this.lyrics, {this.page = 'pdf'});
+  LyricItens(this.lyrics, {this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +23,22 @@ class LyricItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () => Navigator.pushNamed(context, page),
+          onTap: () {
+            final args = RouteArgs(lyricId: lyrics[index].id);
+            Navigator.pushNamed(context, page, arguments: args);
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 12.0),
-                child: Text(lyrics[index].title),
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
+                child: Text(
+                  lyrics[index].title,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
               ),
               Divider(
                 height: 0,

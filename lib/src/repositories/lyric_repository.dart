@@ -6,7 +6,7 @@ import 'package:louvor_bethel/src/models/user_manager.dart';
 class LyricRepository extends UserManager {
   final reference = FirebaseFirestore.instance.collection('lyrics');
   LyricModel _lyric;
-  List _lyrics = [];
+  List _lyrics;
 
   LyricRepository() {
     _getList();
@@ -44,20 +44,19 @@ class LyricRepository extends UserManager {
   }
 
   Future<void> _getList() async {
-    List docs = [];
-    // viewState = ViewState.Busy;
+    _lyrics = [];
+    viewState = ViewState.Busy;
     try {
-      await reference.get().then((value) {
+      await reference.orderBy('title').get().then((value) {
         for (DocumentSnapshot doc in value.docs) {
           LyricModel lyric = LyricModel.fromJson(doc.data());
           lyric.id = doc.reference.id;
-          docs.add(lyric);
-          _lyrics.addAll(docs);
+          _lyrics.add(lyric);
         }
       });
-      // viewState = ViewState.Ready;
+      viewState = ViewState.Ready;
     } catch (e) {
-      // viewState = ViewState.Error;
+      viewState = ViewState.Error;
     }
   }
 

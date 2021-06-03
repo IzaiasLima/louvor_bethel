@@ -112,7 +112,7 @@ class LyricEditPage extends StatelessWidget {
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededChorus,
       decoration: InputDecoration(
-        labelText: 'Início do côro',
+        labelText: 'Início do coro',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
       onSaved: (value) => lyric.chorus = value,

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
-import 'package:louvor_bethel/src/ui/lyric_item.dart';
+import 'package:louvor_bethel/src/ui/lyric_itens.dart';
 
 class LyricListPage extends StatelessWidget {
   @override
@@ -25,9 +25,12 @@ class LyricListPage extends StatelessWidget {
                   Divider(color: Colors.black),
                   SizedBox(height: 20.0),
                   Consumer<LyricRepository>(
-                    builder: (context, value, child) => Card(
+                    builder: (context, repo, child) => Card(
                       margin: EdgeInsets.all(0.0),
-                      child: LyricItem(value.lyrics, page: 'lyric'),
+                      child: LyricItens(
+                        repo.lyrics,
+                        page: 'lyric_details',
+                      ),
                     ),
                   ),
                 ],
