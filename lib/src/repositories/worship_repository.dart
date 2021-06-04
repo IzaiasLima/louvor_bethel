@@ -1,8 +1,17 @@
 import 'package:louvor_bethel/src/models/base_model.dart';
+import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 
 class WorshipRepository extends BaseModel {
+  Future<List<Worship>> list() async {
+    List<Worship> wshp = [];
+    wshp.add(await adoracao());
+    wshp.add(await oferta());
+
+    return wshp;
+  }
+
   // Para os testes
   static Future<Worship> adoracao() async {
     Map<String, dynamic> json = {
@@ -39,9 +48,14 @@ class WorshipRepository extends BaseModel {
   }
 
   static Future<Worship> getWorshipWithUser(Worship worship) async {
-    await UserManager().userById(worship.userId).then((usr) {
-      worship.user = usr;
-    });
+    try {
+      await UserManager().userById(worship.userId).then((usr) {
+        worship.user = usr;
+      });
+    } on Exception catch (_) {
+      worship.user = new UserModel();
+    }
+
     return worship;
   }
 }

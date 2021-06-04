@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
@@ -15,7 +16,11 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserManager()),
         ChangeNotifierProvider(create: (_) => LyricRepository()),
-        ChangeNotifierProvider(create: (_) => WorshipRepository()),
+        FutureProvider<List<Worship>>(
+          initialData: null,
+          create: (_) => WorshipRepository().list(),
+          child: null,
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

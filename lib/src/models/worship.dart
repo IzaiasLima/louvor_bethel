@@ -8,6 +8,8 @@ class Worship {
   UserModel user;
   List<LyricModel> lyrics;
 
+  Worship();
+
   Worship.fromJson(Map<String, dynamic> json) {
     dateTime = json['dateTime'];
     description = json['description'];
@@ -29,22 +31,3 @@ class Worship {
     return data;
   }
 }
-
-// class LyricModel {
-//   int id;
-//   String title;
-
-//   // Song({this.id, this.title});
-
-//   LyricModel.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     title = json['title'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['id'] = this.id;
-//     data['title'] = this.title;
-//     return data;
-//   }
-// }

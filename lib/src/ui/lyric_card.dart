@@ -15,33 +15,36 @@ class LyricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                circleAvatar(worship.user, 20),
-                SizedBox(width: 8.0),
-                Text(
-                  capitalize(dia.format(worship.dateTime)),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 8.0),
-                Text(worship.description),
-              ],
-            ),
-            Icon(Icons.more_vert),
-          ],
-        ),
-        SizedBox(height: 20.0),
-        Card(
-          margin: EdgeInsets.all(0.0),
-          child: LyricItens(worship.lyrics),
-        ),
-      ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  circleAvatar(worship.user, 20),
+                  SizedBox(width: 8.0),
+                  Text(
+                    capitalize(dia.format(worship.dateTime)),
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 8.0),
+                  Text(worship.description),
+                ],
+              ),
+              Icon(Icons.more_vert),
+            ],
+          ),
+          SizedBox(height: 20.0),
+          Card(
+            margin: EdgeInsets.all(0.0),
+            child: LyricItens(worship.lyrics),
+          ),
+        ],
+      ),
     );
   }
 }
