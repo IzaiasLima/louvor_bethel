@@ -15,10 +15,8 @@ class UserManager extends BaseModel {
 
   final CollectionReference ref =
       FirebaseFirestore.instance.collection('users');
-  // UserModel userModel;
 
   UserManager() {
-    // userModel = new UserModel();
     _loadCurrentUser();
   }
 
@@ -79,22 +77,46 @@ class UserManager extends BaseModel {
     User currentUser = usr ?? auth.currentUser;
 
     if (currentUser != null) {
-      DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
-          .instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get();
+      // DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
+      //     .instance
+      //     .collection('users')
+      //     .doc(currentUser.uid)
+      //     .get();
 
-      UserModel tmp =
-          doc.data() != null ? UserModel.fromJson(doc.data()) : new UserModel();
-      tmp.id = currentUser.uid;
-      this.user = tmp;
+      // UserModel tmp =
+      //     doc.data() != null ? UserModel.fromJson(doc.data()) : new UserModel();
+      // tmp.id = currentUser.uid;
+      this.user = await userById(currentUser.uid);
 
-      try {
-        if (user.urlPhoto != null) user.photo = Image.network(user.urlPhoto);
-      } catch (_) {}
+      // try {
+      //   if (this.user.urlPhoto != null) this.user.photo = loadPhoto(this.user);
+      // } catch (_) {}
     }
     viewState = ViewState.Ready;
+  }
+
+  Future<UserModel> userById(String uid) async {
+    UserModel tmp;
+
+    if (uid != null) {
+      var doc = await firebase.collection('users').doc(uid).get();
+      if (doc.data() != null) tmp = UserModel.fromJson(doc.data());
+      tmp.id = uid;
+      try {
+        if (tmp.urlPhoto != null) tmp.photo = _loadPhoto(tmp);
+      } catch (_) {}
+    }
+    return tmp;
+  }
+
+  Image _loadPhoto(UserModel user) {
+    Image photo;
+    try {
+      if (user.urlPhoto != null) photo = Image.network(user.urlPhoto);
+    } catch (_) {
+      photo = Image.asset('assets/images/user_avatar.png');
+    }
+    return photo;
   }
 
   Future<void> uploadImage(String uid) async {

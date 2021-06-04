@@ -10,31 +10,29 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Worship adoracao = WorshipRepository.adoracao();
-    Worship oferta = WorshipRepository.oferta();
+    Worship adoracao = await WorshipRepository.adoracao();
+    Worship oferta = await WorshipRepository.oferta();
 
     return Scaffold(
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
-        child: Consumer<WorshipRepository>(builder: (context, repo, __) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
-                child: Column(
-                  children: [
-                    Text('Semana 21/03 a 26/03'),
-                    Divider(color: Colors.black),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
+              child: Column(
+                children: [
+                  Text('Semana 21/03 a 26/03'),
+                  Divider(color: Colors.black),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
               ),
-              LyricCard(adoracao),
-              LyricCard(oferta),
-            ],
-          );
-        }),
+            ),
+            LyricCard(adoracao),
+            LyricCard(oferta),
+          ],
+        ),
       ),
     );
   }

@@ -1,27 +1,15 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:louvor_bethel/src/models/base_model.dart';
+import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 
 class WorshipRepository extends BaseModel {
-  static Future<String> urlPhoto(String uid) async {
-    String url = '';
-
-    try {
-      Reference ref = FirebaseStorage.instance.ref().child('users/$uid');
-      url = await ref.getDownloadURL().then((value) => value);
-    } catch (_) {}
-
-    return url;
-  }
-
   // Para os testes
-  static Worship adoracao() {
+  static Future<Worship> adoracao() async {
     Map<String, dynamic> json = {
       "dateTime": DateTime.parse("2020-05-24 18:30"),
       "description": "Adoração",
-      "userId": "eci5UOc0KJTO7lBV7uwpiwABfO62}",
-      "userName": "Izaias Lima",
-      "userAvatar": '',
+      "userId": "GiDRCTJds1Rzbkh27ysDN5xUYaZ2",
+      "user": '',
       "lyrics": [
         {"id": '123', "title": "Ao único que digno"},
         {"id": '323', "title": "Grande é Senhor"},
@@ -32,24 +20,28 @@ class WorshipRepository extends BaseModel {
       ]
     };
     Worship w = Worship.fromJson(json);
-    //w.userAvatar = await urlPhoto(w.userId);
-    return w;
+    return await getWorshipWithUser(w);
   }
 
 // Para os testes
-  static Worship oferta() {
+  static Future<Worship> oferta() async {
     Map<String, dynamic> json = {
       "dateTime": DateTime.parse("2020-05-24 20:10"),
       "description": "Oferta",
-      "userId": "rAUWXjFCCSg2oporfpplr4cUHyt1",
-      "userName": "Usuário Dois",
-      "userAvatar": '',
+      "userId": "akmG1s9NXpaIZJeFLbG5wuJBKad2",
+      "user": '',
       "lyrics": [
         {"id": '123', "title": "Aquieta minh'alma"}
       ]
     };
     Worship w = Worship.fromJson(json);
-    // w.userAvatar = await urlPhoto(w.userId);
-    return w;
+    return await getWorshipWithUser(w);
+  }
+
+  static Future<Worship> getWorshipWithUser(Worship worship) async {
+    await UserManager().userById(worship.userId).then((usr) {
+      worship.user = usr;
+    });
+    return worship;
   }
 }
