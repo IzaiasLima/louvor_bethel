@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
-import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/enums/states.dart';
@@ -9,7 +7,9 @@ import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
+import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
 // ignore: must_be_immutable
 class LyricEditPage extends StatelessWidget {
@@ -36,6 +36,7 @@ class LyricEditPage extends StatelessWidget {
                     _titleTextField(),
                     _stanzaTextField(),
                     _chorusFormField(),
+                    _styleFormField(),
                     _tonePassFormField(),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
@@ -44,12 +45,11 @@ class LyricEditPage extends StatelessWidget {
                           : ElevatedButton(
                               child: Text('CADASTRAR'),
                               onPressed: () {
-                                if (!formKey.currentState.validate()) {
-                                  return;
-                                }
+                                if (!formKey.currentState.validate()) return;
+
                                 formKey.currentState.save();
 
-                                repo.save(
+                                repo.saveLyric(
                                   newLyric: lyric,
                                   onSucess: () {
                                     ScaffoldMessenger.of(context)
@@ -116,6 +116,19 @@ class LyricEditPage extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
       onSaved: (value) => lyric.chorus = value,
+    );
+  }
+
+  Widget _styleFormField() {
+    return TextFormField(
+      autocorrect: true,
+      validator: (value) =>
+          validLyricField(value) ? null : Constants.neededStyle,
+      decoration: InputDecoration(
+        labelText: 'Tema/estilo',
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+      ),
+      onSaved: (value) => lyric.style = value.split(','),
     );
   }
 

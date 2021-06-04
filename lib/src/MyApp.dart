@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:louvor_bethel/src/commons/constants.dart';
+import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
 import 'package:louvor_bethel/src/ui/lyric_page.dart';
-import 'package:provider/provider.dart';
-
-import 'package:louvor_bethel/src/models/user_manager.dart';
 
 class MyApp extends StatelessWidget {
   @override

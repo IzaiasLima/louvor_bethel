@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 import 'package:louvor_bethel/src/commons/string_helper.dart';
+import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/lyric_itens.dart';
@@ -23,7 +24,7 @@ class LyricCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                circleAvatar(worship.userAvatar, 20),
+                circleAvatar(new UserModel(), 20),
                 SizedBox(width: 8.0),
                 Text(
                   capitalize(dia.format(worship.dateTime)),

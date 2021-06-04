@@ -64,6 +64,7 @@ class LyricModel {
       'title': this.title,
       'stanza': this.stanza,
       'chorus': this.chorus,
+      'style': this.style,
       'tone': this.tone,
     };
   }

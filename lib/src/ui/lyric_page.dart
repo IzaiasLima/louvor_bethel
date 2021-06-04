@@ -53,7 +53,7 @@ class LyricPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    lyric.title,
+                    StringHelper.capitalize(lyric.title),
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   Text(
@@ -70,7 +70,7 @@ class LyricPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    lyric.tone,
+                    StringHelper.capitalize(lyric.tone),
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   SizedBox(

@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/models/base_model.dart';
 import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/repositories/user_repository.dart';
 
 class UserManager extends BaseModel {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirebaseFirestore db = FirebaseFirestore.instance;
-  UserRepository userRepo;
+  final FirebaseFirestore firebase = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
+
+  final CollectionReference ref =
+      FirebaseFirestore.instance.collection('users');
   // UserModel userModel;
 
   UserManager() {
     // userModel = new UserModel();
     _loadCurrentUser();
   }
-
-  // ViewState _viewState = ViewState.Ready;
-
-  // ViewState get viewState => _viewState;
-
-  // set viewState(ViewState viewState) {
-  //   _viewState = viewState;
-  //   notifyListeners();
-  // }
 
   Future<void> signIn(
       {@required UserModel user,
@@ -40,7 +35,7 @@ class UserManager extends BaseModel {
 
       onSucess();
     } on FirebaseAuthException catch (e) {
-      onError(errorMessage(e.code));
+      onError(_errorMessage(e.code));
     }
     viewState = ViewState.Ready;
   }
@@ -57,12 +52,11 @@ class UserManager extends BaseModel {
 
       newUser.id = result.user.uid;
       this.user = newUser;
-
-      await UserRepository(newUser).save();
+      await save();
 
       onSucess();
     } on FirebaseAuthException catch (e) {
-      onError(errorMessage(e.code));
+      onError(_errorMessage(e.code));
     }
     viewState = ViewState.Ready;
   }
@@ -71,6 +65,12 @@ class UserManager extends BaseModel {
     viewState = ViewState.Busy;
     auth.signOut();
     this.user = new UserModel();
+    viewState = ViewState.Ready;
+  }
+
+  Future<void> save() async {
+    viewState = ViewState.Busy;
+    await ref.doc(user.id).set(user.toMap());
     viewState = ViewState.Ready;
   }
 
@@ -89,13 +89,45 @@ class UserManager extends BaseModel {
           doc.data() != null ? UserModel.fromJson(doc.data()) : new UserModel();
       tmp.id = currentUser.uid;
       this.user = tmp;
+
+      try {
+        if (user.urlPhoto != null) user.photo = Image.network(user.urlPhoto);
+      } catch (_) {}
     }
     viewState = ViewState.Ready;
   }
 
-  // bool get loggedIn => this.user.id.isNotEmpty;
+  Future<void> uploadImage(String uid) async {
+    viewState = ViewState.Busy;
+    if (uid != null) {
+      PickedFile pickedFile = await _imagePicker();
+      Reference ref = storage.ref().child('users/$uid');
 
-  String errorMessage(code) {
+      UploadTask uploadTask = ref.putData(await pickedFile.readAsBytes());
+
+      uploadTask.whenComplete(() async {
+        TaskSnapshot task = uploadTask.snapshot;
+        String url = await task.ref.getDownloadURL();
+
+        user.urlPhoto = url;
+        user.photo = Image.network(url);
+      });
+    }
+    viewState = ViewState.Ready;
+  }
+
+  Future<PickedFile> _imagePicker() async {
+    ImagePicker imagePicker = ImagePicker();
+    PickedFile compressedImage = await imagePicker.getImage(
+      source: ImageSource.gallery,
+      maxHeight: 400.0,
+      maxWidth: 400.0,
+      imageQuality: 90,
+    );
+    return compressedImage;
+  }
+
+  String _errorMessage(code) {
     String msg;
 
     switch (code) {

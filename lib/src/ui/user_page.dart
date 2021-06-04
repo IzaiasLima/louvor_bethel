@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:provider/provider.dart';
+
+import 'package:louvor_bethel/src/commons/constants.dart';
+import 'package:louvor_bethel/src/commons/enums/states.dart';
+import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
-// import 'package:image_picker/image_picker.dart';
-
-// ignore: must_be_immutable
 class UserPage extends StatefulWidget {
   @override
-  _UserPageState createState() => _UserPageState();
+  State<UserPage> createState() => _UserPageState();
 }
 
 class _UserPageState extends State<UserPage> {
@@ -20,13 +21,8 @@ class _UserPageState extends State<UserPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController urlPhotoController = TextEditingController();
 
-  String urlPhoto;
+  UserModel user = new UserModel();
   bool changedPhoto = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,34 +30,31 @@ class _UserPageState extends State<UserPage> {
 
     return Scaffold(
       drawer: CustomDrawer(),
-      appBar: CustomAppBar(), //Text('***LOUVOR BETHEL'),
+      appBar: CustomAppBar(),
       body: Form(
         key: formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 26.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // _circleUserPhoto(model),
-                  Text(
-                    'Dados do usuário',
-                    style: Theme.of(context).textTheme.headline1,
-                  ),
-                  // _emailTextField(model.user.email),
-                  // _namedFormField(model.user.name),
-                  _urlPhotoFormField(),
-                  _updateButton(
-                    context,
-                    formKey,
-                    // authStateModel,
-                    // model,
-                  ),
-                ],
-              ),
+          padding: const EdgeInsets.all(26.0),
+          child: SingleChildScrollView(
+            child: Consumer<UserManager>(
+              builder: (ctx, value, child) {
+                UserManager repo = ctx.watch<UserManager>();
+                emailController.text = repo.user.email;
+                nameController.text = repo.user.name;
+                user = repo.user;
+
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _circleUserPhoto(repo),
+                    _namedFormField(),
+                    _emailTextField(),
+                    _updateButton(context, formKey),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -69,108 +62,61 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Widget circleUserPhoto() {
-    UserModel user = new UserModel(); //model.user;
-    urlPhoto = null; // changedPhoto ? urlPhoto : user.photoUrl;
-
-    return InkWell(
-      onTap: () => user == null ? {} : _uploadImage(user.id),
-      child: Center(
-        child: Padding(
-            padding: const EdgeInsets.only(bottom: 30.0),
-            child: circleAvatar(urlPhoto, 80)),
-      ),
+  Widget _circleUserPhoto(repo) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        repo.viewState == ViewState.Busy
+            ? CircularProgressIndicator()
+            : InkWell(
+                onTap: () => repo.uploadImage(user.id),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: circleAvatar(user, 80),
+                ),
+              ),
+      ],
     );
   }
 
-  Widget namedFormField(String name) {
-    nameController.text = name;
+  Widget _namedFormField() {
     return TextFormField(
       controller: nameController,
       autocorrect: false,
-      validator: (value) => value.isEmpty ? 'Informe seu nome.' : null,
+      validator: (name) => validName(name) ? null : Constants.neededUserName,
       decoration: InputDecoration(
         labelText: 'Nome',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
+      onSaved: (value) => user.name = value,
     );
   }
 
-  Widget emailTextField(String email) {
-    emailController.text = email;
+  Widget _emailTextField() {
     return TextFormField(
       controller: emailController,
-      autocorrect: false,
       enabled: false,
       decoration: InputDecoration(
-        labelText: 'Email',
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        labelText: 'Email (inalterável)',
       ),
+      onSaved: (value) => user.email = value,
     );
   }
 
-  Widget _urlPhotoFormField() {
-    return TextFormField(
-      controller: urlPhotoController,
-      autocorrect: false,
-      enabled: false,
-      decoration: InputDecoration(
-        labelText: 'Url da foto',
-      ),
-    );
-  }
-
-  Widget _updateButton(context, formKey) {
+  Widget _updateButton(BuildContext context, GlobalKey<FormState> formState) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
         child: ElevatedButton(
-          child: Text('ATALIZAR'),
+          child: Text('ATUALIZAR'),
           onPressed: () {
-            if (formKey.currentState.validate()) {
-              // authStateModel.updateProfiler(
-              //     authModel, nameController, urlPhotoController);
-              Navigator.popAndPushNamed(context, 'home');
-            } else {
-              return;
-            }
+            if (!formState.currentState.validate()) return;
+            formState.currentState.save();
+            context.read<UserManager>().save();
+            // Navigator.popAndPushNamed(context, 'home');
           },
         ),
       ),
     );
-  }
-
-  Future _uploadImage(String uid) async {
-    String url;
-
-    if (uid != null) {
-      PickedFile pickedFile = await _imagePicker();
-      FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref = storage.ref().child('users/$uid');
-
-      UploadTask uploadTask = ref.putData(await pickedFile.readAsBytes());
-
-      uploadTask.whenComplete(() async {
-        TaskSnapshot snapshot = uploadTask.snapshot;
-        url = await snapshot.ref.getDownloadURL();
-
-        setState(() {
-          changedPhoto = true;
-          urlPhotoController.text = url;
-          urlPhoto = url;
-        });
-      });
-    }
-  }
-
-  Future<PickedFile> _imagePicker() async {
-    ImagePicker imagePicker = ImagePicker();
-    PickedFile compressedImage = await imagePicker.getImage(
-      source: ImageSource.gallery,
-      maxHeight: 400.0,
-      maxWidth: 400.0,
-      imageQuality: 90,
-    );
-    return compressedImage;
   }
 }

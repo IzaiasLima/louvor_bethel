@@ -9,6 +9,7 @@ import 'package:louvor_bethel/src/ui/lyric_list_page.dart';
 import 'package:louvor_bethel/src/ui/lyric_page.dart';
 import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
 import 'package:louvor_bethel/src/ui/sigup_page.dart';
+import 'package:louvor_bethel/src/ui/user_page.dart';
 import 'package:louvor_bethel/src/ui/video_play.dart';
 
 class Routers {
@@ -24,6 +25,8 @@ class Routers {
         return MaterialPageRoute(builder: (_) => LyricPage());
       case 'lyric_edit':
         return MaterialPageRoute(builder: (_) => LyricEditPage());
+      case 'user':
+        return MaterialPageRoute(builder: (_) => UserPage());
       case 'pdf':
         return MaterialPageRoute(builder: (_) => PdfViewPage());
       case 'login':

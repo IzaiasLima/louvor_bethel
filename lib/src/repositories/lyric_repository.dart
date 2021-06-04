@@ -60,7 +60,7 @@ class LyricRepository extends UserManager {
     }
   }
 
-  Future<void> save(
+  Future<void> saveLyric(
       {LyricModel newLyric, Function onSucess, Function onError}) async {
     viewState = ViewState.Busy;
 

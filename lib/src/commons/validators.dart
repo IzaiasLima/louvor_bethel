@@ -19,5 +19,8 @@ bool validLyricField(String title) {
 }
 
 bool validTone(String tone) {
-  return tone.isNotEmpty && tone.length <= 3 && tone.length >= 1;
+  return tone.isNotEmpty &&
+      tone.length <= 3 &&
+      tone.length >= 1 &&
+      RegExp(r"^[a-gA-G]{1}").hasMatch(tone);
 }
