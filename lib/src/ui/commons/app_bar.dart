@@ -18,7 +18,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: circleAvatar(user, 18), // userAvatar(model, 20),
+              child: user == null
+                  ? CircularProgressIndicator()
+                  : circleAvatar(user, 18), // userAvatar(model, 20),
             )
           ],
           titleSpacing: 0.0,

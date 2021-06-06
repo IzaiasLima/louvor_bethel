@@ -25,7 +25,7 @@ bool validTone(String tone) {
       RegExp(r"^[a-gA-G]{1}").hasMatch(tone);
 }
 
-bool validVideoUrl(String url) {
-  String uri = 'https://youtu.be/';
-  return url.startsWith(uri);
+bool validVideoUrl(String uri) {
+  String url = 'https://youtu.be/';
+  return uri.isEmpty || (uri.startsWith(url) && uri.length > url.length);
 }

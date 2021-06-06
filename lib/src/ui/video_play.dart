@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/route_args.dart';
+import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
+import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class VideoPlay extends StatefulWidget {
+  static const routeName = 'video';
+
   const VideoPlay({Key key}) : super(key: key);
 
   @override
@@ -14,31 +18,45 @@ class _VideoPlayState extends State<VideoPlay> {
 
   @override
   void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final args = ModalRoute.of(context).settings.arguments as RouteArgs;
     _controller = YoutubePlayerController(
-      initialVideoId: _getVideoId('url'),
+      initialVideoId: _getVideoId(args.strParam),
       params: YoutubePlayerParams(
         startAt: Duration(seconds: 0),
         showControls: true,
         showFullscreenButton: true,
       ),
     );
-    super.initState();
-  }
 
-  @override
-  void dispose() {
-    _controller.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as RouteArgs;
-    _controller.cue(_getVideoId(args.strParam));
-
-    return YoutubePlayerIFrame(
-      controller: _controller,
-      aspectRatio: 16 / 9,
+    return Scaffold(
+      drawer: CustomDrawer(),
+      appBar: CustomAppBar(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).scaffoldBackgroundColor,
+              Theme.of(context).primaryColor,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: YoutubePlayerIFrame(
+              controller: _controller,
+              aspectRatio: 16 / 9,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -49,5 +67,11 @@ class _VideoPlayState extends State<VideoPlay> {
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
   }
 }

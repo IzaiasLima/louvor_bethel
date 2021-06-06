@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
@@ -12,34 +16,18 @@ class LyricRepository extends UserManager {
     _getList();
   }
 
-  // get lyric {
-  //   return LyricModel.fromJson({
-  //     'title': 'Ele é exaltado',
-  //     'tone': 'G#+',
-  //     'style': ['ADORAÇÃO'],
-  //     'stanza': 'Ele é exaltado, o Rei é exaltado nos céus',
-  //     'chorus': 'Ele é o Senhor, Sua verdade vai sempre reinar',
-  //     'pdfUrl': 'none',
-  //     'videoUrl': 'none',
-  //     'userId': 'eci5UOc0KJTO7lBV7uwpiwABfO62'
-  //   });
-  // }
-
   List get lyrics => _lyrics;
 
   LyricModel get lyric => _lyric;
 
   Future<LyricModel> lyricById(String id) async {
-    // viewState = ViewState.Busy;
     LyricModel lyric;
     try {
       await reference.doc(id).get().then((doc) {
         lyric = LyricModel.fromJson(doc.data());
+        lyric.id = id;
       });
-      // viewState = ViewState.Ready;
-    } catch (e) {
-      // viewState = ViewState.Error;
-    }
+    } catch (_) {}
     return lyric;
   }
 
@@ -68,7 +56,7 @@ class LyricRepository extends UserManager {
     try {
       var doc;
 
-      if (newLyric.id != null) {
+      if (newLyric.id == null) {
         doc = await reference.add(newLyric.toMap());
         newLyric.id = doc.id;
         _lyrics.add(newLyric);
@@ -76,13 +64,45 @@ class LyricRepository extends UserManager {
         await reference.doc(newLyric.id).set(newLyric.toMap());
       }
 
-      getVideoId(newLyric.videoUrl);
-
       onSucess(newLyric.id);
     } on FirebaseException catch (e) {
       onError(e);
       viewState = ViewState.Error;
     }
     viewState = ViewState.Ready;
+  }
+
+  Future<void> uploadPdf(LyricRepository repo, String lyricId,
+      {Function onSucess, Function onError}) async {
+    try {
+      await FilePicker.platform
+          .pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['pdf'],
+              allowMultiple: false,
+              withData: true)
+          .then((value) {
+        if (value != null) {
+          Uint8List fileBytes = value.files.first.bytes;
+          storage.ref('lyrics/$lyricId.pdf').putData(fileBytes);
+        }
+      });
+
+      onSucess();
+    } on Exception catch (e) {
+      onError('Erro anexando PDF: $e.');
+    }
+  }
+
+  static Future<String> urlPdf(String pdfName) async {
+    String url = '';
+
+    try {
+      Reference ref = FirebaseStorage.instance.ref();
+      ref.child('lyrics/$pdfName.pdf');
+      url = await ref.getDownloadURL().then((value) => value);
+    } catch (_) {}
+
+    return url;
   }
 }

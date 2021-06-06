@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
+import 'package:louvor_bethel/src/ui/video_play.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
@@ -27,7 +29,11 @@ class MyApp extends StatelessWidget {
         title: Constants.title,
         theme: _theme,
         initialRoute: 'landing',
-        routes: {LyricPage.routeName: (context) => LyricPage()},
+        routes: {
+          LyricPage.routeName: (context) => LyricPage(),
+          PdfViewPage.routeName: (context) => PdfViewPage(),
+          VideoPlay.routeName: (context) => VideoPlay(),
+        },
         onGenerateRoute: Routers.generateRoute,
       ),
     );

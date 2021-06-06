@@ -100,15 +100,16 @@ class LyricPage extends StatelessWidget {
         Row(
           children: [
             ElevatedButton(
-                onPressed: () => Navigator.of(context).pushNamed('pdf'),
+                onPressed: () => Navigator.pushNamed(context, 'pdf',
+                    arguments: RouteArgs(strParam: lyric.id)),
                 child: Text('CIFRA')),
             SizedBox(width: 15.0),
             ElevatedButton(
-              onPressed: () {
-                final args = RouteArgs(strParam: lyric.videoUrl);
-                Navigator.pushNamed(context, 'video', arguments: args);
-              },
-              child: Text('LINK'),
+              onPressed: () => lyric.videoUrl == null
+                  ? {}
+                  : Navigator.pushNamed(context, 'video',
+                      arguments: RouteArgs(strParam: lyric.videoUrl)),
+              child: Text(lyric.videoUrl != null ? 'LINK' : 'SEM LINK'),
               style: ElevatedButton.styleFrom(
                 primary: const Color.fromARGB(255, 210, 20, 45),
               ),

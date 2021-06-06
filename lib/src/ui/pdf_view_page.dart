@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+// ignore: must_be_immutable
 class PdfViewPage extends StatefulWidget {
+  static const routeName = 'pdf';
+
   @override
   _PdfViewPageState createState() => _PdfViewPageState();
 }
@@ -25,36 +29,11 @@ class _PdfViewPageState extends State<PdfViewPage> {
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    pdf = null;
-    super.dispose();
-  }
-
-  play() {
-    if (_scrollController.hasClients) {
-      if (isStoped) {
-        _scrollController.animateTo(_scrollController.offset,
-            duration: Duration(seconds: 1), curve: Curves.linear);
-      } else {
-        double maxExtent = _scrollController.position.maxScrollExtent;
-        double distanceDifference = maxExtent - _scrollController.offset;
-        double durationDouble = distanceDifference / speed;
-
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: Duration(seconds: durationDouble.toInt()),
-            curve: Curves.linear);
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => play());
-    // String url =
-    //     'https://5f60ae01-5578-4b0a-9d87-c9ff7d7ca71a.filesusr.com/ugd/fa5e8a_5073d0240559445ba3e54a4967dee5d0.pdf';
-    String url =
-        'https://firebasestorage.googleapis.com/v0/b/louvoradbethel.appspot.com/o/AoErguermosAsMaos.pdf?alt=media&token=df1ff2d9-99ba-43ce-9bd1-0bbed8a5921b';
+    final args = ModalRoute.of(context).settings.arguments as RouteArgs;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollPdf());
+    String pdfName = '${args.strParam}.pdf';
 
     return Scaffold(
       appBar: CustomAppBar(),
@@ -102,7 +81,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
             SingleChildScrollView(
               controller: _scrollController,
               child: SfPdfViewer.network(
-                url,
+                pdfName - LyricRepository.urlPdf(pdfName), //
                 key: _pdfViewerKey,
                 initialScrollOffset: Offset.zero,
                 canShowPaginationDialog: false,
@@ -116,5 +95,29 @@ class _PdfViewPageState extends State<PdfViewPage> {
         ),
       ),
     );
+  }
+
+  _scrollPdf() {
+    if (_scrollController.hasClients) {
+      if (isStoped) {
+        _scrollController.animateTo(_scrollController.offset,
+            duration: Duration(seconds: 1), curve: Curves.linear);
+      } else {
+        double maxExtent = _scrollController.position.maxScrollExtent;
+        double distanceDifference = maxExtent - _scrollController.offset;
+        double durationDouble = distanceDifference / speed;
+
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+            duration: Duration(seconds: durationDouble.toInt()),
+            curve: Curves.linear);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    pdf = null;
+    super.dispose();
   }
 }
