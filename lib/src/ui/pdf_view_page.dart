@@ -33,6 +33,9 @@ class _PdfViewPageState extends State<PdfViewPage> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
     LyricModel lyric = args.objParam as LyricModel;
+    // lyric.pdfUrl = lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
+    //     ? 'https://firebasestorage.googleapis.com/v0/b/louvoradbethel.appspot.com/o/missing.pdf?alt=media&token=9ad4404d-9608-49dc-b44f-5295bda99edd'
+    //     : lyric.pdfUrl;
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollPdf());
 

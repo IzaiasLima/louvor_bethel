@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/route_args.dart';
+import 'package:louvor_bethel/src/ui/commons/components.dart';
 
 class LyricItens extends StatelessWidget {
-  final List lyrics;
+  final List<LyricModel> lyrics;
   final String page;
 
   LyricItens(this.lyrics, {this.page});
@@ -19,13 +21,17 @@ class LyricItens extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, int index) {
     final bool hasNext = (index + 1) < this.lyrics.length;
+    LyricModel lyric = lyrics[index];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
           onTap: () {
-            final args = RouteArgs(lyrics[index].id);
-            Navigator.pushNamed(context, page, arguments: args);
+            final args = RouteObjectArgs(lyric);
+            lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
+                ? onErrorSnackBar(context, 'PDF não incluído para esta música.')
+                : Navigator.pushNamed(context, page, arguments: args);
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

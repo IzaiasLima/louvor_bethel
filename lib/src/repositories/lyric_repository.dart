@@ -25,8 +25,14 @@ class LyricRepository extends UserManager {
     try {
       await refLyrics.doc(id).get().then((doc) {
         lyric = LyricModel.fromJson(doc.data());
-        lyric.id = id;
       });
+
+      lyric.id = id;
+
+      if (lyric.pdfUrl == null || lyric.pdfUrl.isEmpty) {
+        lyric.pdfUrl =
+            'https://firebasestorage.googleapis.com/v0/b/louvoradbethel.appspot.com/o/missing.pdf?alt=media&token=9ad4404d-9608-49dc-b44f-5295bda99edd';
+      }
     } catch (_) {}
     return lyric;
   }

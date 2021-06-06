@@ -41,7 +41,7 @@ class LyricCard extends StatelessWidget {
           SizedBox(height: 20.0),
           Card(
             margin: EdgeInsets.all(0.0),
-            child: LyricItens(worship.lyrics),
+            child: LyricItens(worship.lyrics, page: 'pdf'),
           ),
         ],
       ),
