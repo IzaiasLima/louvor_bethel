@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -37,13 +38,16 @@ class LyricEditPage extends StatelessWidget {
                     _stanzaTextField(),
                     _chorusFormField(),
                     _styleFormField(),
-                    _tonePassFormField(),
+                    _toneFormField(),
+                    _linkTextField(),
+                    (lyric.id != null) ? _pdfTextField() : Text(''),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
                       child: repo.viewState == ViewState.Busy
                           ? CircularProgressIndicator()
                           : ElevatedButton(
-                              child: Text('CADASTRAR'),
+                              child: Text(
+                                  lyric.id == null ? 'CADASTRAR' : 'ATUALIZAR'),
                               onPressed: () {
                                 if (!formKey.currentState.validate()) return;
 
@@ -51,14 +55,15 @@ class LyricEditPage extends StatelessWidget {
 
                                 repo.saveLyric(
                                   newLyric: lyric,
-                                  onSucess: () {
+                                  onSucess: (id) {
+                                    lyric.id = id;
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar(
                                       'Música cadastrada com sucesso.',
                                       color: Theme.of(context).primaryColor,
                                     ));
-                                    Navigator.of(context)
-                                        .popAndPushNamed('lyric_list');
+                                    // Navigator.of(context)
+                                    //     .popAndPushNamed('lyric_list');
                                   },
                                   onError: (e) => ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar(e)),
@@ -77,9 +82,38 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
+  Widget _pdfTextField() {
+    return TextFormField(
+      autocorrect: false,
+      enabled: true,
+      validator: (value) => validLyricField(value) ? null : Constants.validPdf,
+      decoration: InputDecoration(
+        labelText: 'Pdf com a Cifra',
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+      ),
+      onTap: () {
+        print('**************');
+      },
+      onSaved: (value) => lyric..pdfUrl = value,
+    );
+  }
+
+  Widget _linkTextField() {
+    return TextFormField(
+      autofillHints: [AutofillHints.url],
+      autocorrect: false,
+      validator: (value) =>
+          validVideoUrl(value) ? null : Constants.validVideoUrl,
+      decoration: InputDecoration(
+        labelText: 'Link do video',
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+      ),
+      onSaved: (value) => lyric.videoUrl = value,
+    );
+  }
+
   Widget _titleTextField() {
     return TextFormField(
-      autofillHints: [AutofillHints.name],
       autocorrect: true,
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededTitle,
@@ -93,8 +127,6 @@ class LyricEditPage extends StatelessWidget {
 
   Widget _stanzaTextField() {
     return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      autofillHints: [AutofillHints.email],
       autocorrect: true,
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededStanza,
@@ -132,10 +164,10 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _tonePassFormField() {
+  Widget _toneFormField() {
     return TextFormField(
-      // controller: confirmPassdController,
       autocorrect: false,
+      enableSuggestions: false,
       validator: (value) => validTone(value) ? null : Constants.validTone,
       decoration: InputDecoration(
         labelText: 'Tom da música',

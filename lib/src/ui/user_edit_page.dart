@@ -11,12 +11,12 @@ import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
-class UserPage extends StatefulWidget {
+class UserEditPage extends StatefulWidget {
   @override
-  State<UserPage> createState() => _UserPageState();
+  State<UserEditPage> createState() => _UserEditPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _UserEditPageState extends State<UserEditPage> {
   TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController urlPhotoController = TextEditingController();

@@ -14,8 +14,8 @@ bool validName(String name) {
 }
 
 // VALID LYRIC
-bool validLyricField(String title) {
-  return title.isNotEmpty && title.length > 1;
+bool validLyricField(String field) {
+  return field.isNotEmpty && field.length > 1;
 }
 
 bool validTone(String tone) {
@@ -23,4 +23,9 @@ bool validTone(String tone) {
       tone.length <= 3 &&
       tone.length >= 1 &&
       RegExp(r"^[a-gA-G]{1}").hasMatch(tone);
+}
+
+bool validVideoUrl(String url) {
+  String uri = 'https://youtu.be/';
+  return url.startsWith(uri);
 }

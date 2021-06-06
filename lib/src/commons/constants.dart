@@ -13,4 +13,6 @@ class Constants {
   static String neededChorus = 'Informe o início do coro.';
   static String neededStyle = 'Informe a temática ou estilo musical.';
   static String validTone = 'Informe uma nota musical.';
+  static String validPdf = 'Selecione o PDF com a cifra, a ser anexado.';
+  static String validVideoUrl = 'Informe o link do video no Youtube.';
 }

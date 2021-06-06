@@ -25,7 +25,7 @@ class LyricPage extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
               child: FutureProvider<LyricModel>(
                 initialData: null,
-                create: (context) => LyricRepository().lyricById(args.lyricId),
+                create: (context) => LyricRepository().lyricById(args.strParam),
                 builder: (_, child) => Consumer<LyricModel>(
                   builder: (context, lyric, child) => lyric == null
                       ? CircularProgressIndicator()
@@ -105,8 +105,8 @@ class LyricPage extends StatelessWidget {
             SizedBox(width: 15.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('video');
-                // https://music.youtube.com/watch?v=RlIgI0YhYZ8
+                final args = RouteArgs(strParam: lyric.videoUrl);
+                Navigator.pushNamed(context, 'video', arguments: args);
               },
               child: Text('LINK'),
               style: ElevatedButton.styleFrom(

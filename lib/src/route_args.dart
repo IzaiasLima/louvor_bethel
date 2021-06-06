@@ -1,5 +1,5 @@
 class RouteArgs {
-  final String lyricId;
+  final String strParam;
 
-  RouteArgs({this.lyricId});
+  RouteArgs({this.strParam});
 }

@@ -63,15 +63,22 @@ class LyricRepository extends UserManager {
   Future<void> saveLyric(
       {LyricModel newLyric, Function onSucess, Function onError}) async {
     viewState = ViewState.Busy;
-
     newLyric.userId = user.id ?? '';
 
     try {
-      var doc = await reference.add(newLyric.toMap());
-      newLyric.id = doc.id;
-      _lyrics.add(newLyric);
+      var doc;
 
-      onSucess();
+      if (newLyric.id != null) {
+        doc = await reference.add(newLyric.toMap());
+        newLyric.id = doc.id;
+        _lyrics.add(newLyric);
+      } else {
+        await reference.doc(newLyric.id).set(newLyric.toMap());
+      }
+
+      getVideoId(newLyric.videoUrl);
+
+      onSucess(newLyric.id);
     } on FirebaseException catch (e) {
       onError(e);
       viewState = ViewState.Error;
