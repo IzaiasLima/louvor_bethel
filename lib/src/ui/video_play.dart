@@ -37,6 +37,7 @@ class _VideoPlayState extends State<VideoPlay> {
       drawer: CustomDrawer(),
       appBar: CustomAppBar(),
       body: Container(
+        padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,

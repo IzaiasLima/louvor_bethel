@@ -57,7 +57,7 @@ class LyricPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   Text(
-                    StringHelper.listToString(lyric.style).toUpperCase(),
+                    StringHelper.listToString(lyric.style),
                     style: Theme.of(context).textTheme.subtitle2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -100,16 +100,23 @@ class LyricPage extends StatelessWidget {
         Row(
           children: [
             ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, 'pdf',
-                    arguments: RouteArgs(strParam: lyric.id)),
-                child: Text('CIFRA')),
-            SizedBox(width: 15.0),
+              onPressed: () => lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
+                  ? {}
+                  : Navigator.pushNamed(context, 'pdf',
+                      arguments: RouteObjectArgs(lyric)),
+              child: Text(lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
+                  ? 'SEM CIFRA'
+                  : 'CIFRA'),
+            ),
+            SizedBox(width: 10.0),
             ElevatedButton(
-              onPressed: () => lyric.videoUrl == null
+              onPressed: () => lyric.videoUrl == null || lyric.videoUrl.isEmpty
                   ? {}
                   : Navigator.pushNamed(context, 'video',
-                      arguments: RouteArgs(strParam: lyric.videoUrl)),
-              child: Text(lyric.videoUrl != null ? 'LINK' : 'SEM LINK'),
+                      arguments: RouteArgs(lyric.videoUrl)),
+              child: Text(lyric.videoUrl == null || lyric.videoUrl.isEmpty
+                  ? 'SEM LINK'
+                  : 'LINK'),
               style: ElevatedButton.styleFrom(
                 primary: const Color.fromARGB(255, 210, 20, 45),
               ),
@@ -117,13 +124,13 @@ class LyricPage extends StatelessWidget {
           ],
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30.0),
-          child: Card(
-            elevation: 2,
-            child: Image.asset('assets/images/lyric_sample.png'),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 30.0),
+        //   child: Card(
+        //     elevation: 2,
+        //     child: Image.asset('assets/images/lyric_sample.png'),
+        //   ),
+        // ),
       ],
     );
   }

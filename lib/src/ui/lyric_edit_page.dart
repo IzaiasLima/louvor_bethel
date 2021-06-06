@@ -54,40 +54,27 @@ class LyricEditPage extends StatelessWidget {
                                 formKey.currentState.save();
 
                                 if (lyric.id == null) {
-                                  repo.saveLyric(
-                                    newLyric: lyric,
-                                    onSucess: (id) {
-                                      lyric.id = id;
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar(
-                                        'Música cadastrada com sucesso.',
-                                        color: Theme.of(context).primaryColor,
-                                      ));
-                                    },
-                                    onError: (e) =>
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar(e)),
-                                  );
+                                  repo.saveLyric(lyric,
+                                      onSucess: (id) {
+                                        lyric.id = id;
+                                        onSucessSnackBar(
+                                          context,
+                                          'Música cadastrada com sucesso.',
+                                        );
+                                      },
+                                      onError: (err) =>
+                                          onErrorSnackBar(context, err));
                                 } else {
                                   repo.uploadPdf(
-                                    repo,
-                                    lyric.id,
-                                    onSucess: () =>
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                      snackBar(
-                                        'PDF anexado com sucesso.',
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
+                                    lyric,
+                                    onSucess: (_) {
+                                      onSucessSnackBar(
+                                          context, 'PDF anexado com sucesso.');
+                                      Navigator.of(context)
+                                          .popAndPushNamed('lyric_list');
+                                    },
                                     onError: (err) =>
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                      snackBar(
-                                        err,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
+                                        onErrorSnackBar(context, err),
                                   );
                                 }
                               },
@@ -152,7 +139,7 @@ class LyricEditPage extends StatelessWidget {
         labelText: 'Tema/estilo',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      onSaved: (value) => lyric.style = value.split(','),
+      onSaved: (value) => lyric.style = value.toUpperCase().split(','),
     );
   }
 

@@ -13,8 +13,7 @@ class UserManager extends BaseModel {
   final FirebaseFirestore firebase = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
 
-  final CollectionReference ref =
-      FirebaseFirestore.instance.collection('users');
+  final refUser = FirebaseFirestore.instance.collection('users');
 
   UserManager() {
     _loadCurrentUser();
@@ -68,29 +67,15 @@ class UserManager extends BaseModel {
 
   Future<void> save() async {
     viewState = ViewState.Busy;
-    await ref.doc(user.id).set(user.toMap());
+    await refUser.doc(user.id).set(user.toMap());
     viewState = ViewState.Ready;
   }
 
   void _loadCurrentUser({User usr}) async {
     viewState = ViewState.Busy;
     User currentUser = usr ?? auth.currentUser;
-
     if (currentUser != null) {
-      // DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
-      //     .instance
-      //     .collection('users')
-      //     .doc(currentUser.uid)
-      //     .get();
-
-      // UserModel tmp =
-      //     doc.data() != null ? UserModel.fromJson(doc.data()) : new UserModel();
-      // tmp.id = currentUser.uid;
       this.user = await userById(currentUser.uid);
-
-      // try {
-      //   if (this.user.urlPhoto != null) this.user.photo = loadPhoto(this.user);
-      // } catch (_) {}
     }
     viewState = ViewState.Ready;
   }
@@ -123,9 +108,9 @@ class UserManager extends BaseModel {
     viewState = ViewState.Busy;
     if (uid != null) {
       PickedFile pickedFile = await _imagePicker();
-      Reference ref = storage.ref().child('users/$uid');
+      Reference refImage = storage.ref().child('users/$uid');
 
-      UploadTask uploadTask = ref.putData(await pickedFile.readAsBytes());
+      UploadTask uploadTask = refImage.putData(await pickedFile.readAsBytes());
 
       uploadTask.whenComplete(() async {
         TaskSnapshot task = uploadTask.snapshot;

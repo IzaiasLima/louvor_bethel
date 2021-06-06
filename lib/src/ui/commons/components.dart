@@ -21,3 +21,13 @@ SnackBar snackBar(String msg, {color}) {
     backgroundColor: color ?? Colors.red,
   );
 }
+
+ScaffoldFeatureController onSucessSnackBar(context, String msg) {
+  return ScaffoldMessenger.of(context)
+      .showSnackBar(snackBar(msg, color: Theme.of(context).primaryColor));
+}
+
+ScaffoldFeatureController onErrorSnackBar(context, String msg) {
+  return ScaffoldMessenger.of(context).showSnackBar(
+      snackBar(msg, color: const Color.fromARGB(255, 210, 20, 45)));
+}

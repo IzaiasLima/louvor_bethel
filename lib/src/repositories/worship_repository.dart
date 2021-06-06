@@ -2,48 +2,47 @@ import 'package:louvor_bethel/src/models/base_model.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
+import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 
 class WorshipRepository extends BaseModel {
-  Future<List<Worship>> list() async {
-    List<Worship> wshp = [];
-    wshp.add(await adoracao());
-    wshp.add(await oferta());
+  final repo = new LyricRepository();
 
-    return wshp;
+  List<Worship> _list = [];
+
+  get list => _list;
+
+  WorshipRepository() {
+    _getList();
+  }
+
+  Future<void> _getList() async {
+    _list.add(await _getAdoracao());
+    _list.add(await _getOferta());
+
+    notifyListeners();
   }
 
   // Para os testes
-  static Future<Worship> adoracao() async {
+  Future<Worship> _getAdoracao() async {
     Map<String, dynamic> json = {
       "dateTime": DateTime.parse("2020-05-24 18:30"),
       "description": "Adoração",
       "userId": "GiDRCTJds1Rzbkh27ysDN5xUYaZ2",
-      "user": '',
-      "lyrics": [
-        {"id": '123', "title": "Ao único que digno"},
-        {"id": '323', "title": "Grande é Senhor"},
-        {"id": '232', "title": "Tua mão forte"},
-        {"id": '432', "title": "Que se abram os céus"},
-        {"id": '456', "title": "Ele é exaltado"},
-        {"id": '321', "title": "Yeshua"}
-      ]
     };
     Worship w = Worship.fromJson(json);
+    w.lyrics = await repo.getListByStyle('adoracao');
     return await getWorshipWithUser(w);
   }
 
 // Para os testes
-  static Future<Worship> oferta() async {
+  Future<Worship> _getOferta() async {
     Map<String, dynamic> json = {
       "dateTime": DateTime.parse("2020-05-24 20:10"),
       "description": "Oferta",
       "userId": "akmG1s9NXpaIZJeFLbG5wuJBKad2",
-      "user": '',
-      "lyrics": [
-        {"id": '123', "title": "Aquieta minh'alma"}
-      ]
     };
     Worship w = Worship.fromJson(json);
+    w.lyrics = await repo.getListByStyle('oferta');
     return await getWorshipWithUser(w);
   }
 

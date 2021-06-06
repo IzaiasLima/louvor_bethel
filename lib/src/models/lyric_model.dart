@@ -20,18 +20,6 @@ class LyricModel {
       this.videoUrl,
       this.userId});
 
-  // LyricModel.fromDocument(DocumentSnapshot docs) {
-  //   id = docs.reference;
-  //   title = docs['title'];
-  //   tone = docs['tone'];
-  //   style = docs['style'].cast<String>();
-  //   stanza = docs['stanza'];
-  //   chorus = docs['chorus'];
-  //   pdfUrl = docs['pdfUrl'];
-  //   videoUrl = docs['videoUrl'];
-  //   userId = docs['userId'];
-  // }
-
   LyricModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
@@ -66,6 +54,8 @@ class LyricModel {
       'chorus': this.chorus,
       'style': this.style,
       'tone': this.tone,
+      'pdfUrl': this.pdfUrl,
+      'videoUrl': this.videoUrl,
     };
   }
 }

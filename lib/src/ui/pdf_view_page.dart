@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
@@ -30,10 +31,10 @@ class _PdfViewPageState extends State<PdfViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as RouteArgs;
+    final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
+    LyricModel lyric = args.objParam as LyricModel;
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollPdf());
-    String pdfName = '${args.strParam}.pdf';
 
     return Scaffold(
       appBar: CustomAppBar(),
@@ -81,7 +82,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
             SingleChildScrollView(
               controller: _scrollController,
               child: SfPdfViewer.network(
-                pdfName - LyricRepository.urlPdf(pdfName), //
+                lyric.pdfUrl,
                 key: _pdfViewerKey,
                 initialScrollOffset: Offset.zero,
                 canShowPaginationDialog: false,

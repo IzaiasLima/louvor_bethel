@@ -24,7 +24,7 @@ class LyricItens extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            final args = RouteArgs(strParam: lyrics[index].id);
+            final args = RouteArgs(lyrics[index].id);
             Navigator.pushNamed(context, page, arguments: args);
           },
           child: Column(

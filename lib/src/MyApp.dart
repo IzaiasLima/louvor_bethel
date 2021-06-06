@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
         primary: const Color.fromRGBO(98, 95, 90, 1),
         onPrimary: Colors.white,
         onSurface: Colors.grey,
