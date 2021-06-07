@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
-import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
@@ -14,7 +13,9 @@ class LyricPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as RouteArgs;
+    // final args = ModalRoute.of(context).settings.arguments as RouteArgs;
+    final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
+    final lyric = args.objParam as LyricModel;
     return Scaffold(
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
@@ -23,15 +24,14 @@ class LyricPage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
-              child: FutureProvider<LyricModel>(
-                initialData: null,
-                create: (context) => LyricRepository().lyricById(args.strParam),
-                builder: (_, child) => Consumer<LyricModel>(
-                  builder: (context, lyric, child) => lyric == null
-                      ? CircularProgressIndicator()
-                      : _lyricDetail(context, lyric),
-                ),
-              ),
+              // child: FutureProvider<LyricModel>(
+              //   initialData: null,
+              //   create: (context) => LyricRepository().lyricById(args.strParam),
+              //   builder: (_, child) => Consumer<LyricModel>(
+              //     builder: (context, lyric, child) => lyric == null
+              //         ? CircularProgressIndicator()
+              //         : _lyricDetail(context, lyric),
+              child: _lyricDetail(context, lyric),
             ),
           ],
         ),

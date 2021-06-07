@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:louvor_bethel/src/ui/home_page.dart';
 import 'package:louvor_bethel/src/ui/landing_page.dart';
 import 'package:louvor_bethel/src/ui/login_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_edit_page.dart';
+import 'package:louvor_bethel/src/ui/lyric_add_page.dart';
 import 'package:louvor_bethel/src/ui/lyric_list_page.dart';
 import 'package:louvor_bethel/src/ui/lyric_page.dart';
 import 'package:louvor_bethel/src/ui/sigup_page.dart';
@@ -21,12 +21,10 @@ class Routers {
         return MaterialPageRoute(builder: (_) => LyricListPage());
       case 'lyric':
         return MaterialPageRoute(builder: (_) => LyricPage());
-      case 'lyric_edit':
-        return MaterialPageRoute(builder: (_) => LyricEditPage());
+      case 'lyric_add':
+        return MaterialPageRoute(builder: (_) => LyricAddPage());
       case 'user':
         return MaterialPageRoute(builder: (_) => UserEditPage());
-      // case 'pdf':
-      //   return MaterialPageRoute(builder: (_) => PdfViewPage());
       case 'login':
         return MaterialPageRoute(builder: (_) => LoginPage());
       case 'signup':

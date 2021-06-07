@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/ui/lyric_edit_page.dart';
 import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
 import 'package:louvor_bethel/src/ui/video_play.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         initialRoute: 'landing',
         routes: {
           LyricPage.routeName: (context) => LyricPage(),
+          LyricEditPage.routeName: (context) => LyricEditPage(),
           PdfViewPage.routeName: (context) => PdfViewPage(),
           VideoPlay.routeName: (context) => VideoPlay(),
         },

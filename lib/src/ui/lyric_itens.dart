@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
@@ -41,9 +42,25 @@ class LyricItens extends StatelessWidget {
                   horizontal: 16.0,
                   vertical: 12.0,
                 ),
-                child: Text(
-                  lyrics[index].title,
-                  style: Theme.of(context).textTheme.bodyText2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        lyrics[index].title,
+                        style: Theme.of(context).textTheme.bodyText2,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        final args = RouteObjectArgs(lyric);
+                        Navigator.pushNamed(context, 'lyric_edit',
+                            arguments: args);
+                      },
+                      child: Icon(Icons.edit_outlined),
+                    ),
+                    Icon(Icons.delete_outline),
+                  ],
                 ),
               ),
               Divider(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/src/commons/string_helper.dart';
-import 'package:louvor_bethel/src/route_args.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/enums/states.dart';
@@ -14,20 +12,11 @@ import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
 // ignore: must_be_immutable
-class LyricEditPage extends StatelessWidget {
-  static const routeName = 'lyric_edit';
+class LyricAddPage extends StatelessWidget {
   LyricModel lyric = LyricModel();
-  var titleFieldController = TextEditingController();
-  var stanzaFieldController = TextEditingController();
-  var chorusFieldController = TextEditingController();
-  var styleFieldController = TextEditingController();
-  var toneFieldController = TextEditingController();
-  var linkFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
-    final lyric = args.objParam as LyricModel;
     final formKey = GlobalKey<FormState>();
     final scafoldKey = GlobalKey<ScaffoldState>();
 
@@ -44,20 +33,21 @@ class LyricEditPage extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    _titleFormField(lyric.title),
-                    _stanzaFormField(lyric.stanza),
-                    _chorusFormField(lyric.chorus),
-                    _styleFormField(StringHelper.listToString(lyric.style)),
-                    _toneFormField(lyric.tone),
-                    _linkFormField(lyric.videoUrl),
+                    _titleTextField(),
+                    _stanzaTextField(),
+                    _chorusFormField(),
+                    _styleFormField(),
+                    _toneFormField(),
+                    _linkTextField(),
                     // (lyric.id != null) ? _pdfTextField() : Text(''),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
                       child: repo.viewState == ViewState.Busy
                           ? CircularProgressIndicator()
                           : ElevatedButton(
-                              child: Text(
-                                  lyric.id == null ? 'SALVAR' : 'ANEXAR PDF'),
+                              child: Text(lyric.id == null
+                                  ? 'CADASTRAR'
+                                  : 'ANEXAR PDF'),
                               onPressed: () {
                                 if (!formKey.currentState.validate()) return;
 
@@ -101,10 +91,8 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _titleFormField(value) {
-    titleFieldController.text = value;
+  Widget _titleTextField() {
     return TextFormField(
-      controller: titleFieldController,
       autocorrect: true,
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededTitle,
@@ -116,10 +104,8 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _stanzaFormField(value) {
-    stanzaFieldController.text = value;
+  Widget _stanzaTextField() {
     return TextFormField(
-      controller: stanzaFieldController,
       autocorrect: true,
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededStanza,
@@ -131,10 +117,8 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _chorusFormField(value) {
-    chorusFieldController.text = value;
+  Widget _chorusFormField() {
     return TextFormField(
-      controller: chorusFieldController,
       autocorrect: true,
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededChorus,
@@ -146,10 +130,8 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _styleFormField(value) {
-    styleFieldController.text = value;
+  Widget _styleFormField() {
     return TextFormField(
-      controller: styleFieldController,
       autocorrect: true,
       validator: (value) =>
           validLyricField(value) ? null : Constants.neededStyle,
@@ -161,10 +143,8 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _toneFormField(value) {
-    toneFieldController.text = value;
+  Widget _toneFormField() {
     return TextFormField(
-      controller: toneFieldController,
       autocorrect: false,
       enableSuggestions: false,
       validator: (value) => validTone(value) ? null : Constants.validTone,
@@ -176,10 +156,8 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _linkFormField(value) {
-    linkFieldController.text = value;
+  Widget _linkTextField() {
     return TextFormField(
-      controller: linkFieldController,
       autofillHints: [AutofillHints.url],
       autocorrect: false,
       validator: (value) =>

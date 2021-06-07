@@ -27,9 +27,11 @@ class CustomDrawer extends StatelessWidget {
                 child: ListView(
                   children: [
                     _listtile(context, Icon(Icons.home), 'Início', 'home'),
-                    _listtile(context, Icon(Icons.library_music_outlined),
-                        'Cadastrar músicas', 'lyric_edit'),
-                    _listtile(context, Icon(Icons.music_note),
+                    _listtile(context, Icon(Icons.playlist_add),
+                        'Cadastrar músicas', 'lyric_add'),
+                    // _listtile(context, Icon(Icons.playlist_add_check),
+                    //     'Editar músicas', 'lyric_edit'),
+                    _listtile(context, Icon(Icons.queue_music),
                         'Consultar músicas', 'lyric_list'),
                     _listtile(
                         context, Icon(Icons.person), 'Editar Perfil', 'user'),
