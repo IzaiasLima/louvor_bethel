@@ -47,7 +47,7 @@ class LyricAddPage extends StatelessWidget {
                           : ElevatedButton(
                               child: Text(lyric.id == null
                                   ? 'CADASTRAR'
-                                  : 'ANEXAR PDF'),
+                                  : 'ENVIAR PDF'),
                               onPressed: () {
                                 if (!formKey.currentState.validate()) return;
 
@@ -57,24 +57,24 @@ class LyricAddPage extends StatelessWidget {
                                   repo.saveLyric(lyric,
                                       onSucess: (id) {
                                         lyric.id = id;
-                                        onSucessSnackBar(
+                                        customSnackBar(
                                           context,
                                           'Música cadastrada com sucesso.',
                                         );
                                       },
                                       onError: (err) =>
-                                          onErrorSnackBar(context, err));
+                                          errorSnackBar(context, err));
                                 } else {
                                   repo.uploadPdf(
                                     lyric,
                                     onSucess: (_) {
-                                      onSucessSnackBar(
+                                      customSnackBar(
                                           context, 'PDF anexado com sucesso.');
                                       Navigator.of(context)
                                           .popAndPushNamed('lyric_list');
                                     },
                                     onError: (err) =>
-                                        onErrorSnackBar(context, err),
+                                        errorSnackBar(context, err),
                                   );
                                 }
                               },

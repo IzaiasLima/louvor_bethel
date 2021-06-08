@@ -40,6 +40,8 @@ dependencies:
   youtube_plyr_iframe: ^2.0.6
   image_picker: ^0.7.5+3
   file_picker: ^3.0.2+2
+  confirm_dialog: ^1.0.0
+  double_back_to_close_app: ^2.0.1
 
 dev_dependencies:
   flutter_test:

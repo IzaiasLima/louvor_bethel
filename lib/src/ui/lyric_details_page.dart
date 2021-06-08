@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-// import 'package:provider/provider.dart';
+import 'package:louvor_bethel/src/commons/constants.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
+import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
 
-class LyricPage extends StatelessWidget {
+class LyricDetailsPage extends StatelessWidget {
   static const routeName = 'lyric_details';
 
   @override
@@ -24,13 +25,6 @@ class LyricPage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
-              // child: FutureProvider<LyricModel>(
-              //   initialData: null,
-              //   create: (context) => LyricRepository().lyricById(args.strParam),
-              //   builder: (_, child) => Consumer<LyricModel>(
-              //     builder: (context, lyric, child) => lyric == null
-              //         ? CircularProgressIndicator()
-              //         : _lyricDetail(context, lyric),
               child: _lyricDetail(context, lyric),
             ),
           ],
@@ -40,6 +34,7 @@ class LyricPage extends StatelessWidget {
   }
 
   Widget _lyricDetail(BuildContext context, LyricModel lyric) {
+    final theme = Theme.of(context).textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,11 +49,11 @@ class LyricPage extends StatelessWidget {
                 children: [
                   Text(
                     StringHelper.capitalize(lyric.title),
-                    style: Theme.of(context).textTheme.headline6,
+                    style: theme.headline6,
                   ),
                   Text(
                     StringHelper.listToString(lyric.style),
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: theme.subtitle2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -71,44 +66,41 @@ class LyricPage extends StatelessWidget {
                 children: [
                   Text(
                     StringHelper.capitalize(lyric.tone),
-                    style: Theme.of(context).textTheme.headline5,
+                    style: theme.headline5,
                   ),
-                  SizedBox(
-                    height: 22.0,
-                  ),
+                  SizedBox(height: 22.0),
                 ],
               ),
             ),
           ],
         ),
         Divider(color: Colors.grey, thickness: 2.0),
-        // SizedBox(height: 20.0),
         Text(
           'Primeiro verso da estrofe',
-          style: Theme.of(context).textTheme.headline2,
+          style: theme.headline2,
         ),
         Text(lyric.stanza),
-        Divider(color: Color.fromARGB(255, 200, 200, 200), thickness: 1.0),
+        Divider(color: Constants.grayColor, thickness: 1.0),
         // SizedBox(height: 20.0),
         Text(
           'Primeiro verso do coro',
-          style: Theme.of(context).textTheme.headline2,
+          style: theme.headline2,
         ),
         Text(lyric.chorus),
-        Divider(color: Color.fromARGB(255, 200, 200, 200), thickness: 1.0),
+        Divider(color: Constants.grayColor, thickness: 1.0),
         SizedBox(height: 15.0),
         Row(
           children: [
             ElevatedButton(
               onPressed: () => lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
                   ? {}
-                  : Navigator.pushNamed(context, 'pdf',
+                  : Navigator.pushNamed(context, PdfViewPage.routeName,
                       arguments: RouteObjectArgs(lyric)),
               child: Text(lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
                   ? 'SEM CIFRA'
-                  : 'CIFRA'),
+                  : ' CIFRA '),
             ),
-            SizedBox(width: 10.0),
+            SizedBox(width: 15.0),
             ElevatedButton(
               onPressed: () => lyric.videoUrl == null || lyric.videoUrl.isEmpty
                   ? {}
@@ -116,9 +108,9 @@ class LyricPage extends StatelessWidget {
                       arguments: RouteArgs(lyric.videoUrl)),
               child: Text(lyric.videoUrl == null || lyric.videoUrl.isEmpty
                   ? 'SEM LINK'
-                  : 'LINK'),
+                  : ' LINK '),
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 210, 20, 45),
+                primary: Constants.redColor,
               ),
             ),
           ],

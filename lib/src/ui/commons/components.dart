@@ -22,12 +22,12 @@ SnackBar snackBar(String msg, {color}) {
   );
 }
 
-ScaffoldFeatureController onSucessSnackBar(context, String msg) {
+ScaffoldFeatureController customSnackBar(context, String msg) {
   return ScaffoldMessenger.of(context)
       .showSnackBar(snackBar(msg, color: Theme.of(context).primaryColor));
 }
 
-ScaffoldFeatureController onErrorSnackBar(context, String msg) {
+ScaffoldFeatureController errorSnackBar(context, String msg) {
   return ScaffoldMessenger.of(context).showSnackBar(
       snackBar(msg, color: const Color.fromARGB(255, 210, 20, 45)));
 }

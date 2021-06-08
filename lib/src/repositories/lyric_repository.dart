@@ -5,18 +5,24 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/models/worship.dart';
 
 class LyricRepository extends UserManager {
   final refLyrics = FirebaseFirestore.instance.collection('lyrics');
   LyricModel _lyric;
   List<LyricModel> _lyrics;
+  List<Worship> _worships;
 
   LyricRepository() {
     _getList();
+    _getWorshipList();
   }
 
   List get lyrics => _lyrics;
+
+  List get worships => _worships;
 
   LyricModel get lyric => _lyric;
 
@@ -26,21 +32,15 @@ class LyricRepository extends UserManager {
       await refLyrics.doc(id).get().then((doc) {
         lyric = LyricModel.fromJson(doc.data());
       });
-
       lyric.id = id;
-
-      if (lyric.pdfUrl == null || lyric.pdfUrl.isEmpty) {
-        lyric.pdfUrl =
-            'https://firebasestorage.googleapis.com/v0/b/louvoradbethel.appspot.com/o/missing.pdf?alt=media&token=9ad4404d-9608-49dc-b44f-5295bda99edd';
-      }
     } catch (_) {}
     return lyric;
   }
 
   Future<void> _getList() async {
-    _lyrics = [];
     viewState = ViewState.Busy;
     try {
+      _lyrics = [];
       await refLyrics.orderBy('title').get().then((value) {
         for (DocumentSnapshot doc in value.docs) {
           LyricModel lyric = LyricModel.fromJson(doc.data());
@@ -54,21 +54,31 @@ class LyricRepository extends UserManager {
     }
   }
 
-  Future<List<LyricModel>> getListByStyle(String style) async {
-    _lyrics = [];
-    try {
-      await refLyrics
-          .where('style', arrayContains: style.toUpperCase())
-          .get()
-          .then((value) {
-        for (DocumentSnapshot doc in value.docs) {
-          LyricModel lyric = LyricModel.fromJson(doc.data());
-          lyric.id = doc.reference.id;
-          _lyrics.add(lyric);
-        }
-      });
-    } catch (_) {}
-    return _lyrics;
+  // Future<List<LyricModel>> getListByStyle(String style) async {
+  //   _lyrics = [];
+  //   try {
+  //     await refLyrics
+  //         .where('style', arrayContains: style.toUpperCase())
+  //         .get()
+  //         .then((value) {
+  //       for (DocumentSnapshot doc in value.docs) {
+  //         LyricModel lyric = LyricModel.fromJson(doc.data());
+  //         lyric.id = doc.reference.id;
+  //         _lyrics.add(lyric);
+  //       }
+  //     });
+  //   } catch (_) {}
+  //   return _lyrics;
+  // }
+
+  Future<void> _saveLyric(LyricModel newLyric) async {
+    if (newLyric.id == null) {
+      var doc = await refLyrics.add(newLyric.toMap());
+      newLyric.id = doc.id;
+      _lyrics.add(newLyric);
+    } else {
+      await refLyrics.doc(newLyric.id).set(newLyric.toMap());
+    }
   }
 
   Future<void> saveLyric(LyricModel newLyric,
@@ -77,18 +87,10 @@ class LyricRepository extends UserManager {
     newLyric.userId = user.id ?? '';
 
     try {
-      var doc;
-
-      if (newLyric.id == null) {
-        doc = await refLyrics.add(newLyric.toMap());
-        newLyric.id = doc.id;
-        _lyrics.add(newLyric);
-      } else {
-        await refLyrics.doc(newLyric.id).set(newLyric.toMap());
-      }
-
+      await _saveLyric(newLyric);
+      await _getList();
       onSucess(newLyric.id);
-    } on Exception catch (e) {
+    } catch (e) {
       onError(e);
       viewState = ViewState.Error;
     }
@@ -110,14 +112,15 @@ class LyricRepository extends UserManager {
           viewState = ViewState.Busy;
           Uint8List fileBytes = value.files.first.bytes;
           storage.ref('lyrics/$pdfName').putData(fileBytes);
+        } else {
+          throw ('Arquivo não selecionado.');
         }
       });
 
       lyric.pdfUrl = await _getUrlPdf(pdfName);
-      saveLyric(lyric);
-
-      onSucess('ok');
-    } on Exception catch (e) {
+      await _saveLyric(lyric);
+      onSucess(lyric.pdfUrl);
+    } catch (e) {
       onError('Erro anexando PDF: $e.');
       viewState = ViewState.Error;
     }
@@ -133,5 +136,75 @@ class LyricRepository extends UserManager {
     } catch (_) {}
 
     return url;
+  }
+
+  Future<void> deleteLyric(String lyricId,
+      {Function onSucess, Function onError}) async {
+    viewState = ViewState.Busy;
+
+    try {
+      await _deletePdf(lyricId);
+      await refLyrics.doc(lyricId).delete().onError((err, _) {
+        throw (err);
+      });
+      await _getList();
+      onSucess();
+    } catch (e) {
+      onError(e);
+      viewState = ViewState.Error;
+    }
+    viewState = ViewState.Ready;
+  }
+
+  Future<void> _deletePdf(String lyricId) async {
+    try {
+      await storage.ref('lyrics/$lyricId').delete();
+    } catch (_) {}
+  }
+
+// Testes
+  Future<void> getAdoracao() async {
+    Map<String, dynamic> json = {
+      "dateTime": DateTime.parse("2021-06-24 18:30"),
+      "description": "Adoração",
+      "userId": "GiDRCTJds1Rzbkh27ysDN5xUYaZ2",
+    };
+    Worship w = Worship.fromJson(json);
+    _lyrics.removeLast();
+    w.lyrics.addAll(_lyrics);
+    await getWorshipWithUser(w);
+    _worships.add(w);
+  }
+
+// Testes
+  Future<void> _getWorshipList() async {
+    viewState = ViewState.Busy;
+    await getAdoracao();
+    await getOferta();
+    viewState = ViewState.Ready;
+  }
+
+// Testes
+  Future<void> getOferta() async {
+    Map<String, dynamic> json = {
+      "dateTime": DateTime.parse("20201-06-24 20:10"),
+      "description": "Oferta",
+      "userId": "akmG1s9NXpaIZJeFLbG5wuJBKad2",
+    };
+    Worship w = Worship.fromJson(json);
+    w.lyrics.add(_lyrics.last);
+    await getWorshipWithUser(w);
+    _worships.add(w);
+  }
+
+  static Future<Worship> getWorshipWithUser(Worship worship) async {
+    try {
+      await UserManager().userById(worship.userId).then((usr) {
+        worship.user = usr;
+      });
+    } on Exception catch (_) {
+      worship.user = new UserModel();
+    }
+    return worship;
   }
 }

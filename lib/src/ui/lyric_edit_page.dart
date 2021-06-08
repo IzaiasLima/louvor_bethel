@@ -16,20 +16,28 @@ import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 // ignore: must_be_immutable
 class LyricEditPage extends StatelessWidget {
   static const routeName = 'lyric_edit';
-  LyricModel lyric = LyricModel();
   var titleFieldController = TextEditingController();
   var stanzaFieldController = TextEditingController();
   var chorusFieldController = TextEditingController();
   var styleFieldController = TextEditingController();
   var toneFieldController = TextEditingController();
   var linkFieldController = TextEditingController();
+  var lyric = LyricModel();
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
-    final lyric = args.objParam as LyricModel;
     final formKey = GlobalKey<FormState>();
     final scafoldKey = GlobalKey<ScaffoldState>();
+
+    final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
+    lyric = args.objParam as LyricModel;
+
+    titleFieldController.text = lyric.title;
+    stanzaFieldController.text = lyric.stanza;
+    chorusFieldController.text = lyric.chorus;
+    styleFieldController.text = StringHelper.listToString(lyric.style);
+    toneFieldController.text = lyric.tone;
+    linkFieldController.text = lyric.videoUrl;
 
     return Scaffold(
       key: scafoldKey,
@@ -44,52 +52,46 @@ class LyricEditPage extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    _titleFormField(lyric.title),
-                    _stanzaFormField(lyric.stanza),
-                    _chorusFormField(lyric.chorus),
-                    _styleFormField(StringHelper.listToString(lyric.style)),
-                    _toneFormField(lyric.tone),
-                    _linkFormField(lyric.videoUrl),
-                    // (lyric.id != null) ? _pdfTextField() : Text(''),
-                    Padding(
-                      padding: const EdgeInsets.all(26.0),
-                      child: repo.viewState == ViewState.Busy
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              child: Text(
-                                  lyric.id == null ? 'SALVAR' : 'ANEXAR PDF'),
-                              onPressed: () {
-                                if (!formKey.currentState.validate()) return;
-
-                                formKey.currentState.save();
-
-                                if (lyric.id == null) {
-                                  repo.saveLyric(lyric,
-                                      onSucess: (id) {
-                                        lyric.id = id;
-                                        onSucessSnackBar(
-                                          context,
-                                          'Música cadastrada com sucesso.',
-                                        );
-                                      },
+                    _titleFormField(),
+                    _stanzaFormField(),
+                    _chorusFormField(),
+                    _styleFormField(),
+                    _toneFormField(),
+                    _linkFormField(),
+                    SizedBox(height: 20.0),
+                    repo.viewState == ViewState.Busy
+                        ? CircularProgressIndicator()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ElevatedButton(
+                                  child: Text('  SALVAR  '),
+                                  onPressed: () {
+                                    if (!formKey.currentState.validate())
+                                      return;
+                                    formKey.currentState.save();
+                                    repo.saveLyric(lyric,
+                                        onSucess: (id) {
+                                          lyric.id = id;
+                                          customSnackBar(context,
+                                              'Música atualizada com sucesso.');
+                                        },
+                                        onError: (err) =>
+                                            errorSnackBar(context, err));
+                                  }),
+                              SizedBox(width: 10.0),
+                              ElevatedButton(
+                                child: Text('ANEXAR PDF'),
+                                onPressed: () {
+                                  repo.uploadPdf(lyric,
+                                      onSucess: (e) => customSnackBar(
+                                          context, 'PDF anexado com sucesso.'),
                                       onError: (err) =>
-                                          onErrorSnackBar(context, err));
-                                } else {
-                                  repo.uploadPdf(
-                                    lyric,
-                                    onSucess: (_) {
-                                      onSucessSnackBar(
-                                          context, 'PDF anexado com sucesso.');
-                                      Navigator.of(context)
-                                          .popAndPushNamed('lyric_list');
-                                    },
-                                    onError: (err) =>
-                                        onErrorSnackBar(context, err),
-                                  );
-                                }
-                              },
-                            ),
-                    ),
+                                          errorSnackBar(context, err));
+                                },
+                              ),
+                            ],
+                          ),
                     // _saveTextButtom(),
                   ],
                 ),
@@ -101,8 +103,7 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _titleFormField(value) {
-    titleFieldController.text = value;
+  Widget _titleFormField() {
     return TextFormField(
       controller: titleFieldController,
       autocorrect: true,
@@ -116,8 +117,7 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _stanzaFormField(value) {
-    stanzaFieldController.text = value;
+  Widget _stanzaFormField() {
     return TextFormField(
       controller: stanzaFieldController,
       autocorrect: true,
@@ -131,8 +131,7 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _chorusFormField(value) {
-    chorusFieldController.text = value;
+  Widget _chorusFormField() {
     return TextFormField(
       controller: chorusFieldController,
       autocorrect: true,
@@ -146,8 +145,7 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _styleFormField(value) {
-    styleFieldController.text = value;
+  Widget _styleFormField() {
     return TextFormField(
       controller: styleFieldController,
       autocorrect: true,
@@ -161,8 +159,7 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _toneFormField(value) {
-    toneFieldController.text = value;
+  Widget _toneFormField() {
     return TextFormField(
       controller: toneFieldController,
       autocorrect: false,
@@ -176,8 +173,7 @@ class LyricEditPage extends StatelessWidget {
     );
   }
 
-  Widget _linkFormField(value) {
-    linkFieldController.text = value;
+  Widget _linkFormField() {
     return TextFormField(
       controller: linkFieldController,
       autofillHints: [AutofillHints.url],

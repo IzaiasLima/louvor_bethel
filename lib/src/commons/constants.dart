@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+
 class Constants {
   static String title = 'LOUVOR BETHEL';
 
+  static const redColor = const Color.fromARGB(255, 210, 20, 45);
+  static const grayColor = Color.fromARGB(255, 200, 200, 200);
 // User
   static String neededUserName = 'Informe qual será seu nome no aplicativo.';
   static String validEmail = 'Informe um email válido.';
