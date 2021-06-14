@@ -20,6 +20,11 @@ class LyricModel {
       this.videoUrl,
       this.userId});
 
+  LyricModel.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    title = map['title'];
+  }
+
   LyricModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];

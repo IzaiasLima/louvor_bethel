@@ -29,3 +29,8 @@ bool validVideoUrl(String uri) {
   String url = 'https://youtu.be/';
   return uri.isEmpty || (uri.startsWith(url) && uri.length > url.length);
 }
+
+// VALID WORSHIP
+bool validWorshipField(String field) {
+  return field.isNotEmpty && field.length > 1;
+}

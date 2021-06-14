@@ -9,6 +9,7 @@ import 'package:louvor_bethel/src/ui/lyric_list_page.dart';
 import 'package:louvor_bethel/src/ui/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/sigup_page.dart';
 import 'package:louvor_bethel/src/ui/user_edit_page.dart';
+import 'package:louvor_bethel/src/ui/worship_add_page.dart';
 
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -23,6 +24,8 @@ class Routers {
         return MaterialPageRoute(builder: (_) => LyricDetailsPage());
       case 'lyric_add':
         return MaterialPageRoute(builder: (_) => LyricAddPage());
+      case 'worship_add':
+        return MaterialPageRoute(builder: (_) => WorshipAddPage());
       case 'user':
         return MaterialPageRoute(builder: (_) => UserEditPage());
       case 'login':

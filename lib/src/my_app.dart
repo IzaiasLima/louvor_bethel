@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
@@ -16,10 +18,25 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserManager()),
-        ChangeNotifierProvider(create: (_) => LyricRepository()),
-        // ChangeNotifierProvider(create: (_) => WorshipRepository()),
+        // ChangeNotifierProvider(create: (_) => LyricRepository(), lazy: false),
+        ChangeNotifierProxyProvider<UserManager, LyricRepository>(
+          create: (_) => LyricRepository(),
+          update: (_, uRepo, lRepo) => lRepo..update(uRepo),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(create: (_) => WorshipRepository()),
+        // ChangeNotifierProxyProvider<LyricRepository, WorshipRepository>(
+        //   create: (_) => WorshipRepository(),
+        //   update: (_, repo, wRepo) => wRepo..update(repo),
+        //   lazy: false,
+        // ),
       ],
       child: MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        supportedLocales: [const Locale('pt', 'BR')],
         debugShowCheckedModeBanner: false,
         title: Constants.title,
         theme: _theme,

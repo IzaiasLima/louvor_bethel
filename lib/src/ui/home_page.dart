@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
-import 'package:louvor_bethel/src/commons/enums/states.dart';
-import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/ui/lyric_card.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
@@ -18,8 +17,8 @@ class HomePage extends StatelessWidget {
         snackBar: const SnackBar(
           content: Text('Pressione de novo para sair.'),
         ),
-        child: Consumer<LyricRepository>(
-          builder: (context, repo, child) {
+        child: Consumer<WorshipRepository>(
+          builder: (_, repo, __) {
             return SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Column(
@@ -36,15 +35,19 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
                   ),
-                  repo.viewState == ViewState.Busy
+                  repo.loading
                       ? CircularProgressIndicator()
-                      : ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: repo.worships.length,
-                          itemBuilder: (context, index) =>
-                              LyricCard(repo.worships[index]),
-                        ),
+                      : (repo.worships != null && repo.worships.length > 0)
+                          ? ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: repo.worships.length,
+                              itemBuilder: (context, index) =>
+                                  LyricCard(repo.worships[index]),
+                            )
+                          : Container(
+                              child: Text('Não havia dados para exibir.'),
+                            ),
                 ],
               ),
             );

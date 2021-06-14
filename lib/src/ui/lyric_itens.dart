@@ -7,25 +7,36 @@ import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric_edit_page.dart';
+import 'package:provider/provider.dart';
 
 class LyricItens extends StatelessWidget {
-  final List<LyricModel> lyrics;
+  // final List<LyricModel> lyrics;
   final String page;
 
-  LyricItens(this.lyrics, {this.page});
+  LyricItens({this.page});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: lyrics.length,
-      itemBuilder: _buildItem,
+    return Consumer<LyricRepository>(
+      builder: (_, repo, __) => (repo.lyrics != null && repo.lyrics.length > 0)
+          ? ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: repo.lyrics.length,
+              itemBuilder: (context, index) =>
+                  _buildItem(context, repo.lyrics, index),
+            )
+          : Container(
+              padding: EdgeInsets.all(16.0),
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: Text('Não havia dados para exibir.'),
+            ),
     );
   }
 
-  Widget _buildItem(BuildContext context, int index) {
-    final bool hasNext = (index + 1) < this.lyrics.length;
+  Widget _buildItem(BuildContext context, lyrics, int index) {
+    final bool hasNext = (index + 1) < lyrics.length;
     LyricModel lyric = lyrics[index];
 
     return Column(
@@ -53,10 +64,8 @@ class LyricItens extends StatelessWidget {
                       ),
                     ),
                     page == LyricDetailsPage.routeName
-                        ? _popUpMenu(lyric)
-                        : SizedBox(
-                            height: 45.0,
-                          ),
+                        ? _popUpMenu(context, lyric)
+                        : SizedBox(height: 45.0),
                   ],
                 ),
               ),
@@ -73,8 +82,9 @@ class LyricItens extends StatelessWidget {
     );
   }
 
-  Widget _popUpMenu(LyricModel lyric) => PopupMenuButton<int>(
-        itemBuilder: (context) => [
+  Widget _popUpMenu(BuildContext context, LyricModel lyric) =>
+      PopupMenuButton<int>(
+        itemBuilder: (_) => [
           PopupMenuItem(
             value: 1,
             child: InkWell(
@@ -110,7 +120,7 @@ class LyricItens extends StatelessWidget {
                   textOK: Text('SIM'),
                   textCancel: Text('NÃO'),
                 )) {
-                  LyricRepository().deleteLyric(lyric.id,
+                  await context.read<LyricRepository>().delete(lyric.id,
                       onSucess: () => customSnackBar(
                           context, 'Exclusão efetuada com sucesso.'),
                       onError: (err) =>

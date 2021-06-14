@@ -1,23 +1,36 @@
 import 'dart:typed_data';
+
+import 'package:flutter/widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 
-class LyricRepository extends UserManager {
-  final refLyrics = FirebaseFirestore.instance.collection('lyrics');
-  LyricModel _lyric;
-  List<LyricModel> _lyrics;
-  List<Worship> _worships;
+class LyricRepository extends ChangeNotifier {
+  List<LyricModel> _lyrics = [];
+  List<Worship> _worships = [];
+  LyricModel _lyric = new LyricModel();
+  UserModel user;
 
-  LyricRepository() {
+  bool _loading = false;
+
+  final refLyrics = FirebaseFirestore.instance.collection('lyrics');
+  final storage = FirebaseStorage.instance;
+
+  update(UserManager userManager) {
+    this.user = userManager.user;
     _getList();
-    _getWorshipList();
+  }
+
+  get loading => _loading;
+
+  set loading(bool state) {
+    _loading = state;
+    notifyListeners();
   }
 
   List get lyrics => _lyrics;
@@ -26,19 +39,21 @@ class LyricRepository extends UserManager {
 
   LyricModel get lyric => _lyric;
 
-  Future<LyricModel> lyricById(String id) async {
-    LyricModel lyric;
+  Future<void> lyricById(String id) async {
+    loading = true;
     try {
       await refLyrics.doc(id).get().then((doc) {
-        lyric = LyricModel.fromJson(doc.data());
+        _lyric = LyricModel.fromJson(doc.data());
+        _lyric.id = id;
       });
-      lyric.id = id;
-    } catch (_) {}
-    return lyric;
+    } catch (err) {
+      debugPrint(err);
+    }
+    loading = false;
   }
 
   Future<void> _getList() async {
-    viewState = ViewState.Busy;
+    loading = true;
     try {
       _lyrics = [];
       await refLyrics.orderBy('title').get().then((value) {
@@ -48,53 +63,33 @@ class LyricRepository extends UserManager {
           _lyrics.add(lyric);
         }
       });
-      viewState = ViewState.Ready;
     } catch (e) {
-      viewState = ViewState.Error;
+      loading = false;
+      debugPrint('Erro obtendo a lista: $e');
     }
+    loading = false;
   }
 
-  // Future<List<LyricModel>> getListByStyle(String style) async {
-  //   _lyrics = [];
-  //   try {
-  //     await refLyrics
-  //         .where('style', arrayContains: style.toUpperCase())
-  //         .get()
-  //         .then((value) {
-  //       for (DocumentSnapshot doc in value.docs) {
-  //         LyricModel lyric = LyricModel.fromJson(doc.data());
-  //         lyric.id = doc.reference.id;
-  //         _lyrics.add(lyric);
-  //       }
-  //     });
-  //   } catch (_) {}
-  //   return _lyrics;
-  // }
-
-  Future<void> _saveLyric(LyricModel newLyric) async {
-    if (newLyric.id == null) {
-      var doc = await refLyrics.add(newLyric.toMap());
-      newLyric.id = doc.id;
-      _lyrics.add(newLyric);
-    } else {
-      await refLyrics.doc(newLyric.id).set(newLyric.toMap());
-    }
-  }
-
-  Future<void> saveLyric(LyricModel newLyric,
+  Future<void> save(LyricModel lyric,
       {Function onSucess, Function onError}) async {
-    viewState = ViewState.Busy;
-    newLyric.userId = user.id ?? '';
+    loading = true;
 
     try {
-      await _saveLyric(newLyric);
-      await _getList();
-      onSucess(newLyric.id);
+      lyric.userId = user.id ?? '';
+      if (lyric.id == null) {
+        var doc = await refLyrics.add(lyric.toMap());
+        lyric.id = doc.id;
+      } else {
+        _lyrics.removeWhere((d) => d.id == lyric.id);
+        await refLyrics.doc(lyric.id).update(lyric.toMap());
+      }
+      _lyrics.add(lyric);
+      onSucess(lyric.id);
     } catch (e) {
+      loading = false;
       onError(e);
-      viewState = ViewState.Error;
     }
-    viewState = ViewState.Ready;
+    loading = false;
   }
 
   Future<void> uploadPdf(LyricModel lyric,
@@ -109,7 +104,7 @@ class LyricRepository extends UserManager {
               withData: true)
           .then((value) {
         if (value != null) {
-          viewState = ViewState.Busy;
+          loading = true;
           Uint8List fileBytes = value.files.first.bytes;
           storage.ref('lyrics/$pdfName').putData(fileBytes);
         } else {
@@ -118,13 +113,13 @@ class LyricRepository extends UserManager {
       });
 
       lyric.pdfUrl = await _getUrlPdf(pdfName);
-      await _saveLyric(lyric);
+      await save(lyric);
       onSucess(lyric.pdfUrl);
     } catch (e) {
+      loading = false;
       onError('Erro anexando PDF: $e.');
-      viewState = ViewState.Error;
     }
-    viewState = ViewState.Ready;
+    loading = false;
   }
 
   Future<String> _getUrlPdf(String pdfName) async {
@@ -133,78 +128,68 @@ class LyricRepository extends UserManager {
     try {
       Reference refPdf = storage.ref().child('lyrics/$pdfName');
       url = await refPdf.getDownloadURL().then((value) => value);
-    } catch (_) {}
+    } catch (err) {
+      debugPrint('Erro obtendo Url do PDF: $err');
+    }
 
     return url;
   }
 
-  Future<void> deleteLyric(String lyricId,
+  Future<void> delete(String lyricId,
       {Function onSucess, Function onError}) async {
-    viewState = ViewState.Busy;
-
+    loading = true;
     try {
       await _deletePdf(lyricId);
       await refLyrics.doc(lyricId).delete().onError((err, _) {
         throw (err);
       });
-      await _getList();
+      _lyrics.removeWhere((l) => l.id == lyricId);
       onSucess();
     } catch (e) {
       onError(e);
-      viewState = ViewState.Error;
     }
-    viewState = ViewState.Ready;
+    loading = false;
   }
 
   Future<void> _deletePdf(String lyricId) async {
     try {
       await storage.ref('lyrics/$lyricId').delete();
-    } catch (_) {}
-  }
-
-// Testes
-  Future<void> getAdoracao() async {
-    Map<String, dynamic> json = {
-      "dateTime": DateTime.parse("2021-06-24 18:30"),
-      "description": "Adoração",
-      "userId": "GiDRCTJds1Rzbkh27ysDN5xUYaZ2",
-    };
-    Worship w = Worship.fromJson(json);
-    _lyrics.removeLast();
-    w.lyrics.addAll(_lyrics);
-    await getWorshipWithUser(w);
-    _worships.add(w);
-  }
-
-// Testes
-  Future<void> _getWorshipList() async {
-    viewState = ViewState.Busy;
-    await getAdoracao();
-    await getOferta();
-    viewState = ViewState.Ready;
-  }
-
-// Testes
-  Future<void> getOferta() async {
-    Map<String, dynamic> json = {
-      "dateTime": DateTime.parse("20201-06-24 20:10"),
-      "description": "Oferta",
-      "userId": "akmG1s9NXpaIZJeFLbG5wuJBKad2",
-    };
-    Worship w = Worship.fromJson(json);
-    w.lyrics.add(_lyrics.last);
-    await getWorshipWithUser(w);
-    _worships.add(w);
-  }
-
-  static Future<Worship> getWorshipWithUser(Worship worship) async {
-    try {
-      await UserManager().userById(worship.userId).then((usr) {
-        worship.user = usr;
-      });
-    } on Exception catch (_) {
-      worship.user = new UserModel();
+    } catch (err) {
+      debugPrint('Erro excluindo PDF: $err');
     }
-    return worship;
   }
+
+// s
+
+// // Testes
+//   Future<void> _getWorshipList() async {
+//     loading = true;
+//     await getAdoracao();
+//     await getOferta();
+//     loading = false;
+//   }
+
+// // Testes
+//   Future<void> getOferta() async {
+//     Map<String, dynamic> json = {
+//       "dateTime": DateTime.parse("20201-06-24 20:10"),
+//       "description": "Oferta",
+//       "userId": "akmG1s9NXpaIZJeFLbG5wuJBKad2",
+//     };
+//     Worship w = Worship.fromJson(json);
+//     w.lyrics.add(_lyrics.last);
+//     await getWorshipWithUser(w);
+//     _worships.add(w);
+//   }
+
+  // static Future<Worship> getWorshipWithUser(Worship worship) async {
+  //   try {
+  //     await UserManager().userById(worship.userId).then((usr) {
+  //       worship.user = usr;
+  //     });
+  //   } on Exception catch (_) {
+  //     worship.user = new UserModel();
+  //   }
+  //   return worship;
+  // }
 }

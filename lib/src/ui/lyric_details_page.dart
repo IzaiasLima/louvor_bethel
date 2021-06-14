@@ -3,11 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
+import 'package:provider/provider.dart';
 
 class LyricDetailsPage extends StatelessWidget {
   static const routeName = 'lyric_details';
@@ -21,14 +23,20 @@ class LyricDetailsPage extends StatelessWidget {
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
-              child: _lyricDetail(context, lyric),
-            ),
-          ],
-        ),
+        child: Consumer<LyricRepository>(builder: (context, repo, child) {
+          if (repo.lyrics.length > 0) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
+                  child: _lyricDetail(context, lyric),
+                ),
+              ],
+            );
+          } else {
+            return null;
+          }
+        }),
       ),
     );
   }

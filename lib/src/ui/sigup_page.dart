@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextFormField(
       autocorrect: false,
       obscureText: true,
-      validator: (value) => validPassword(value) ? null : Constants.neededPwd,
+      validator: (value) => validPassword(value) ? null : Constants.validPwd,
       decoration: InputDecoration(
         labelText: 'Senha',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -123,7 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
       // controller: confirmPassdController,
       autocorrect: false,
       obscureText: true,
-      validator: (value) => validPassword(value) ? null : Constants.neededPwd,
+      validator: (value) => validPassword(value) ? null : Constants.validPwd,
       decoration: InputDecoration(
         labelText: 'Cofirme a senha',
         floatingLabelBehavior: FloatingLabelBehavior.auto,

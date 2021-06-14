@@ -17,7 +17,7 @@ Widget circleAvatar(UserModel user, double radius) {
 SnackBar snackBar(String msg, {color}) {
   return SnackBar(
     content: Text(msg),
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 3),
     backgroundColor: color ?? Colors.red,
   );
 }

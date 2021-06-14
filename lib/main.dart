@@ -3,11 +3,11 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:louvor_bethel/src/MyApp.dart';
+import 'package:louvor_bethel/src/my_app.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
-  initializeDateFormatting();
+  // initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());

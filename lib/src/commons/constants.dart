@@ -8,15 +8,19 @@ class Constants {
 // User
   static String neededUserName = 'Informe qual será seu nome no aplicativo.';
   static String validEmail = 'Informe um email válido.';
-  static String neededPwd = 'A senha dever ter seis caracteres ou mais.';
+  static String validPwd = 'A senha dever ter seis caracteres ou mais.';
   static String neededEqPwd = 'As senhas precisam ser iguas.';
 
 // Lyric
-  static String neededTitle = 'Informe o título da música.';
-  static String neededStanza = 'Informe o início da primeira estrofe.';
-  static String neededChorus = 'Informe o início do coro.';
-  static String neededStyle = 'Informe a temática ou estilo musical.';
+  static String validTitle = 'Informe o título da música.';
+  static String validStanza = 'Informe o início da primeira estrofe.';
+  static String validChorus = 'Informe o início do coro.';
+  static String validStyle = 'Informe a temática ou estilo musical.';
   static String validTone = 'Informe uma nota musical.';
   static String validPdf = 'Selecione o PDF com a cifra, a ser anexado.';
   static String validVideoUrl = 'Informe o link do video no Youtube.';
+
+  // Worship
+  static String validDescription = 'Dê um nome para o evento ou momento.';
+  static String validTime = 'Informe a data e hora do evento.';
 }

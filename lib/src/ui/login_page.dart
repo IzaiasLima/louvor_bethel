@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
       controller: passwordController,
       autocorrect: false,
       obscureText: true,
-      validator: (value) => validPassword(value) ? null : Constants.neededPwd,
+      validator: (value) => validPassword(value) ? null : Constants.validPwd,
       decoration: InputDecoration(
         labelText: 'Senha',
         floatingLabelBehavior: FloatingLabelBehavior.auto,

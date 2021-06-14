@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
@@ -18,10 +17,10 @@ class LyricAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final scafoldKey = GlobalKey<ScaffoldState>();
+    // final scafoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: scafoldKey,
+      // key: scafoldKey,
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       body: Form(
@@ -42,7 +41,7 @@ class LyricAddPage extends StatelessWidget {
                     // (lyric.id != null) ? _pdfTextField() : Text(''),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
-                      child: repo.viewState == ViewState.Busy
+                      child: repo.loading
                           ? CircularProgressIndicator()
                           : ElevatedButton(
                               child: Text(lyric.id == null
@@ -54,16 +53,18 @@ class LyricAddPage extends StatelessWidget {
                                 formKey.currentState.save();
 
                                 if (lyric.id == null) {
-                                  repo.saveLyric(lyric,
-                                      onSucess: (id) {
-                                        lyric.id = id;
-                                        customSnackBar(
-                                          context,
-                                          'Música cadastrada com sucesso.',
-                                        );
-                                      },
-                                      onError: (err) =>
-                                          errorSnackBar(context, err));
+                                  repo.save(
+                                    lyric,
+                                    onSucess: (id) {
+                                      lyric.id = id;
+                                      customSnackBar(
+                                        context,
+                                        'Música cadastrada com sucesso.',
+                                      );
+                                    },
+                                    onError: (err) =>
+                                        errorSnackBar(context, '$err'),
+                                  );
                                 } else {
                                   repo.uploadPdf(
                                     lyric,
@@ -74,7 +75,7 @@ class LyricAddPage extends StatelessWidget {
                                           .popAndPushNamed('lyric_list');
                                     },
                                     onError: (err) =>
-                                        errorSnackBar(context, err),
+                                        errorSnackBar(context, '$err'),
                                   );
                                 }
                               },
@@ -95,7 +96,7 @@ class LyricAddPage extends StatelessWidget {
     return TextFormField(
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededTitle,
+          validLyricField(value) ? null : Constants.validTitle,
       decoration: InputDecoration(
         labelText: 'Título da música',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -108,7 +109,7 @@ class LyricAddPage extends StatelessWidget {
     return TextFormField(
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededStanza,
+          validLyricField(value) ? null : Constants.validStanza,
       decoration: InputDecoration(
         labelText: 'Primeira estrofe',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -121,7 +122,7 @@ class LyricAddPage extends StatelessWidget {
     return TextFormField(
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededChorus,
+          validLyricField(value) ? null : Constants.validChorus,
       decoration: InputDecoration(
         labelText: 'Início do coro',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -134,7 +135,7 @@ class LyricAddPage extends StatelessWidget {
     return TextFormField(
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededStyle,
+          validLyricField(value) ? null : Constants.validStyle,
       decoration: InputDecoration(
         labelText: 'Tema/estilo',
         floatingLabelBehavior: FloatingLabelBehavior.auto,

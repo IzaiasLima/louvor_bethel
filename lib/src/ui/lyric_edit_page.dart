@@ -4,7 +4,6 @@ import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/route_args.dart';
 import 'package:provider/provider.dart';
 
-import 'package:louvor_bethel/src/commons/enums/states.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
@@ -59,7 +58,7 @@ class LyricEditPage extends StatelessWidget {
                     _toneFormField(),
                     _linkFormField(),
                     SizedBox(height: 20.0),
-                    repo.viewState == ViewState.Busy
+                    repo.loading
                         ? CircularProgressIndicator()
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -70,7 +69,7 @@ class LyricEditPage extends StatelessWidget {
                                     if (!formKey.currentState.validate())
                                       return;
                                     formKey.currentState.save();
-                                    repo.saveLyric(lyric,
+                                    repo.save(lyric,
                                         onSucess: (id) {
                                           lyric.id = id;
                                           customSnackBar(context,
@@ -108,7 +107,7 @@ class LyricEditPage extends StatelessWidget {
       controller: titleFieldController,
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededTitle,
+          validLyricField(value) ? null : Constants.validTitle,
       decoration: InputDecoration(
         labelText: 'Título da música',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -122,7 +121,7 @@ class LyricEditPage extends StatelessWidget {
       controller: stanzaFieldController,
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededStanza,
+          validLyricField(value) ? null : Constants.validStanza,
       decoration: InputDecoration(
         labelText: 'Primeira estrofe',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -136,7 +135,7 @@ class LyricEditPage extends StatelessWidget {
       controller: chorusFieldController,
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededChorus,
+          validLyricField(value) ? null : Constants.validChorus,
       decoration: InputDecoration(
         labelText: 'Início do coro',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -150,7 +149,7 @@ class LyricEditPage extends StatelessWidget {
       controller: styleFieldController,
       autocorrect: true,
       validator: (value) =>
-          validLyricField(value) ? null : Constants.neededStyle,
+          validLyricField(value) ? null : Constants.validStyle,
       decoration: InputDecoration(
         labelText: 'Tema/estilo',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
