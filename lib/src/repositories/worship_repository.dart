@@ -25,6 +25,12 @@ class WorshipRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> save(Worship worship) async {
+    loading = true;
+    await worshioRef.add(worship.toMap);
+    loading = false;
+  }
+
   Future<void> _getList() async {
     loading = true;
 

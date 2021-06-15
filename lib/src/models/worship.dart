@@ -35,6 +35,17 @@ class Worship {
     }
   }
 
+  Map<String, dynamic> get toMap {
+    final data = new Map<String, dynamic>();
+    data['description'] = this.description;
+    data['dateTime'] = this.dateTime;
+    data['userId'] = this.userId;
+    if (this.lyrics != null) {
+      data['lyrics'] = this.lyrics.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+
   // Map<String, dynamic> toJson() {
   //   final Map<String, dynamic> data = new Map<String, dynamic>();
   //   data['dateTime'] = this.dateTime;

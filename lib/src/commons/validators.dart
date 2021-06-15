@@ -34,3 +34,8 @@ bool validVideoUrl(String uri) {
 bool validWorshipField(String field) {
   return field.isNotEmpty && field.length > 1;
 }
+
+bool validWorshipDate(DateTime field) {
+  print('${field != null && field.isAfter(DateTime.now())}');
+  return field != null && field.isAfter(DateTime.now());
+}

@@ -1,36 +1,62 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
+import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
+import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
+// ignore: must_be_immutable
 class WorshipAddPage extends StatelessWidget {
-  const WorshipAddPage({Key key}) : super(key: key);
+  Worship worship = Worship();
+
+  WorshipAddPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    Worship worship = Worship();
 
     return Scaffold(
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
-      body: Container(
-        child: Column(
-          children: [
-            _descriptionFormField(),
-            _dateTimeFormfield(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('CADASTRAR'),
-              ),
-            ),
-          ],
+      body: Form(
+        key: formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Consumer<WorshipRepository>(
+            builder: (_, repo, __) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _descriptionFormField(),
+                    _dateTimeFormfield(),
+                    Padding(
+                      padding: const EdgeInsets.all(26.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (!formKey.currentState.validate())
+                            return;
+                          else {
+                            formKey.currentState.save();
+                            worship.lyrics = [];
+                            worship.userId =
+                                context.read<UserManager>().user.id;
+                            repo.save(worship);
+                          }
+                        },
+                        child: Text('CADASTRAR'),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -43,6 +69,9 @@ class WorshipAddPage extends StatelessWidget {
         labelText: 'Data e hora do evento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
+      validator: (value) =>
+          validWorshipDate(value) ? null : Constants.validTime,
+      onSaved: (dateTime) => worship.dateTime = dateTime,
       format: format,
       onShowPicker: (context, currentValue) async {
         final date = await showDatePicker(
@@ -50,11 +79,6 @@ class WorshipAddPage extends StatelessWidget {
           firstDate: DateTime(1900),
           initialDate: currentValue ?? DateTime.now(),
           lastDate: DateTime(2100),
-          // builder: (context, child) => Localizations.override(
-          //   context: context,
-          //   locale: Locale('pt'),
-          //   child: child,
-          // ),
         );
         if (date != null) {
           final time = await showTimePicker(
@@ -79,7 +103,7 @@ class WorshipAddPage extends StatelessWidget {
       ),
       validator: (value) =>
           validWorshipField(value) ? null : Constants.validDescription,
-      // onSaved: (newValue) => worship,
+      onSaved: (value) => worship.description = value,
     );
   }
 }
