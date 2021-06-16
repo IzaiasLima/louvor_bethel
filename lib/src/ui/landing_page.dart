@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
-import 'package:louvor_bethel/src/ui/home_page.dart';
+import 'package:louvor_bethel/src/ui/worship_add_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:splashscreen/splashscreen.dart';
@@ -16,7 +16,8 @@ class LandingPage extends StatelessWidget {
           'assets/images/bethel_background.png',
         ).image,
         loaderColor: Colors.transparent,
-        navigateAfterSeconds: userManager.loggedIn ? HomePage() : LoginPage(),
+        navigateAfterSeconds:
+            userManager.loggedIn ? WorshipAddPage() : LoginPage(),
       ),
     );
   }

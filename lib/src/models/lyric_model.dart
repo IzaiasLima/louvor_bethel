@@ -8,6 +8,7 @@ class LyricModel {
   String pdfUrl;
   String videoUrl;
   String userId;
+  bool selected;
 
   LyricModel(
       {this.id,
@@ -18,7 +19,8 @@ class LyricModel {
       this.chorus,
       this.pdfUrl,
       this.videoUrl,
-      this.userId});
+      this.userId,
+      this.selected});
 
   LyricModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
@@ -35,6 +37,7 @@ class LyricModel {
     pdfUrl = json['pdfUrl'];
     videoUrl = json['videoUrl'];
     userId = json['userId'];
+    selected = false;
   }
 
   Map<String, dynamic> toJson() {

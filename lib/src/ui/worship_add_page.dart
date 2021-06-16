@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/ui/lyric_select.dart';
 import 'package:provider/provider.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
@@ -35,6 +37,15 @@ class WorshipAddPage extends StatelessWidget {
                   children: [
                     _descriptionFormField(),
                     _dateTimeFormfield(),
+                    TextButton(
+                      child: Row(
+                        children: [
+                          Icon(Icons.add),
+                          Text('Incluir músicas'),
+                        ],
+                      ),
+                      onPressed: () => _addLyrics(context),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
                       child: ElevatedButton(
@@ -60,6 +71,20 @@ class WorshipAddPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _addLyrics(context) async {
+    final List<LyricModel> result = await Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, _, __) => LyricSelect(),
+      ),
+    );
+    result.forEach((l) {
+      print('${l.title}');
+    });
+
+    return;
   }
 
   _dateTimeFormfield() {
