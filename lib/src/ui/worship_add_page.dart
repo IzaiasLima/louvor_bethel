@@ -38,14 +38,17 @@ class WorshipAddPage extends StatelessWidget {
                     _descriptionFormField(),
                     _dateTimeFormfield(),
                     TextButton(
-                      child: Row(
-                        children: [
-                          Icon(Icons.add),
-                          Text('Incluir músicas'),
-                        ],
-                      ),
-                      onPressed: () => _addLyrics(context),
-                    ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.add),
+                            Text('Incluir músicas'),
+                          ],
+                        ),
+                        onPressed: () async {
+                          await _addLyrics(context).then(
+                            (value) => worship.lyrics.addAll(value),
+                          );
+                        }),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
                       child: ElevatedButton(
@@ -54,7 +57,7 @@ class WorshipAddPage extends StatelessWidget {
                             return;
                           else {
                             formKey.currentState.save();
-                            worship.lyrics = [];
+                            // worship.lyrics = [];
                             worship.userId =
                                 context.read<UserManager>().user.id;
                             repo.save(worship);
@@ -73,18 +76,14 @@ class WorshipAddPage extends StatelessWidget {
     );
   }
 
-  void _addLyrics(context) async {
+  Future<List<LyricModel>> _addLyrics(context) async {
     final List<LyricModel> result = await Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, _, __) => LyricSelect(),
       ),
     );
-    result.forEach((l) {
-      print('${l.title}');
-    });
-
-    return;
+    return result;
   }
 
   _dateTimeFormfield() {
