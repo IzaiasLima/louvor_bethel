@@ -1,23 +1,21 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/models/lyric_model.dart';
-import 'package:louvor_bethel/src/ui/lyric_select.dart';
 import 'package:provider/provider.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
+import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
+import 'package:louvor_bethel/src/ui/lyric_select.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
 // ignore: must_be_immutable
 class WorshipAddPage extends StatelessWidget {
   Worship worship = Worship();
-
-  WorshipAddPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +39,14 @@ class WorshipAddPage extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(Icons.add),
-                            Text('Incluir músicas'),
+                            Text('Adicionar músicas'),
                           ],
                         ),
                         onPressed: () async {
-                          await _addLyrics(context).then(
-                            (value) => worship.lyrics.addAll(value),
-                          );
+                          await _selLyrics(context).then((value) {
+                            worship.lyrics = [];
+                            worship.lyrics.addAll(value);
+                          });
                         }),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
@@ -57,7 +56,6 @@ class WorshipAddPage extends StatelessWidget {
                             return;
                           else {
                             formKey.currentState.save();
-                            // worship.lyrics = [];
                             worship.userId =
                                 context.read<UserManager>().user.id;
                             repo.save(worship);
@@ -76,7 +74,7 @@ class WorshipAddPage extends StatelessWidget {
     );
   }
 
-  Future<List<LyricModel>> _addLyrics(context) async {
+  Future<List<LyricModel>> _selLyrics(context) async {
     final List<LyricModel> result = await Navigator.push(
       context,
       PageRouteBuilder(
@@ -87,7 +85,7 @@ class WorshipAddPage extends StatelessWidget {
   }
 
   _dateTimeFormfield() {
-    final format = DateFormat("dd-MM-yyyy HH:mm");
+    final format = DateFormat("dd/MM/yyyy HH:mm");
     return DateTimeField(
       decoration: InputDecoration(
         labelText: 'Data e hora do evento',
@@ -99,13 +97,15 @@ class WorshipAddPage extends StatelessWidget {
       format: format,
       onShowPicker: (context, currentValue) async {
         final date = await showDatePicker(
+          confirmText: 'OK',
           context: context,
-          firstDate: DateTime(1900),
+          firstDate: DateTime.now(),
           initialDate: currentValue ?? DateTime.now(),
-          lastDate: DateTime(2100),
+          lastDate: DateTime.now().add(Duration(days: 180)),
         );
         if (date != null) {
           final time = await showTimePicker(
+            confirmText: 'OK',
             context: context,
             initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
           );
