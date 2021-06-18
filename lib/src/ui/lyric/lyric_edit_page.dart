@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
-import 'package:louvor_bethel/src/route_args.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/validators.dart';

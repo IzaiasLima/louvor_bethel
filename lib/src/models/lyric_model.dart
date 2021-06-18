@@ -66,4 +66,11 @@ class LyricModel {
       'videoUrl': this.videoUrl,
     };
   }
+
+  Map<String, String> toBasicMap() {
+    return {
+      'id': this.id,
+      'title': this.title,
+    };
+  }
 }

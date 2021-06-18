@@ -33,7 +33,6 @@ class WorshipRepository extends ChangeNotifier {
 
   Future<void> _getList() async {
     loading = true;
-
     _worships = [];
     Worship w;
 

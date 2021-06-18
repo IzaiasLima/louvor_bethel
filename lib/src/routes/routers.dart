@@ -4,13 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:louvor_bethel/src/ui/home_page.dart';
 import 'package:louvor_bethel/src/ui/landing_page.dart';
 import 'package:louvor_bethel/src/ui/login_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_add_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_list_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_details_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_select.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_add_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_list_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
+import 'package:louvor_bethel/src/ui/worship/worship_add_page.dart';
 import 'package:louvor_bethel/src/ui/sigup_page.dart';
 import 'package:louvor_bethel/src/ui/user_edit_page.dart';
-import 'package:louvor_bethel/src/ui/worship_add_page.dart';
+import 'package:louvor_bethel/src/ui/worship/lyric_select.dart';
 
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings settings) {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/commons/datetime_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
-import 'package:louvor_bethel/src/ui/lyric_card.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_card.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Semana 25/06 a 31/06'),
+                        Text(DateTimeHelper.getWeek()),
                         Divider(color: Colors.black),
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,

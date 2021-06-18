@@ -8,7 +8,7 @@ class Worship {
   String description;
   String userId;
   UserModel user;
-  List<LyricModel> lyrics;
+  List<Map<String, dynamic>> lyrics;
 
   Worship();
 
@@ -17,9 +17,10 @@ class Worship {
     dateTime = doc['dateTime'].toDate();
     description = doc['description'];
     userId = doc['userId'];
-    lyrics = <LyricModel>[];
+    lyrics = [];
     if (doc['lyrics'] != null) {
-      doc['lyrics'].forEach((v) => lyrics.add(LyricModel.fromMap(v)));
+      // doc['lyrics'].forEach((v) => lyrics.add(LyricModel.fromMap(v)));
+      doc['lyrics'].forEach((v) => lyrics.add(v));
     }
   }
 
@@ -27,10 +28,11 @@ class Worship {
     dateTime = json['dateTime'];
     description = json['description'];
     userId = json['userId'];
-    lyrics = <LyricModel>[];
+    lyrics = [];
     if (json['lyrics'] != null) {
       json['lyrics'].forEach((v) {
-        lyrics.add(new LyricModel.fromJson(v));
+        lyrics.add(LyricModel().toBasicMap());
+        // lyrics.add(new LyricModel.fromJson(v));
       });
     }
   }
@@ -41,7 +43,8 @@ class Worship {
     data['dateTime'] = this.dateTime;
     data['userId'] = this.userId;
     if (this.lyrics != null) {
-      data['lyrics'] = this.lyrics.map((v) => v.toJson()).toList();
+      // data['lyrics'] = this.lyrics.map((v) => v.toJson()).toList();
+      data['lyrics'] = this.lyrics;
     }
     return data;
   }

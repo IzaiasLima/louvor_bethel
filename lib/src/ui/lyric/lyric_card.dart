@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
-import 'package:louvor_bethel/src/ui/lyric_itens.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_itens.dart';
 
 class LyricCard extends StatelessWidget {
   final Worship worship;

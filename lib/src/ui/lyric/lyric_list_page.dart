@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
-import 'package:louvor_bethel/src/ui/lyric_details_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_itens.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_itens.dart';
 
 class LyricListPage extends StatelessWidget {
   @override

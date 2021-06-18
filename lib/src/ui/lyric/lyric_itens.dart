@@ -3,10 +3,10 @@ import 'package:confirm_dialog/confirm_dialog.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
-import 'package:louvor_bethel/src/route_args.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
-import 'package:louvor_bethel/src/ui/lyric_details_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_edit_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_edit_page.dart';
 import 'package:provider/provider.dart';
 
 class LyricItens extends StatelessWidget {

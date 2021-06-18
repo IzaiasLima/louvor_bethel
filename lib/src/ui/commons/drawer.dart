@@ -33,8 +33,7 @@ class CustomDrawer extends StatelessWidget {
                         'Consultar músicas', 'lyric_list'),
                     _listtile(context, Icon(Icons.post_add),
                         'Cadastrar eventos', 'worship_add'),
-                    _listtile(context, Icon(Icons.post_add), 'Editar eventos',
-                        'lyric_select'),
+                    // _listtile(context, Icon(Icons.post_add), 'Editar eventos',''),
                     _listtile(
                         context, Icon(Icons.person), 'Editar Perfil', 'user'),
                     _logout(context, Icon(Icons.exit_to_app), 'Sair', 'login'),

@@ -9,9 +9,9 @@ import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
-import 'package:louvor_bethel/src/ui/lyric_select.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
+import 'package:louvor_bethel/src/ui/worship/lyric_select.dart';
 
 // ignore: must_be_immutable
 class WorshipAddPage extends StatelessWidget {
@@ -48,6 +48,8 @@ class WorshipAddPage extends StatelessWidget {
                             worship.lyrics.addAll(value);
                           });
                         }),
+
+                    // worship.lyrics[]
                     Padding(
                       padding: const EdgeInsets.all(26.0),
                       child: ElevatedButton(
@@ -74,14 +76,16 @@ class WorshipAddPage extends StatelessWidget {
     );
   }
 
-  Future<List<LyricModel>> _selLyrics(context) async {
+  Future<List<Map<String, dynamic>>> _selLyrics(context) async {
+    List<Map<String, dynamic>> sel = [];
     final List<LyricModel> result = await Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, _, __) => LyricSelect(),
       ),
     );
-    return result;
+    result.forEach((l) => sel.add(l.toBasicMap()));
+    return sel;
   }
 
   _dateTimeFormfield() {

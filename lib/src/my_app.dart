@@ -7,8 +7,8 @@ import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/user_manager.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
-import 'package:louvor_bethel/src/ui/lyric_details_page.dart';
-import 'package:louvor_bethel/src/ui/lyric_edit_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_edit_page.dart';
 import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
 import 'package:louvor_bethel/src/ui/video_play.dart';
 
@@ -17,7 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserManager()),
+        ChangeNotifierProvider(
+          create: (_) => UserManager(),
+          lazy: false,
+        ),
         // ChangeNotifierProvider(create: (_) => LyricRepository(), lazy: false),
         ChangeNotifierProxyProvider<UserManager, LyricRepository>(
           create: (_) => LyricRepository(),

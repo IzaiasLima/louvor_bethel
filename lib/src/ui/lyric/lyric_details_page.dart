@@ -4,7 +4,7 @@ import 'package:louvor_bethel/src/commons/constants.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
-import 'package:louvor_bethel/src/route_args.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
