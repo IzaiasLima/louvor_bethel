@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
-import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_itens.dart';
 
 class LyricListPage extends StatelessWidget {
@@ -25,9 +24,7 @@ class LyricListPage extends StatelessWidget {
                   SizedBox(height: 20.0),
                   Card(
                     margin: EdgeInsets.all(0.0),
-                    child: LyricItens(
-                      page: LyricDetailsPage.routeName,
-                    ),
+                    child: LyricItens(),
                   ),
                 ],
               ),

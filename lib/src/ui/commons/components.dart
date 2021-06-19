@@ -10,7 +10,7 @@ Widget circleAvatar(UserModel user, double radius) {
 
   return CircleAvatar(
     radius: radius,
-    backgroundImage: user.photo.image,
+    backgroundImage: user?.photo?.image,
   );
 }
 

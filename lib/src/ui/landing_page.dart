@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splashscreen/splashscreen.dart';
 
-import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/ui/home_page.dart';
-import 'package:louvor_bethel/src/ui/login_page.dart';
+import 'package:louvor_bethel/src/ui/user/login_page.dart';
 
 class LandingPage extends StatelessWidget {
   @override

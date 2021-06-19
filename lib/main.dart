@@ -6,7 +6,6 @@ import 'package:louvor_bethel/src/my_app.dart';
 
 void main() async {
   Intl.defaultLocale = 'pt_BR';
-  // initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());

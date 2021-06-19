@@ -10,17 +10,18 @@ class LyricModel {
   String userId;
   bool selected;
 
-  LyricModel(
-      {this.id,
-      this.title,
-      this.tone,
-      this.style,
-      this.stanza,
-      this.chorus,
-      this.pdfUrl,
-      this.videoUrl,
-      this.userId,
-      this.selected});
+  LyricModel({
+    this.id,
+    this.title,
+    this.tone,
+    this.style,
+    this.stanza,
+    this.chorus,
+    this.pdfUrl,
+    this.videoUrl,
+    this.userId,
+    this.selected,
+  });
 
   LyricModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];

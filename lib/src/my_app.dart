@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
-import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_edit_page.dart';
-import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
-import 'package:louvor_bethel/src/ui/video_play.dart';
+import 'package:louvor_bethel/src/ui/lyric/media/pdf_view_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/media/video_play.dart';
 
 class MyApp extends StatelessWidget {
   @override

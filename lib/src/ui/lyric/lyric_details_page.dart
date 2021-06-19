@@ -8,7 +8,7 @@ import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
-import 'package:louvor_bethel/src/ui/pdf_view_page.dart';
+import 'package:louvor_bethel/src/ui/lyric/media/pdf_view_page.dart';
 import 'package:provider/provider.dart';
 
 class LyricDetailsPage extends StatelessWidget {

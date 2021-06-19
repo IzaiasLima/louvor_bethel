@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                                   LyricCard(repo.worships[index]),
                             )
                           : Container(
-                              child: Text('Não havia dados para exibir.'),
+                              child: Text('Não há eventos agendados.'),
                             ),
                 ],
               ),

@@ -7,13 +7,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 
 class LyricRepository extends ChangeNotifier {
   List<LyricModel> _lyrics = [];
   List<Worship> _worships = [];
-  LyricModel _lyric = new LyricModel();
+  // LyricModel _lyric = new LyricModel();
   UserModel user;
 
   bool _loading = false;
@@ -37,20 +37,24 @@ class LyricRepository extends ChangeNotifier {
 
   List get worships => _worships;
 
-  LyricModel get lyric => _lyric;
-
-  Future<void> lyricById(String id) async {
-    loading = true;
-    try {
-      await refLyrics.doc(id).get().then((doc) {
-        _lyric = LyricModel.fromJson(doc.data());
-        _lyric.id = id;
-      });
-    } catch (err) {
-      debugPrint(err);
-    }
-    loading = false;
+  LyricModel lyricById(String id) {
+    return _lyrics.firstWhere((e) => e.id == id);
   }
+
+  // LyricModel get lyric => _lyric;
+
+  // Future<void> lyricById(String id) async {
+  //   loading = true;
+  //   try {
+  //     await refLyrics.doc(id).get().then((doc) {
+  //       _lyric = LyricModel.fromJson(doc.data());
+  //       _lyric.id = id;
+  //     });
+  //   } catch (err) {
+  //     debugPrint(err);
+  //   }
+  //   loading = false;
+  // }
 
   Future<void> _getList() async {
     loading = true;
@@ -71,7 +75,7 @@ class LyricRepository extends ChangeNotifier {
   }
 
   Future<void> save(LyricModel lyric,
-      {Function onSucess, Function onError}) async {
+      {@required Function onSucess, @required Function onError}) async {
     loading = true;
 
     try {
@@ -83,6 +87,7 @@ class LyricRepository extends ChangeNotifier {
         _lyrics.removeWhere((d) => d.id == lyric.id);
         await refLyrics.doc(lyric.id).update(lyric.toMap());
       }
+      lyric.selected = false;
       _lyrics.add(lyric);
       onSucess(lyric.id);
     } catch (e) {
@@ -113,7 +118,7 @@ class LyricRepository extends ChangeNotifier {
       });
 
       lyric.pdfUrl = await _getUrlPdf(pdfName);
-      await save(lyric);
+      await save(lyric, onSucess: onSucess, onError: onError);
       onSucess(lyric.pdfUrl);
     } catch (e) {
       loading = false;
@@ -146,6 +151,7 @@ class LyricRepository extends ChangeNotifier {
       _lyrics.removeWhere((l) => l.id == lyricId);
       onSucess();
     } catch (e) {
+      loading = false;
       onError(e);
     }
     loading = false;

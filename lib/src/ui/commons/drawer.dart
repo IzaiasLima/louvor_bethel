@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:provider/provider.dart';
 
-import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserModel user = context.read<UserManager>().user;
+
     return SafeArea(
       child: Drawer(
         child: Column(
@@ -27,13 +29,14 @@ class CustomDrawer extends StatelessWidget {
                 child: ListView(
                   children: [
                     _listtile(context, Icon(Icons.home), 'Início', 'home'),
-                    _listtile(context, Icon(Icons.playlist_add),
-                        'Cadastrar músicas', 'lyric_add'),
+                    if (user != null && user.isAdmin)
+                      _listtile(context, Icon(Icons.playlist_add),
+                          'Cadastrar músicas', 'lyric_add'),
                     _listtile(context, Icon(Icons.queue_music),
                         'Consultar músicas', 'lyric_list'),
-                    _listtile(context, Icon(Icons.post_add),
-                        'Cadastrar eventos', 'worship_add'),
-                    // _listtile(context, Icon(Icons.post_add), 'Editar eventos',''),
+                    if (user != null && user.isAdmin)
+                      _listtile(context, Icon(Icons.post_add),
+                          'Agendar eventos', 'worship_add'),
                     _listtile(
                         context, Icon(Icons.person), 'Editar Perfil', 'user'),
                     _logout(context, Icon(Icons.exit_to_app), 'Sair', 'login'),
@@ -48,48 +51,42 @@ class CustomDrawer extends StatelessWidget {
   }
 
   Widget _drawerHeader(BuildContext context) {
+    final UserModel user = context.read<UserManager>().user;
     return DrawerHeader(
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
       ),
-      child: Consumer<UserManager>(
-        builder: (context, value, child) {
-          UserModel user = context.read<UserManager>().user;
-
-          return Column(
-            children: [
-              Container(
-                height: 65,
-                padding: EdgeInsets.all(16.0),
-                alignment: Alignment.bottomCenter,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/bethel.png"),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
+      child: Column(
+        children: [
+          Container(
+            height: 65,
+            padding: EdgeInsets.all(16.0),
+            alignment: Alignment.bottomCenter,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              image: DecorationImage(
+                image: AssetImage("assets/images/bethel.png"),
+                fit: BoxFit.fitHeight,
               ),
-              Text(
-                'Louvor Bethel',
-                style: TextStyle(height: 1.3, color: Colors.white),
-              ),
-              Text(
-                'by Izaias Moreira Lima',
-                style:
-                    TextStyle(fontSize: 8.0, height: 1.0, color: Colors.white),
-              ),
-              Text(
-                'coder@izaias.dev',
-                style: TextStyle(fontSize: 8.0, color: Colors.white),
-              ),
-              Text(
-                user != null ? 'Usuário: ${user.email}' : '',
-                style: TextStyle(fontSize: 9.0, color: Colors.white),
-              ),
-            ],
-          );
-        },
+            ),
+          ),
+          Text(
+            'Louvor Bethel',
+            style: TextStyle(height: 1.3, color: Colors.white),
+          ),
+          Text(
+            'by Izaias Moreira Lima',
+            style: TextStyle(fontSize: 8.0, height: 1.0, color: Colors.white),
+          ),
+          Text(
+            'coder@izaias.dev',
+            style: TextStyle(fontSize: 8.0, color: Colors.white),
+          ),
+          Text(
+            user != null ? 'Usuário: ${user?.email}' : '',
+            style: TextStyle(fontSize: 9.0, color: Colors.white),
+          ),
+        ],
       ),
     );
   }

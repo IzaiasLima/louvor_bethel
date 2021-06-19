@@ -85,7 +85,7 @@ class UserManager extends BaseModel {
 
     if (uid != null) {
       var doc = await firebase.collection('users').doc(uid).get();
-      if (doc.data() != null) tmp = UserModel.fromJson(doc.data());
+      if (doc.data() != null) tmp = UserModel.fromDoc(doc.data());
       tmp.id = uid;
       try {
         if (tmp.urlPhoto != null) tmp.photo = _loadPhoto(tmp);

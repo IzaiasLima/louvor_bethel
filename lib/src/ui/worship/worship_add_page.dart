@@ -6,7 +6,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
-import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
@@ -14,8 +14,24 @@ import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/ui/worship/lyric_select.dart';
 
 // ignore: must_be_immutable
-class WorshipAddPage extends StatelessWidget {
-  Worship worship = Worship();
+class WorshipAddPage extends StatefulWidget {
+  @override
+  _WorshipAddPageState createState() => _WorshipAddPageState();
+}
+
+class _WorshipAddPageState extends State<WorshipAddPage> {
+  final fmt = DateFormat("dd/MM/yyyy HH:mm");
+  Worship worship;
+  TextEditingController descController;
+  TextEditingController dateTimeController;
+
+  @override
+  void initState() {
+    worship = Worship();
+    descController = TextEditingController();
+    dateTimeController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +45,31 @@ class WorshipAddPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Consumer<WorshipRepository>(
-            builder: (_, repo, __) {
+            builder: (_, x, __) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
                     _descriptionFormField(),
                     _dateTimeFormfield(),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Column(
+                        children: worship.songs == null
+                            ? [
+                                Text('Ainda não há músicas selecionadas.',
+                                    style: TextStyle(color: Colors.red))
+                              ]
+                            : worship.songs
+                                .map((s) => ListTile(
+                                      minLeadingWidth: 0.1,
+                                      dense: true,
+                                      leading: Icon(Icons.music_note),
+                                      title: Text('${s['title']}'),
+                                    ))
+                                .toList(),
+                      ),
+                    ),
                     TextButton(
                         child: Row(
                           children: [
@@ -43,24 +78,30 @@ class WorshipAddPage extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          await _selLyrics(context).then((value) {
-                            worship.lyrics = [];
-                            worship.lyrics.addAll(value);
+                          formKey.currentState.save();
+                          await _selLyrics(context, worship).then((value) {
+                            setState(() {
+                              worship = value;
+                              descController.text = worship.description;
+                              dateTimeController.text =
+                                  fmt.format(worship.dateTime);
+                            });
                           });
                         }),
-
-                    // worship.lyrics[]
                     Padding(
                       padding: const EdgeInsets.all(26.0),
                       child: ElevatedButton(
                         onPressed: () {
-                          if (!formKey.currentState.validate())
+                          final repo = context.read<WorshipRepository>();
+                          if (!formKey.currentState.validate() ||
+                              worship.songs == null)
                             return;
                           else {
                             formKey.currentState.save();
                             worship.userId =
                                 context.read<UserManager>().user.id;
                             repo.save(worship);
+                            Navigator.of(context).pop();
                           }
                         },
                         child: Text('CADASTRAR'),
@@ -76,8 +117,10 @@ class WorshipAddPage extends StatelessWidget {
     );
   }
 
-  Future<List<Map<String, dynamic>>> _selLyrics(context) async {
+  Future<Worship> _selLyrics(context, Worship worship) async {
     List<Map<String, dynamic>> sel = [];
+    worship.songs = [];
+
     final List<LyricModel> result = await Navigator.push(
       context,
       PageRouteBuilder(
@@ -85,12 +128,13 @@ class WorshipAddPage extends StatelessWidget {
       ),
     );
     result.forEach((l) => sel.add(l.toBasicMap()));
-    return sel;
+    worship.songs.addAll(sel);
+    return worship;
   }
 
   _dateTimeFormfield() {
-    final format = DateFormat("dd/MM/yyyy HH:mm");
     return DateTimeField(
+      controller: dateTimeController,
       decoration: InputDecoration(
         labelText: 'Data e hora do evento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -98,7 +142,7 @@ class WorshipAddPage extends StatelessWidget {
       validator: (value) =>
           validWorshipDate(value) ? null : Constants.validTime,
       onSaved: (dateTime) => worship.dateTime = dateTime,
-      format: format,
+      format: fmt,
       onShowPicker: (context, currentValue) async {
         final date = await showDatePicker(
           confirmText: 'OK',
@@ -123,6 +167,7 @@ class WorshipAddPage extends StatelessWidget {
 
   _descriptionFormField() {
     return TextFormField(
+      controller: descController,
       autocorrect: true,
       // autofocus: true,
       decoration: InputDecoration(

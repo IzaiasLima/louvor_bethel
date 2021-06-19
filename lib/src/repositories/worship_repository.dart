@@ -2,12 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/models/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 
 class WorshipRepository extends ChangeNotifier {
-  CollectionReference worshioRef =
-      FirebaseFirestore.instance.collection('worships');
+  CollectionReference ref = FirebaseFirestore.instance.collection('worships');
 
   List<Worship> _worships;
   bool _loading = false;
@@ -27,7 +26,8 @@ class WorshipRepository extends ChangeNotifier {
 
   Future<void> save(Worship worship) async {
     loading = true;
-    await worshioRef.add(worship.toMap);
+    await ref.add(worship.toMap);
+    _worships.add(worship);
     loading = false;
   }
 
@@ -37,7 +37,7 @@ class WorshipRepository extends ChangeNotifier {
     Worship w;
 
     try {
-      await worshioRef.orderBy('dateTime').get().then((values) async {
+      await ref.orderBy('dateTime').get().then((values) async {
         for (DocumentSnapshot doc in values.docs) {
           w = Worship.fromDoc(doc);
           await _getUser(w.userId).then((usr) => w.user = usr);
@@ -64,5 +64,21 @@ class WorshipRepository extends ChangeNotifier {
       debugPrint(err);
     }
     return user;
+  }
+
+  Future<void> delete(String worshipId,
+      {Function onSucess, Function onError}) async {
+    loading = true;
+    try {
+      await ref.doc(worshipId).delete().onError((err, _) {
+        throw (err);
+      });
+      _worships.removeWhere((w) => w.id == worshipId);
+      onSucess();
+    } catch (e) {
+      loading = false;
+      onError(e);
+    }
+    loading = false;
   }
 }

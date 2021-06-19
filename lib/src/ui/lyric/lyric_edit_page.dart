@@ -64,7 +64,7 @@ class LyricEditPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               ElevatedButton(
-                                  child: Text('  SALVAR  '),
+                                  child: Text('SALVAR'),
                                   onPressed: () {
                                     if (!formKey.currentState.validate())
                                       return;
@@ -75,10 +75,10 @@ class LyricEditPage extends StatelessWidget {
                                           customSnackBar(context,
                                               'Música atualizada com sucesso.');
                                         },
-                                        onError: (err) =>
-                                            errorSnackBar(context, err));
+                                        onError: (err) => errorSnackBar(
+                                            context, err.toString()));
                                   }),
-                              SizedBox(width: 10.0),
+                              SizedBox(width: 8.0),
                               ElevatedButton(
                                 child: Text('ANEXAR PDF'),
                                 onPressed: () {

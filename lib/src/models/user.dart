@@ -8,12 +8,14 @@ class UserModel {
   Image photo;
   String password;
   String confirmPass;
+  bool isAdmin;
 
   UserModel(
       {this.id = '',
       this.name = '',
       this.email = '',
       this.password = '',
+      this.isAdmin = false,
       this.urlPhoto});
 
   Map<String, dynamic> toMap() {
@@ -24,10 +26,11 @@ class UserModel {
     };
   }
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UserModel.fromDoc(Map<String, dynamic> json) {
     email = json['email'];
     name = json['name'];
     urlPhoto = json['urlPhoto'];
+    isAdmin = json['isAdmin'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
