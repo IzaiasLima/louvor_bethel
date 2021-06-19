@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
@@ -32,17 +33,23 @@ class SongItens extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext context, songs, int index) {
-    final bool hasNext = (index + 1) < songs.length;
     String songId = songs[index]['id'];
+    final bool hasNext = (index + 1) < songs.length;
+    final LyricModel lyric = context.read<LyricRepository>().lyricById(songId);
+    final args = RouteObjectArgs(lyric);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
+          onLongPress: () {
+            Navigator.pushNamed(context, LyricDetailsPage.routeName,
+                arguments: args);
+          },
           onTap: () async {
-            final LyricModel lyric =
-                context.read<LyricRepository>().lyricById(songId);
-            final args = RouteObjectArgs(lyric);
+            // final LyricModel lyric =
+            //     context.read<LyricRepository>().lyricById(songId);
+            // final args = RouteObjectArgs(lyric);
             (lyric == null || lyric.pdfUrl == null || lyric.pdfUrl.isEmpty)
                 ? errorSnackBar(context, 'PDF não incluído para esta música.')
                 : Navigator.pushNamed(context, PdfViewPage.routeName,

@@ -46,10 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                             : ElevatedButton(
                                 child: Text('AUTENTICAR'),
                                 onPressed: () {
-                                  if (!formKey.currentState.validate()) {
-                                    return;
-                                  }
-
+                                  if (!formKey.currentState.validate()) return;
                                   userManager.signIn(
                                     user: UserModel(
                                       email: emailController.text,
@@ -65,9 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                       ),
                       // _switchStateButtom(authStateModel),
-                      SizedBox(
-                        height: 40,
-                      ),
+                      SizedBox(height: 16),
                       _newUserTextButtom(),
                     ],
                   ),

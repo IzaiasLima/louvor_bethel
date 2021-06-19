@@ -36,8 +36,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollPdf());
 
     return Scaffold(
-      appBar: CustomAppBar(),
-      drawer: CustomDrawer(),
+      appBar: AppBar(automaticallyImplyLeading: true),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(
         alignment: Alignment.bottomRight,

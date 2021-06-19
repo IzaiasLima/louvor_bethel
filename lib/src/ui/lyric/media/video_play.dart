@@ -34,8 +34,7 @@ class _VideoPlayState extends State<VideoPlay> {
     );
 
     return Scaffold(
-      drawer: CustomDrawer(),
-      appBar: CustomAppBar(),
+      appBar: AppBar(automaticallyImplyLeading: true),
       body: Container(
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
