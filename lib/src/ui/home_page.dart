@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/commons/datetime_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
+import 'package:louvor_bethel/src/commons/datetime_helper.dart';
+import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
-import 'package:louvor_bethel/src/ui/lyric/lyric_card.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_card.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool listAll = false;
+  int weekOfset = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,17 +29,27 @@ class HomePage extends StatelessWidget {
         ),
         child: Consumer<WorshipRepository>(
           builder: (_, repo, __) {
+            List<Worship> worships =
+                listAll ? repo.worships : repo.getWeek(weekOfset);
             return SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(26.0, 26.0, 26.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(DateTimeHelper.getWeek()),
+                        GestureDetector(
+                          onDoubleTap: onDoubleTap,
+                          onHorizontalDragEnd: onHorizontalDragEnd,
+                          child: listAll
+                              ? Text('Lista geral de eventos')
+                              : Text(
+                                  DateTimeHelper.getTxtWeek(offset: weekOfset),
+                                ),
+                        ),
                         Divider(color: Colors.black),
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,16 +57,16 @@ class HomePage extends StatelessWidget {
                   ),
                   repo.loading
                       ? CircularProgressIndicator()
-                      : (repo.worships != null && repo.worships.length > 0)
+                      : (worships != null && worships.length > 0)
                           ? ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: repo.worships.length,
+                              itemCount: worships.length,
                               itemBuilder: (context, index) =>
-                                  LyricCard(repo.worships[index]),
+                                  LyricCard(worships[index]),
                             )
                           : Container(
-                              child: Text('Não há eventos agendados.'),
+                              child: Text('Sem eventos nesta semana.'),
                             ),
                 ],
               ),
@@ -56,5 +75,19 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onHorizontalDragEnd(DragEndDetails details) {
+    bool increment = details.velocity.pixelsPerSecond > Offset.zero;
+    setState(() {
+      if (increment)
+        weekOfset++;
+      else
+        weekOfset--;
+    });
+  }
+
+  void onDoubleTap() {
+    setState(() => listAll = !listAll);
   }
 }

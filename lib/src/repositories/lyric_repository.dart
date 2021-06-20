@@ -13,13 +13,33 @@ import 'package:louvor_bethel/src/models/worship.dart';
 class LyricRepository extends ChangeNotifier {
   List<LyricModel> _lyrics = [];
   List<Worship> _worships = [];
-  // LyricModel _lyric = new LyricModel();
   UserModel user;
-
+  String _search = '';
   bool _loading = false;
 
   final refLyrics = FirebaseFirestore.instance.collection('lyrics');
   final storage = FirebaseStorage.instance;
+
+  String get search => _search.toLowerCase();
+
+  set search(String value) {
+    _search = value ?? '';
+    notifyListeners();
+  }
+
+  List<LyricModel> get filteredLyrics {
+    List<LyricModel> filtered = [];
+
+    if (search == null || search.isEmpty) {
+      filtered.addAll(_lyrics);
+    } else {
+      filtered.addAll(lyrics.where((l) =>
+          l.title.toLowerCase().contains(search) ||
+          l.stanza.toLowerCase().contains(search) ||
+          l.chorus.toLowerCase().contains(search)));
+    }
+    return filtered;
+  }
 
   update(UserManager userManager) {
     this.user = userManager.user;
@@ -38,23 +58,12 @@ class LyricRepository extends ChangeNotifier {
   List get worships => _worships;
 
   LyricModel lyricById(String id) {
-    return _lyrics.firstWhere((e) => e.id == id);
+    try {
+      return _lyrics.isNotEmpty ? _lyrics.firstWhere((e) => e.id == id) : null;
+    } catch (_) {
+      return new LyricModel(id: null, title: 'Música excluída');
+    }
   }
-
-  // LyricModel get lyric => _lyric;
-
-  // Future<void> lyricById(String id) async {
-  //   loading = true;
-  //   try {
-  //     await refLyrics.doc(id).get().then((doc) {
-  //       _lyric = LyricModel.fromJson(doc.data());
-  //       _lyric.id = id;
-  //     });
-  //   } catch (err) {
-  //     debugPrint(err);
-  //   }
-  //   loading = false;
-  // }
 
   Future<void> _getList() async {
     loading = true;
@@ -164,38 +173,4 @@ class LyricRepository extends ChangeNotifier {
       debugPrint('Erro excluindo PDF: $err');
     }
   }
-
-// s
-
-// // Testes
-//   Future<void> _getWorshipList() async {
-//     loading = true;
-//     await getAdoracao();
-//     await getOferta();
-//     loading = false;
-//   }
-
-// // Testes
-//   Future<void> getOferta() async {
-//     Map<String, dynamic> json = {
-//       "dateTime": DateTime.parse("20201-06-24 20:10"),
-//       "description": "Oferta",
-//       "userId": "akmG1s9NXpaIZJeFLbG5wuJBKad2",
-//     };
-//     Worship w = Worship.fromJson(json);
-//     w.lyrics.add(_lyrics.last);
-//     await getWorshipWithUser(w);
-//     _worships.add(w);
-//   }
-
-  // static Future<Worship> getWorshipWithUser(Worship worship) async {
-  //   try {
-  //     await UserManager().userById(worship.userId).then((usr) {
-  //       worship.user = usr;
-  //     });
-  //   } on Exception catch (_) {
-  //     worship.user = new UserModel();
-  //   }
-  //   return worship;
-  // }
 }

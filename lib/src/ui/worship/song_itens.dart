@@ -28,7 +28,7 @@ class SongItens extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             height: 50,
             width: MediaQuery.of(context).size.width,
-            child: Text('Não havia dados para exibir.'),
+            child: Text('Sem eventos na semana selecionada.'),
           );
   }
 
@@ -42,14 +42,11 @@ class SongItens extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onLongPress: () {
-            Navigator.pushNamed(context, LyricDetailsPage.routeName,
-                arguments: args);
-          },
+          onLongPress: () => lyric.id != null
+              ? Navigator.pushNamed(context, LyricDetailsPage.routeName,
+                  arguments: args)
+              : errorSnackBar(context, 'Música inexiste na base de dados.'),
           onTap: () async {
-            // final LyricModel lyric =
-            //     context.read<LyricRepository>().lyricById(songId);
-            // final args = RouteObjectArgs(lyric);
             (lyric == null || lyric.pdfUrl == null || lyric.pdfUrl.isEmpty)
                 ? errorSnackBar(context, 'PDF não incluído para esta música.')
                 : Navigator.pushNamed(context, PdfViewPage.routeName,

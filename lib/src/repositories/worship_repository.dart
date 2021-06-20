@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:louvor_bethel/src/commons/datetime_helper.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
@@ -19,16 +20,21 @@ class WorshipRepository extends ChangeNotifier {
 
   bool get loading => _loading;
 
+  get weekOfset => null;
+
   set loading(bool state) {
     _loading = state;
     notifyListeners();
   }
 
-  Future<void> save(Worship worship) async {
-    loading = true;
-    await ref.add(worship.toMap);
-    _worships.add(worship);
-    loading = false;
+  List<Worship> getWeek(int ofset) {
+    DateTime start = DateTimeHelper.getWeekFilter(offset: ofset)['weekStart'];
+    DateTime end = DateTimeHelper.getWeekFilter(offset: ofset)['weekEnd'];
+
+    List<Worship> week = _worships
+        .where((w) => (w.dateTime.isAfter(start) && w.dateTime.isBefore(end)))
+        .toList();
+    return week;
   }
 
   Future<void> _getList() async {
@@ -64,6 +70,13 @@ class WorshipRepository extends ChangeNotifier {
       debugPrint(err);
     }
     return user;
+  }
+
+  Future<void> save(Worship worship) async {
+    loading = true;
+    await ref.add(worship.toMap);
+    _worships.add(worship);
+    loading = false;
   }
 
   Future<void> delete(String worshipId,

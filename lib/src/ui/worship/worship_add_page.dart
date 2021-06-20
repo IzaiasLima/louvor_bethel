@@ -21,15 +21,17 @@ class WorshipAddPage extends StatefulWidget {
 
 class _WorshipAddPageState extends State<WorshipAddPage> {
   final fmt = DateFormat("dd/MM/yyyy HH:mm");
-  Worship worship;
   TextEditingController descController;
   TextEditingController dateTimeController;
+  DateTime initValue;
+  Worship worship;
 
   @override
   void initState() {
     worship = Worship();
     descController = TextEditingController();
     dateTimeController = TextEditingController();
+    initValue = DateTime.now();
     super.initState();
   }
 
@@ -44,73 +46,69 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
         key: formKey,
         child: Padding(
           padding: const EdgeInsets.all(30.0),
-          child: Consumer<WorshipRepository>(
-            builder: (_, x, __) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _descriptionFormField(),
-                    _dateTimeFormfield(),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Column(
-                        children: worship.songs == null
-                            ? [
-                                Text('Ainda não há músicas selecionadas.',
-                                    style: TextStyle(color: Colors.red))
-                              ]
-                            : worship.songs
-                                .map((s) => ListTile(
-                                      minLeadingWidth: 0.1,
-                                      dense: true,
-                                      leading: Icon(Icons.music_note),
-                                      title: Text('${s['title']}'),
-                                    ))
-                                .toList(),
-                      ),
-                    ),
-                    TextButton(
-                        child: Row(
-                          children: [
-                            Icon(Icons.add),
-                            Text('Adicionar músicas'),
-                          ],
-                        ),
-                        onPressed: () async {
-                          formKey.currentState.save();
-                          await _selLyrics(context, worship).then((value) {
-                            setState(() {
-                              worship = value;
-                              descController.text = worship.description;
-                              dateTimeController.text =
-                                  fmt.format(worship.dateTime);
-                            });
-                          });
-                        }),
-                    Padding(
-                      padding: const EdgeInsets.all(26.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final repo = context.read<WorshipRepository>();
-                          if (!formKey.currentState.validate() ||
-                              worship.songs == null)
-                            return;
-                          else {
-                            formKey.currentState.save();
-                            worship.userId =
-                                context.read<UserManager>().user.id;
-                            repo.save(worship);
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text('CADASTRAR'),
-                      ),
-                    ),
-                  ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _descriptionFormField(),
+                _dateTimeFormfield(),
+                Container(
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    children: worship.songs == null
+                        ? [
+                            Text('Ainda não há músicas selecionadas.',
+                                style: TextStyle(color: Colors.red))
+                          ]
+                        : worship.songs
+                            .map((s) => ListTile(
+                                  minLeadingWidth: 0.1,
+                                  dense: true,
+                                  leading: Icon(Icons.music_note),
+                                  title: Text('${s['title']}'),
+                                ))
+                            .toList(),
+                  ),
                 ),
-              );
-            },
+                TextButton(
+                    child: Row(
+                      children: [
+                        Icon(Icons.add),
+                        Text('Adicionar músicas'),
+                      ],
+                    ),
+                    onPressed: () async {
+                      formKey.currentState.save();
+                      await _selLyrics(context, worship).then((value) {
+                        setState(() {
+                          worship = value;
+                          initValue = worship.dateTime;
+                          dateTimeController.text =
+                              fmt.format(worship.dateTime);
+                          descController.text = worship.description;
+                        });
+                      });
+                    }),
+                Padding(
+                  padding: const EdgeInsets.all(26.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final repo = context.read<WorshipRepository>();
+                      if (!formKey.currentState.validate() ||
+                          worship.songs == null)
+                        return;
+                      else {
+                        formKey.currentState.save();
+                        worship.userId = context.read<UserManager>().user.id;
+                        repo.save(worship);
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: Text('CADASTRAR'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -135,6 +133,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
   _dateTimeFormfield() {
     return DateTimeField(
       controller: dateTimeController,
+      initialValue: initValue,
       decoration: InputDecoration(
         labelText: 'Data e hora do evento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -148,7 +147,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
           confirmText: 'OK',
           context: context,
           firstDate: DateTime.now(),
-          initialDate: currentValue ?? DateTime.now(),
+          initialDate: currentValue ?? initValue,
           lastDate: DateTime.now().add(Duration(days: 180)),
         );
         if (date != null) {

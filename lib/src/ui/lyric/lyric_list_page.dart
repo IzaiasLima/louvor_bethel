@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
-import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
+import 'package:louvor_bethel/src/commons/constants.dart';
+import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_itens.dart';
 
@@ -9,7 +12,16 @@ class LyricListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: AppBar(
+        title: Consumer<LyricRepository>(builder: (_, repo, __) {
+          return repo.search.isEmpty
+              ? Text(Constants.title)
+              : Text('${repo.search}');
+        }),
+        actions: [
+          searchLyrics(context),
+        ],
+      ), // CustomAppBar(),
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(

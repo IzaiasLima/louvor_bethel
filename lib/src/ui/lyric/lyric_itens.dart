@@ -19,9 +19,9 @@ class LyricItens extends StatelessWidget {
           ? ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: repo.lyrics.length,
+              itemCount: repo.filteredLyrics.length,
               itemBuilder: (context, index) =>
-                  _buildItem(context, repo.lyrics, index),
+                  _buildItem(context, repo.filteredLyrics, index),
             )
           : Container(
               padding: EdgeInsets.all(16.0),
