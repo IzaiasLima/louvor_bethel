@@ -45,31 +45,45 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
       body: Form(
         key: formKey,
         child: Padding(
-          padding: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: SingleChildScrollView(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _descriptionFormField(),
                 _dateTimeFormfield(),
                 Container(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Column(
-                    children: worship.songs == null
-                        ? [
-                            Text('Ainda não há músicas selecionadas.',
-                                style: TextStyle(color: Colors.red))
-                          ]
-                        : worship.songs
-                            .map((s) => ListTile(
-                                  minLeadingWidth: 0.1,
-                                  dense: true,
-                                  leading: Icon(Icons.music_note),
-                                  title: Text('${s['title']}'),
-                                ))
-                            .toList(),
-                  ),
-                ),
+                    alignment: Alignment.topLeft,
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: worship.songs == null
+                        ? Text('Ainda não há músicas selecionadas.',
+                            style: TextStyle(color: Colors.red))
+                        : Container(
+                            height: (worship.songs.length * 50.0),
+                            child: ReorderableListView(
+                              children: worship.songs
+                                  .map((song) => ListTile(
+                                        key: ValueKey(song),
+                                        dense: true,
+                                        minLeadingWidth: 0.1,
+                                        horizontalTitleGap: 0.0,
+                                        leading: Icon(Icons.music_note),
+                                        title: Text('${song['title']}'),
+                                      ))
+                                  .toList(),
+                              onReorder: reorderSongs,
+                            ),
+                          )
+                    // : worship.songs
+                    //     .map((s) => ListTile(
+                    //           minLeadingWidth: 0.1,
+                    //           dense: true,
+                    //           leading: Icon(Icons.music_note),
+                    //           title: Text('${s['title']}'),
+                    //         ))
+                    //     .toList(),
+                    // ),
+                    ),
                 TextButton(
                     child: Row(
                       children: [
@@ -113,6 +127,16 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
         ),
       ),
     );
+  }
+
+  void reorderSongs(int oldindex, int newindex) {
+    setState(() {
+      if (newindex > oldindex) {
+        newindex -= 1;
+      }
+      final song = worship.songs.removeAt(oldindex);
+      worship.songs.insert(newindex, song);
+    });
   }
 
   Future<Worship> _selLyrics(context, Worship worship) async {

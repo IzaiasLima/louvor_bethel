@@ -27,14 +27,14 @@ class WorshipRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Worship> getWeek(int ofset) {
+  List<Worship> getWeekWorships(int ofset) {
     DateTime start = DateTimeHelper.getWeekFilter(offset: ofset)['weekStart'];
     DateTime end = DateTimeHelper.getWeekFilter(offset: ofset)['weekEnd'];
 
-    List<Worship> week = _worships
+    List<Worship> weekWorships = _worships
         .where((w) => (w.dateTime.isAfter(start) && w.dateTime.isBefore(end)))
         .toList();
-    return week;
+    return weekWorships;
   }
 
   Future<void> _getList() async {

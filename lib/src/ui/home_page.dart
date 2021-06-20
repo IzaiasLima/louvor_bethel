@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
         child: Consumer<WorshipRepository>(
           builder: (_, repo, __) {
             List<Worship> worships =
-                listAll ? repo.worships : repo.getWeek(weekOfset);
+                listAll ? repo.worships : repo.getWeekWorships(weekOfset);
             return SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Column(

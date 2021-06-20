@@ -28,30 +28,31 @@ class LyricCard extends StatelessWidget {
         children: [
           Card(
             elevation: 1,
-            color: Colors.white.withAlpha(180),
             margin: EdgeInsets.zero,
+            color: Colors.white.withAlpha(180),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: circleAvatar(worship.user, 20),
-                    ),
-                    SizedBox(width: 4.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          StringHelper.capitalize(dia.format(worship.dateTime)),
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(worship.description,
-                            style: TextStyle(height: 0.95)),
-                      ],
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Row(
+                    children: [
+                      circleAvatar(worship.user, 18),
+                      SizedBox(width: 4.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            StringHelper.capitalize(
+                                dia.format(worship.dateTime)),
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          Text(worship.description,
+                              style: TextStyle(height: 0.95)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 if (user.isAdmin) _popUpMenu(context, worship.id),
               ],
@@ -67,6 +68,7 @@ class LyricCard extends StatelessWidget {
 
   Widget _popUpMenu(BuildContext context, String worshipId) {
     return PopupMenuButton<int>(
+      padding: EdgeInsets.all(10),
       itemBuilder: (_) => [
         PopupMenuItem(
           value: 2,
