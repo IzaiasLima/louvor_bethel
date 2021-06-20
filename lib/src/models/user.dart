@@ -23,6 +23,7 @@ class UserModel {
       'name': this.name,
       'email': this.email,
       'urlPhoto': this.urlPhoto,
+      'isAdmin': this.isAdmin ?? false,
     };
   }
 
