@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';
@@ -15,7 +18,7 @@ class PdfViewPage extends StatefulWidget {
 class _PdfViewPageState extends State<PdfViewPage> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   ScrollController _scrollController;
-  double speed = 50;
+  double speed = 10;
   SfPdfViewer pdf;
   bool isStoped = true;
 
@@ -34,8 +37,11 @@ class _PdfViewPageState extends State<PdfViewPage> {
     final LyricModel lyric = args.objParam as LyricModel;
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollPdf());
 
+    Future.delayed(Duration.zero,
+        () => context.read<LyricRepository>().setUrlPdf('${lyric.id}.pdf'));
+
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: true),
+      appBar: CustomAppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(
         alignment: Alignment.bottomRight,
@@ -58,14 +64,12 @@ class _PdfViewPageState extends State<PdfViewPage> {
               child: Slider(
                 value: speed,
                 min: 1.0,
-                max: 100.0,
-                divisions: 99,
-                onChanged: (value) {
-                  setState(() {
-                    speed = value;
-                    print(speed);
-                  });
-                },
+                max: 20.0,
+                divisions: 19,
+                onChanged: (value) => setState(() {
+                  speed = value;
+                  print(speed);
+                }),
               ),
             ),
           ),
@@ -76,19 +80,26 @@ class _PdfViewPageState extends State<PdfViewPage> {
           fit: StackFit.expand,
           alignment: Alignment.topLeft,
           children: [
-            SingleChildScrollView(
-              controller: _scrollController,
-              child: SfPdfViewer.network(
-                lyric.pdfUrl,
-                key: _pdfViewerKey,
-                initialScrollOffset: Offset.zero,
-                canShowPaginationDialog: false,
-                canShowScrollHead: false,
-                canShowScrollStatus: false,
-                interactionMode: PdfInteractionMode.pan,
-                pageSpacing: 0.0,
-              ),
-            ),
+            Consumer<LyricRepository>(
+              builder: (_, repo, __) {
+                if (repo.url == null || repo.url.isEmpty)
+                  return Center(child: CircularProgressIndicator());
+                else
+                  return SingleChildScrollView(
+                    controller: _scrollController,
+                    child: SfPdfViewer.network(
+                      repo.url,
+                      key: _pdfViewerKey,
+                      initialScrollOffset: Offset.zero,
+                      canShowPaginationDialog: false,
+                      canShowScrollHead: false,
+                      canShowScrollStatus: false,
+                      interactionMode: PdfInteractionMode.pan,
+                      pageSpacing: 0.0,
+                    ),
+                  );
+              },
+            )
           ],
         ),
       ),

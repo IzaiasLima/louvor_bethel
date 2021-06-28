@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/src/commons/constants.dart';
+import 'package:provider/provider.dart';
 
+import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric_model.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
-import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/ui/lyric/media/pdf_view_page.dart';
-import 'package:provider/provider.dart';
 
 class LyricDetailsPage extends StatelessWidget {
   static const routeName = 'lyric_details';
@@ -21,7 +20,7 @@ class LyricDetailsPage extends StatelessWidget {
     final lyric = args.objParam as LyricModel;
     return Scaffold(
       appBar: CustomAppBar(),
-      drawer: CustomDrawer(),
+      // drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Consumer<LyricRepository>(builder: (context, repo, child) {
           if (repo.lyrics.length > 0) {
@@ -123,14 +122,6 @@ class LyricDetailsPage extends StatelessWidget {
             ),
           ],
         ),
-
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 30.0),
-        //   child: Card(
-        //     elevation: 2,
-        //     child: Image.asset('assets/images/lyric_sample.png'),
-        //   ),
-        // ),
       ],
     );
   }

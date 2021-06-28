@@ -16,16 +16,19 @@ class LyricRepository extends ChangeNotifier {
   UserModel user;
   String _search = '';
   bool _loading = false;
+  String _url = '';
 
   final refLyrics = FirebaseFirestore.instance.collection('lyrics');
   final storage = FirebaseStorage.instance;
 
   String get search => _search.toLowerCase();
+  String get url => _url;
 
-  set search(String value) {
-    _search = value ?? '';
-    notifyListeners();
-  }
+  get loading => _loading;
+
+  List get lyrics => _lyrics;
+
+  List get worships => _worships;
 
   List<LyricModel> get filteredLyrics {
     List<LyricModel> filtered = [];
@@ -41,21 +44,10 @@ class LyricRepository extends ChangeNotifier {
     return filtered;
   }
 
-  update(UserManager userManager) {
-    this.user = userManager.user;
-    _getList();
-  }
-
-  get loading => _loading;
-
   set loading(bool state) {
     _loading = state;
     notifyListeners();
   }
-
-  List get lyrics => _lyrics;
-
-  List get worships => _worships;
 
   LyricModel lyricById(String id) {
     try {
@@ -63,6 +55,11 @@ class LyricRepository extends ChangeNotifier {
     } catch (_) {
       return new LyricModel(id: null, title: 'Música excluída');
     }
+  }
+
+  set search(String value) {
+    _search = value ?? '';
+    notifyListeners();
   }
 
   Future<void> _getList() async {
@@ -126,7 +123,8 @@ class LyricRepository extends ChangeNotifier {
         }
       });
 
-      lyric.pdfUrl = await _getUrlPdf(pdfName);
+      await setUrlPdf(pdfName);
+      lyric.pdfUrl = _url;
       await save(lyric, onSucess: onSucess, onError: onError);
       onSucess(lyric.pdfUrl);
     } catch (e) {
@@ -136,17 +134,21 @@ class LyricRepository extends ChangeNotifier {
     loading = false;
   }
 
-  Future<String> _getUrlPdf(String pdfName) async {
-    String url = '';
-
+  Future<void> setUrlPdf(String pdfName) async {
+    loading = true;
     try {
       Reference refPdf = storage.ref().child('lyrics/$pdfName');
-      url = await refPdf.getDownloadURL().then((value) => value);
+      _url = await refPdf.getDownloadURL().then((value) => value);
+      loading = false;
     } catch (err) {
+      loading = false;
       debugPrint('Erro obtendo Url do PDF: $err');
     }
+  }
 
-    return url;
+  update(UserManager userManager) {
+    this.user = userManager.user;
+    _getList();
   }
 
   Future<void> delete(String lyricId,

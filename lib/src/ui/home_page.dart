@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
@@ -44,11 +45,19 @@ class _HomePageState extends State<HomePage> {
                         GestureDetector(
                           onDoubleTap: onDoubleTap,
                           onHorizontalDragEnd: onHorizontalDragEnd,
-                          child: listAll
-                              ? Text('Lista geral de eventos')
-                              : Text(
-                                  DateTimeHelper.getTxtWeek(offset: weekOfset),
-                                ),
+                          child: LayoutBuilder(
+                            builder: (_, constrains) {
+                              return Container(
+                                width: constrains.maxWidth,
+                                child: listAll
+                                    ? Text('Lista geral (todos os eventos)')
+                                    : Text(
+                                        DateTimeHelper.getTxtWeek(
+                                            offset: weekOfset),
+                                      ),
+                              );
+                            },
+                          ),
                         ),
                         Divider(color: Colors.black),
                       ],
@@ -78,12 +87,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    bool increment = details.velocity.pixelsPerSecond > Offset.zero;
     setState(() {
-      if (increment)
+      if (details.primaryVelocity > 1.0) {
         weekOfset++;
-      else
+      } else if (details.primaryVelocity < -1.0) {
         weekOfset--;
+      }
     });
   }
 

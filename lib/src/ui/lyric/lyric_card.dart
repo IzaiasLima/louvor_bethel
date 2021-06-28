@@ -13,7 +13,7 @@ import 'package:louvor_bethel/src/ui/worship/song_itens.dart';
 
 class LyricCard extends StatelessWidget {
   final Worship worship;
-  final DateFormat dia = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
+  final DateFormat fmt = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
 
   LyricCard(this.worship);
 
@@ -44,7 +44,7 @@ class LyricCard extends StatelessWidget {
                         children: [
                           Text(
                             StringHelper.capitalize(
-                                dia.format(worship.dateTime)),
+                                fmt.format(worship.dateTime)),
                             style: Theme.of(context).textTheme.headline4,
                           ),
                           Text(worship.description,
@@ -70,6 +70,31 @@ class LyricCard extends StatelessWidget {
     return PopupMenuButton<int>(
       padding: EdgeInsets.all(10),
       itemBuilder: (_) => [
+        PopupMenuItem(
+          value: 2,
+          child: InkWell(
+            child: Row(
+              children: [
+                Icon(Icons.delete_outlined),
+                SizedBox(width: 16.0),
+                Text('Fazer escala'),
+              ],
+            ),
+            onTap: () async {
+              Navigator.pop(context);
+              if (await confirm(
+                context,
+                content: Text('Fazer a escala dos músicos para este evento?'),
+                textOK: Text('SIM'),
+                textCancel: Text('NÃO'),
+              )) {
+                customSnackBar(context, 'Exclusão efetuada com sucesso.');
+                return;
+              }
+              return;
+            },
+          ),
+        ),
         PopupMenuItem(
           value: 2,
           child: InkWell(
