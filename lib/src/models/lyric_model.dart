@@ -8,6 +8,7 @@ class LyricModel {
   String pdfUrl;
   String videoUrl;
   String userId;
+  bool hasPdf;
   bool selected;
 
   LyricModel({
@@ -20,6 +21,7 @@ class LyricModel {
     this.pdfUrl,
     this.videoUrl,
     this.userId,
+    this.hasPdf,
     this.selected,
   });
 
@@ -38,6 +40,7 @@ class LyricModel {
     pdfUrl = json['pdfUrl'];
     videoUrl = json['videoUrl'];
     userId = json['userId'];
+    hasPdf = json['hasPdf'] ?? false;
     selected = false;
   }
 
@@ -52,6 +55,7 @@ class LyricModel {
     data['pdfUrl'] = this.pdfUrl;
     data['videoUrl'] = this.videoUrl;
     data['userId'] = this.userId;
+    data['hasPdf'] = this.hasPdf;
     return data;
   }
 
@@ -65,6 +69,7 @@ class LyricModel {
       'tone': this.tone,
       'pdfUrl': this.pdfUrl,
       'videoUrl': this.videoUrl,
+      'hasPdf': this.hasPdf,
     };
   }
 

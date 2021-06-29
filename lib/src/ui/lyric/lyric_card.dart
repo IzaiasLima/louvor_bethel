@@ -2,6 +2,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/repositories/user_manager.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
+import 'package:louvor_bethel/src/ui/schedule/schedule.dart';
 import 'package:provider/provider.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 
@@ -54,7 +56,7 @@ class LyricCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (user.isAdmin) _popUpMenu(context, worship.id),
+                if (user.isAdmin) _popUpMenu(context, worship),
               ],
             ),
           ),
@@ -66,7 +68,7 @@ class LyricCard extends StatelessWidget {
     );
   }
 
-  Widget _popUpMenu(BuildContext context, String worshipId) {
+  Widget _popUpMenu(BuildContext context, Worship worship) {
     return PopupMenuButton<int>(
       padding: EdgeInsets.all(10),
       itemBuilder: (_) => [
@@ -82,16 +84,8 @@ class LyricCard extends StatelessWidget {
             ),
             onTap: () async {
               Navigator.pop(context);
-              if (await confirm(
-                context,
-                content: Text('Fazer a escala dos músicos para este evento?'),
-                textOK: Text('SIM'),
-                textCancel: Text('NÃO'),
-              )) {
-                customSnackBar(context, 'Exclusão efetuada com sucesso.');
-                return;
-              }
-              return;
+              Navigator.pushNamed(context, SchedulePage.routeName,
+                  arguments: RouteObjectArgs(worship));
             },
           ),
         ),
@@ -113,7 +107,7 @@ class LyricCard extends StatelessWidget {
                 textOK: Text('SIM'),
                 textCancel: Text('NÃO'),
               )) {
-                await context.read<WorshipRepository>().delete(worshipId,
+                await context.read<WorshipRepository>().delete(worship.id,
                     onSucess: () => customSnackBar(
                         context, 'Exclusão efetuada com sucesso.'),
                     onError: (err) =>

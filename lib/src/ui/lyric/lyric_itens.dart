@@ -42,11 +42,10 @@ class LyricItens extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            final args = RouteObjectArgs(lyric);
             Navigator.pushNamed(
               context,
               LyricDetailsPage.routeName,
-              arguments: args,
+              arguments: RouteObjectArgs(lyric),
             );
           },
           child: Column(
