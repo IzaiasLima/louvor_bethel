@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/models/lyric_model.dart';

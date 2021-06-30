@@ -1,19 +1,14 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/commons/string_helper.dart';
-import 'package:louvor_bethel/src/routes/route_args.dart';
-import 'package:provider/provider.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
+import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
-import 'package:louvor_bethel/src/models/lyric_model.dart';
-import 'package:louvor_bethel/src/repositories/user_manager.dart';
+import 'package:louvor_bethel/src/models/schedule.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
-import 'package:louvor_bethel/src/repositories/worship_repository.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
-// import 'package:louvor_bethel/src/ui/commons/drawer.dart';
-import 'package:louvor_bethel/src/ui/worship/lyric_select.dart';
 
 // ignore: must_be_immutable
 class SchedulePage extends StatefulWidget {
@@ -31,7 +26,6 @@ class _SchedulePageState extends State<SchedulePage> {
 
   @override
   void initState() {
-    // worship = Worship();
     descController = TextEditingController();
     dateTimeController = TextEditingController();
     initValue = DateTime.now();
@@ -45,10 +39,15 @@ class _SchedulePageState extends State<SchedulePage> {
     final formKey = GlobalKey<FormState>();
     final DateFormat fmt = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
     String evento = '${fmt.format(worship.dateTime)} - ${worship.description}';
+    Schedule schedule;
+
+    Clipboard.getData(Clipboard.kTextPlain).then((value) {
+      schedule = Schedule.fromText(value.text);
+      worship.schedule = schedule;
+    });
 
     return Scaffold(
       appBar: CustomAppBar(),
-      // drawer: CustomDrawer(),
       body: Form(
         key: formKey,
         child: Padding(
@@ -128,21 +127,6 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
       ),
     );
-  }
-
-  Future<Worship> _selLyrics(context, Worship worship) async {
-    List<Map<String, dynamic>> sel = [];
-    worship.songs = [];
-
-    final List<LyricModel> result = await Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, _, __) => LyricSelect(),
-      ),
-    );
-    result.forEach((l) => sel.add(l.toBasicMap()));
-    worship.songs.addAll(sel);
-    return worship;
   }
 
   _guitarFormField() {
@@ -279,4 +263,19 @@ class _SchedulePageState extends State<SchedulePage> {
       onSaved: (value) => worship.description = value,
     );
   }
+
+  //   Future<Worship> _selLyrics(context, Worship worship) async {
+  //   List<Map<String, dynamic>> sel = [];
+  //   worship.songs = [];
+
+  //   final List<LyricModel> result = await Navigator.push(
+  //     context,
+  //     PageRouteBuilder(
+  //       pageBuilder: (context, _, __) => LyricSelect(),
+  //     ),
+  //   );
+  //   result.forEach((l) => sel.add(l.toBasicMap()));
+  //   worship.songs.addAll(sel);
+  //   return worship;
+  // }
 }

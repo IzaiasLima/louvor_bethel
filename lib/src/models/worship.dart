@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:louvor_bethel/src/models/schedule.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 
 class Worship {
@@ -8,6 +9,7 @@ class Worship {
   String userId;
   UserModel user;
   List<Map<String, dynamic>> songs;
+  Schedule schedule;
 
   Worship();
 
@@ -18,6 +20,7 @@ class Worship {
     userId = doc['userId'];
     songs = [];
     if (doc['songs'] != null) doc['songs'].forEach((v) => songs.add(v));
+    schedule = Schedule.fromJson(doc['schedule'] ?? []);
   }
 
   // Worship.fromJson(Map<String, dynamic> json) {
@@ -39,6 +42,7 @@ class Worship {
     data['dateTime'] = this.dateTime;
     data['userId'] = this.userId;
     if (this.songs != null) data['songs'] = this.songs;
+    data['schedule'] = this.schedule ?? new Map<String, dynamic>();
 
     return data;
   }

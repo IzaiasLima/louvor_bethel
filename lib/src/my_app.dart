@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/ui/schedule/performer_select.dart';
-import 'package:louvor_bethel/src/ui/schedule/schedule.dart';
+import 'package:louvor_bethel/src/ui/schedule/schedule_page.dart';
+import 'package:louvor_bethel/src/ui/schedule/schedule_details_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         initialRoute: 'landing',
         routes: {
           SchedulePage.routeName: (context) => SchedulePage(),
+          ScheduleDetailsPage.routeName: (context) => ScheduleDetailsPage(),
           PerformerSelect.routeName: (context) => PerformerSelect(),
           LyricDetailsPage.routeName: (context) => LyricDetailsPage(),
           LyricEditPage.routeName: (context) => LyricEditPage(),
