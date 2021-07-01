@@ -1,4 +1,4 @@
-class LyricModel {
+class Lyric {
   String id;
   String title;
   String tone;
@@ -11,7 +11,7 @@ class LyricModel {
   bool hasPdf;
   bool selected;
 
-  LyricModel({
+  Lyric({
     this.id,
     this.title,
     this.tone,
@@ -25,12 +25,12 @@ class LyricModel {
     this.selected,
   });
 
-  LyricModel.fromMap(Map<String, dynamic> map) {
+  Lyric.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     title = map['title'];
   }
 
-  LyricModel.fromJson(Map<String, dynamic> json) {
+  Lyric.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     tone = json['tone'];

@@ -5,7 +5,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
@@ -143,7 +143,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
     List<Map<String, dynamic>> sel = [];
     worship.songs = [];
 
-    final List<LyricModel> result = await Navigator.push(
+    final List<Lyric> result = await Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, _, __) => LyricSelect(),

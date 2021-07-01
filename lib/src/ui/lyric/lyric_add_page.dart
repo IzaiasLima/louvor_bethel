@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
@@ -12,7 +12,7 @@ import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 
 // ignore: must_be_immutable
 class LyricAddPage extends StatelessWidget {
-  LyricModel lyric = LyricModel();
+  Lyric lyric = Lyric();
 
   @override
   Widget build(BuildContext context) {

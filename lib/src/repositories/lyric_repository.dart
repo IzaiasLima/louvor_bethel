@@ -5,13 +5,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 
 class LyricRepository extends ChangeNotifier {
-  List<LyricModel> _lyrics = [];
+  List<Lyric> _lyrics = [];
   List<Worship> _worships = [];
   UserModel user;
   String _search = '';
@@ -30,8 +30,8 @@ class LyricRepository extends ChangeNotifier {
 
   List get worships => _worships;
 
-  List<LyricModel> get filteredLyrics {
-    List<LyricModel> filtered = [];
+  List<Lyric> get filteredLyrics {
+    List<Lyric> filtered = [];
 
     if (search == null || search.isEmpty) {
       filtered.addAll(_lyrics);
@@ -49,11 +49,11 @@ class LyricRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  LyricModel lyricById(String id) {
+  Lyric lyricById(String id) {
     try {
       return _lyrics.isNotEmpty ? _lyrics.firstWhere((e) => e.id == id) : null;
     } catch (_) {
-      return new LyricModel(id: null, title: 'Música excluída');
+      return new Lyric(id: null, title: 'Música excluída');
     }
   }
 
@@ -68,7 +68,7 @@ class LyricRepository extends ChangeNotifier {
       _lyrics = [];
       await refLyrics.orderBy('title').get().then((value) {
         for (DocumentSnapshot doc in value.docs) {
-          LyricModel lyric = LyricModel.fromJson(doc.data());
+          Lyric lyric = Lyric.fromJson(doc.data());
           lyric.id = doc.reference.id;
           _lyrics.add(lyric);
         }
@@ -80,7 +80,7 @@ class LyricRepository extends ChangeNotifier {
     loading = false;
   }
 
-  Future<void> save(LyricModel lyric,
+  Future<void> save(Lyric lyric,
       {@required Function onSucess, @required Function onError}) async {
     loading = true;
 
@@ -103,7 +103,7 @@ class LyricRepository extends ChangeNotifier {
     loading = false;
   }
 
-  Future<void> uploadPdf(LyricModel lyric,
+  Future<void> uploadPdf(Lyric lyric,
       {Function onSucess, Function onError}) async {
     String pdfName = '${lyric.id}.pdf';
     try {
@@ -124,9 +124,9 @@ class LyricRepository extends ChangeNotifier {
       });
 
       await setUrlPdf(pdfName);
-      lyric.pdfUrl = _url;
+      lyric.hasPdf = true;
       await save(lyric, onSucess: onSucess, onError: onError);
-      onSucess(lyric.pdfUrl);
+      onSucess(_url);
     } catch (e) {
       loading = false;
       onError('Erro anexando PDF: $e.');

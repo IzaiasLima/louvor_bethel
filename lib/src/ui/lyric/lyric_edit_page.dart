@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
@@ -21,7 +21,7 @@ class LyricEditPage extends StatelessWidget {
   var styleFieldController = TextEditingController();
   var toneFieldController = TextEditingController();
   var linkFieldController = TextEditingController();
-  var lyric = LyricModel();
+  var lyric = Lyric();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class LyricEditPage extends StatelessWidget {
     final scafoldKey = GlobalKey<ScaffoldState>();
 
     final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
-    lyric = args.objParam as LyricModel;
+    lyric = args.objParam as Lyric;
 
     titleFieldController.text = lyric.title;
     stanzaFieldController.text = lyric.stanza;

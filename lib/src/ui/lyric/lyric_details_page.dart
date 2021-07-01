@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
@@ -17,7 +17,7 @@ class LyricDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // final args = ModalRoute.of(context).settings.arguments as RouteArgs;
     final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
-    final lyric = args.objParam as LyricModel;
+    final lyric = args.objParam as Lyric;
     return Scaffold(
       appBar: CustomAppBar(),
       // drawer: CustomDrawer(),
@@ -40,7 +40,7 @@ class LyricDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _lyricDetail(BuildContext context, LyricModel lyric) {
+  Widget _lyricDetail(BuildContext context, Lyric lyric) {
     final theme = Theme.of(context).textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -99,13 +99,11 @@ class LyricDetailsPage extends StatelessWidget {
         Row(
           children: [
             ElevatedButton(
-              onPressed: () => lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
+              onPressed: () => !lyric.hasPdf
                   ? {}
                   : Navigator.pushNamed(context, PdfViewPage.routeName,
                       arguments: RouteObjectArgs(lyric)),
-              child: Text(lyric.pdfUrl == null || lyric.pdfUrl.isEmpty
-                  ? 'SEM CIFRA'
-                  : ' CIFRA '),
+              child: Text(lyric.hasPdf ? 'CIFRA' : 'SEM CIFRA'),
             ),
             SizedBox(width: 15.0),
             ElevatedButton(

@@ -4,7 +4,7 @@ import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
@@ -35,7 +35,7 @@ class LyricItens extends StatelessWidget {
   Widget _buildItem(BuildContext context, lyrics, int index) {
     final bool hasNext = (index + 1) < lyrics.length;
     UserModel user = context.read<UserManager>().user;
-    LyricModel lyric = lyrics[index];
+    Lyric lyric = lyrics[index];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +79,7 @@ class LyricItens extends StatelessWidget {
     );
   }
 
-  Widget _popUpMenu(BuildContext context, LyricModel lyric) {
+  Widget _popUpMenu(BuildContext context, Lyric lyric) {
     return PopupMenuButton<int>(
       itemBuilder: (_) => [
         PopupMenuItem(

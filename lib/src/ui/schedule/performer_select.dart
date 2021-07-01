@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 
@@ -58,7 +58,7 @@ class _PerformerSelectState extends State<PerformerSelect> {
                   ElevatedButton(
                     child: Text('CONFIRMAR'),
                     onPressed: () {
-                      List<LyricModel> sel = repo.filteredLyrics
+                      List<Lyric> sel = repo.filteredLyrics
                           .where((l) => l.selected == true)
                           .toList();
                       Navigator.pop(context, sel);

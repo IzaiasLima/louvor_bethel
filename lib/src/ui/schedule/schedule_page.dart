@@ -1,12 +1,12 @@
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
-import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/models/schedule.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
+import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 
@@ -18,32 +18,45 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  final fmt = DateFormat("dd/MM/yyyy HH:mm");
-  TextEditingController descController;
-  TextEditingController dateTimeController;
-  DateTime initValue;
+  var leadSingerController = TextEditingController();
+  var backingVocalsController = TextEditingController();
+  var keyboardController = TextEditingController();
+  var acoustGuitarController = TextEditingController();
+  var guitarController = TextEditingController();
+  var bassController = TextEditingController();
+  var drumsController = TextEditingController();
+  var backupMusicianController = TextEditingController();
+  var backupVocalController = TextEditingController();
+
+  // DateTime initValue;
   Worship worship;
 
   @override
   void initState() {
-    descController = TextEditingController();
-    dateTimeController = TextEditingController();
-    initValue = DateTime.now();
+    // initValue = DateTime.now();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
-    final worship = args.objParam as Worship;
+    worship = args.objParam as Worship;
     final formKey = GlobalKey<FormState>();
     final DateFormat fmt = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
-    String evento = '${fmt.format(worship.dateTime)} - ${worship.description}';
-    Schedule schedule;
+    // Schedule schedule;
 
     Clipboard.getData(Clipboard.kTextPlain).then((value) {
-      schedule = Schedule.fromText(value.text);
-      worship.schedule = schedule;
+      worship.schedule = Schedule.fromText(value.text);
+
+      leadSingerController.text = worship.schedule.leadSinger;
+      backingVocalsController.text = worship.schedule.backingVocals;
+      keyboardController.text = worship.schedule.keyboard;
+      acoustGuitarController.text = worship.schedule.acoustGuitar;
+      guitarController.text = worship.schedule.guitar;
+      bassController.text = worship.schedule.bass;
+      drumsController.text = worship.schedule.drums;
+      backupMusicianController.text = worship.schedule.backupMusician;
+      backupVocalController.text = worship.schedule.backupVocal;
     });
 
     return Scaffold(
@@ -57,68 +70,28 @@ class _SchedulePageState extends State<SchedulePage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  StringHelper.capitalize(evento),
+                  StringHelper.capitalize(fmt.format(worship.dateTime)),
                   style: Theme.of(context).textTheme.headline6,
                 ),
-                Text('Escala de músicos'),
+                Text('${worship.description}'),
                 _leadSingerFormField(),
                 _backingVocalsFormField(),
-
                 _keyboardFormField(),
-                _acoustGuitarFormField(),
                 _guitarFormField(),
+                _acoustGuitarFormField(),
                 _bassFormField(),
                 _drumsFormField(),
                 _backupMusicianFormField(),
-                _backupVocalFormField(),
-
-                // Container(
-                //     alignment: Alignment.topLeft,
-                //     padding: EdgeInsets.symmetric(vertical: 16.0),
-                //     child: worship.songs == null
-                //         ? Text('Ainda não há músicas selecionadas.',
-                //             style: TextStyle(color: Colors.red))
-                //         : Container(
-                //             height: (worship.songs.length * 50.0),
-                //             child: Text('Músicos'),
-                //  ReorderableListView(
-                //   children: worship.songs
-                //       .map((song) => ListTile(
-                //             key: ValueKey(song),
-                //             dense: true,
-                //             minLeadingWidth: 0.1,
-                //             horizontalTitleGap: 0.0,
-                //             leading: Icon(Icons.music_note),
-                //             title: Text('${song['title']}'),
-                //           ))
-                //       .toList(),
-                //   onReorder: null,
-                // ),
-                // )),
-                // TextButton(
-                //     child: Row(
-                //       children: [
-                //         Icon(Icons.add),
-                //         Text('Adicionar músicas'),
-                //       ],
-                //     ),
-                //     onPressed: () async {
-                //       formKey.currentState.save();
-                //       await _selLyrics(context, worship).then((value) {
-                //         setState(() {
-                //           // worship = value;
-                //           initValue = worship.dateTime;
-                //           dateTimeController.text =
-                //               fmt.format(worship.dateTime);
-                //           descController.text = worship.description;
-                //         });
-                //       });
-                //     }),
+                _backupVocalsFormField(),
                 Padding(
                   padding: const EdgeInsets.all(26.0),
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('CADASTRAR'),
+                    onPressed: () {
+                      formKey.currentState.save();
+                      context.read<WorshipRepository>().update(worship);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('CADASTRAR!'),
                   ),
                 ),
               ],
@@ -129,153 +102,111 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
+  _leadSingerFormField() {
+    return TextFormField(
+      controller: leadSingerController,
+      autocorrect: true,
+      decoration: InputDecoration(
+        labelText: 'Ministro de louvor',
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+      ),
+      onSaved: (value) => worship.schedule.leadSinger = value,
+    );
+  }
+
   _guitarFormField() {
     return TextFormField(
-      controller: descController,
+      controller: guitarController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Guitarrista',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.guitar = value,
     );
   }
 
   _bassFormField() {
     return TextFormField(
-      controller: descController,
+      controller: bassController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Baixista',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.bass = value,
     );
   }
 
   _acoustGuitarFormField() {
     return TextFormField(
-      controller: descController,
+      controller: acoustGuitarController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Violonista',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.acoustGuitar = value,
     );
   }
 
   _keyboardFormField() {
     return TextFormField(
-      controller: descController,
+      controller: keyboardController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Tecladista',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.keyboard = value,
     );
   }
 
   _drumsFormField() {
     return TextFormField(
-      controller: descController,
+      controller: drumsController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Baterista',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.drums = value,
     );
   }
 
   _backupMusicianFormField() {
     return TextFormField(
-      controller: descController,
+      controller: backupMusicianController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Músico reserva',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
-    );
-  }
-
-  _leadSingerFormField() {
-    return TextFormField(
-      controller: descController,
-      autocorrect: true,
-      // autofocus: true,
-      decoration: InputDecoration(
-        labelText: 'Ministro de louvor',
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-      ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.backupMusician = value,
     );
   }
 
   _backingVocalsFormField() {
     return TextFormField(
-      controller: descController,
+      controller: backingVocalsController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
-        labelText: 'Back vocais',
+        labelText: 'Backvocais',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.backingVocals = value,
     );
   }
 
-  _backupVocalFormField() {
+  _backupVocalsFormField() {
     return TextFormField(
-      controller: descController,
+      controller: backupVocalController,
       autocorrect: true,
-      // autofocus: true,
       decoration: InputDecoration(
         labelText: 'Cantor reserva',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      validator: (value) =>
-          validWorshipField(value) ? null : Constants.validDescription,
-      onSaved: (value) => worship.description = value,
+      onSaved: (value) => worship.schedule.backupVocal = value,
     );
   }
-
-  //   Future<Worship> _selLyrics(context, Worship worship) async {
-  //   List<Map<String, dynamic>> sel = [];
-  //   worship.songs = [];
-
-  //   final List<LyricModel> result = await Navigator.push(
-  //     context,
-  //     PageRouteBuilder(
-  //       pageBuilder: (context, _, __) => LyricSelect(),
-  //     ),
-  //   );
-  //   result.forEach((l) => sel.add(l.toBasicMap()));
-  //   worship.songs.addAll(sel);
-  //   return worship;
-  // }
 }

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/repositories/worship_repository.dart';
-import 'package:louvor_bethel/src/ui/schedule/performer_select.dart';
-import 'package:louvor_bethel/src/ui/schedule/schedule_page.dart';
-import 'package:louvor_bethel/src/ui/schedule/schedule_details_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/repositories/user_manager.dart';
+import 'package:louvor_bethel/src/repositories/worship_repository.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/routers.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_edit_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/media/pdf_view_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/media/video_play.dart';
+import 'package:louvor_bethel/src/ui/schedule/performer_select.dart';
+import 'package:louvor_bethel/src/ui/schedule/schedule_page.dart';
+import 'package:louvor_bethel/src/ui/schedule/schedule_details_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -24,18 +24,12 @@ class MyApp extends StatelessWidget {
           create: (_) => UserManager(),
           lazy: false,
         ),
-        // ChangeNotifierProvider(create: (_) => LyricRepository(), lazy: false),
         ChangeNotifierProxyProvider<UserManager, LyricRepository>(
           create: (_) => LyricRepository(),
           update: (_, uRepo, lRepo) => lRepo..update(uRepo),
           lazy: false,
         ),
         ChangeNotifierProvider(create: (_) => WorshipRepository()),
-        // ChangeNotifierProxyProvider<LyricRepository, WorshipRepository>(
-        //   create: (_) => WorshipRepository(),
-        //   update: (_, repo, wRepo) => wRepo..update(repo),
-        //   lazy: false,
-        // ),
       ],
       child: MaterialApp(
         localizationsDelegates: [

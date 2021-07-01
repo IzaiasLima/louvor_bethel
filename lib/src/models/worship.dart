@@ -9,7 +9,7 @@ class Worship {
   String userId;
   UserModel user;
   List<Map<String, dynamic>> songs;
-  Schedule schedule;
+  Schedule schedule = new Schedule();
 
   Worship();
 
@@ -20,21 +20,8 @@ class Worship {
     userId = doc['userId'];
     songs = [];
     if (doc['songs'] != null) doc['songs'].forEach((v) => songs.add(v));
-    schedule = Schedule.fromJson(doc['schedule'] ?? []);
+    schedule = Schedule.fromDoc(doc['schedule']);
   }
-
-  // Worship.fromJson(Map<String, dynamic> json) {
-  //   dateTime = json['dateTime'];
-  //   description = json['description'];
-  //   userId = json['userId'];
-  //   songs = [];
-  //   if (json['songs'] != null) {
-  //     json['songs'].forEach((v) {
-  //       songs.add(LyricModel().toBasicMap());
-  //       // songs.add(new LyricModel.fromJson(v));
-  //     });
-  //   }
-  // }
 
   Map<String, dynamic> get toMap {
     final data = new Map<String, dynamic>();
@@ -42,7 +29,7 @@ class Worship {
     data['dateTime'] = this.dateTime;
     data['userId'] = this.userId;
     if (this.songs != null) data['songs'] = this.songs;
-    data['schedule'] = this.schedule ?? new Map<String, dynamic>();
+    data['schedule'] = this.schedule.toMap;
 
     return data;
   }

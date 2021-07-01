@@ -4,7 +4,7 @@ import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-import 'package:louvor_bethel/src/models/lyric_model.dart';
+import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
 
 // ignore: must_be_immutable
@@ -34,7 +34,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
-    final LyricModel lyric = args.objParam as LyricModel;
+    final Lyric lyric = args.objParam as Lyric;
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollPdf());
 
     Future.delayed(Duration.zero,

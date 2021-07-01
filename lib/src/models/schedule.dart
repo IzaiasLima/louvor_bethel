@@ -20,22 +20,22 @@ class Schedule {
       this.backupMusician,
       this.backupVocal});
 
-  Schedule.fromJson(Map<String, dynamic> json) {
-    leadSinger = json['leadSinger'];
-    backingVocals = json['backingVocals'];
-    keyboard = json['keyboard'];
-    acoustGuitar = json['acoustGuitar'];
-    guitar = json['guitar'];
-    bass = json['bass'];
-    drums = json['drums'];
-    backupMusician = json['backupMusician'];
-    backupVocal = json['backupVocal'];
+  Schedule.fromDoc(Map<String, dynamic> doc) {
+    leadSinger = doc['leadSinger'];
+    backingVocals = doc['backingVocals'];
+    keyboard = doc['keyboard'];
+    acoustGuitar = doc['acoustGuitar'];
+    guitar = doc['guitar'];
+    bass = doc['bass'];
+    drums = doc['drums'];
+    backupMusician = doc['backupMusician'];
+    backupVocal = doc['backupVocal'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> get toMap {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['leadSinger'] = this.leadSinger;
-    data['backingVocals'] = this.backingVocals;
+    data['backingVocals'] = _(this.backingVocals);
     data['keyboard'] = this.keyboard;
     data['acoustGuitar'] = this.acoustGuitar;
     data['guitar'] = this.guitar;
@@ -61,6 +61,10 @@ class Schedule {
         backupVocal = list[9];
       }
     }
+  }
+
+  _(String txt) {
+    return txt.replaceAll(',', '/').replaceAll(' ', '');
   }
 
   @override
