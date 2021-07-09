@@ -59,7 +59,8 @@ class LyricDetailsPage extends StatelessWidget {
                     style: theme.headline6,
                   ),
                   Text(
-                    StringHelper.listToString(lyric.style),
+                    // StringHelper.listToString(lyric.style),
+                    lyric.styles,
                     style: theme.subtitle2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -103,7 +104,7 @@ class LyricDetailsPage extends StatelessWidget {
                   ? {}
                   : Navigator.pushNamed(context, PdfViewPage.routeName,
                       arguments: RouteObjectArgs(lyric)),
-              child: Text(lyric.hasPdf ? 'CIFRA' : 'SEM CIFRA'),
+              child: Text((lyric.hasPdf ?? false) ? 'CIFRA' : 'SEM CIFRA'),
             ),
             SizedBox(width: 15.0),
             ElevatedButton(
@@ -113,7 +114,7 @@ class LyricDetailsPage extends StatelessWidget {
                       arguments: RouteArgs(lyric.videoUrl)),
               child: Text(lyric.videoUrl == null || lyric.videoUrl.isEmpty
                   ? 'SEM LINK'
-                  : ' LINK '),
+                  : 'VIDEO'),
               style: ElevatedButton.styleFrom(
                 primary: Constants.redColor,
               ),

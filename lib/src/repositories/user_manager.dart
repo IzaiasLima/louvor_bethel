@@ -10,10 +10,9 @@ import 'package:louvor_bethel/src/models/user.dart';
 
 class UserManager extends BaseModel {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirebaseFirestore firebase = FirebaseFirestore.instance;
+  // final FirebaseFirestore firebase = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
-
-  final refUser = FirebaseFirestore.instance.collection('users');
+  final users = FirebaseFirestore.instance.collection('users');
 
   UserManager() {
     _loadCurrentUser();
@@ -32,6 +31,7 @@ class UserManager extends BaseModel {
 
       onSucess();
     } on FirebaseAuthException catch (e) {
+      viewState = ViewState.Ready;
       onError(_errorMessage(e.code));
     }
     viewState = ViewState.Ready;
@@ -53,6 +53,23 @@ class UserManager extends BaseModel {
 
       onSucess();
     } on FirebaseAuthException catch (e) {
+      viewState = ViewState.Ready;
+      onError(_errorMessage(e.code));
+    }
+    viewState = ViewState.Ready;
+  }
+
+  Future<void> sendPassResetEmail(
+      {@required String email,
+      @required Function onSucess,
+      @required Function onError}) async {
+    viewState = ViewState.Busy;
+
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      onSucess();
+    } on FirebaseAuthException catch (e) {
+      viewState = ViewState.Ready;
       onError(_errorMessage(e.code));
     }
     viewState = ViewState.Ready;
@@ -67,7 +84,7 @@ class UserManager extends BaseModel {
 
   Future<void> save() async {
     viewState = ViewState.Busy;
-    await refUser.doc(user.id).set(user.toMap());
+    await users.doc(user.id).set(user.toMap());
     viewState = ViewState.Ready;
   }
 
@@ -84,24 +101,29 @@ class UserManager extends BaseModel {
     UserModel tmp;
 
     if (uid != null) {
-      var doc = await firebase.collection('users').doc(uid).get();
+      var doc = await users.doc(uid).get();
       if (doc.data() != null) tmp = UserModel.fromDoc(doc.data());
       tmp.id = uid;
-      try {
-        if (tmp.urlPhoto != null) tmp.photo = _loadPhoto(tmp);
-      } catch (_) {}
+      tmp.photo = await _loadPhoto(tmp);
     }
     return tmp;
   }
 
-  Image _loadPhoto(UserModel user) {
+  Future<Image> _loadPhoto(UserModel user) async {
     Image photo;
     try {
-      if (user.urlPhoto != null) photo = Image.network(user.urlPhoto);
+      var urlPhoto = await _getDownloadURL(user.id);
+      if (urlPhoto != null) photo = Image.network(urlPhoto);
     } catch (_) {
       photo = Image.asset('assets/images/user_avatar.png');
     }
     return photo;
+  }
+
+  Future<String> _getDownloadURL(String uid) async {
+    Reference refImage = storage.ref().child('users/$uid');
+    String url = await refImage.getDownloadURL();
+    return url;
   }
 
   Future<void> uploadImage(String uid) async {
@@ -116,7 +138,7 @@ class UserManager extends BaseModel {
         TaskSnapshot task = uploadTask.snapshot;
         String url = await task.ref.getDownloadURL();
 
-        user.urlPhoto = url;
+        // user.urlPhoto = url;
         user.photo = Image.network(url);
       });
     }

@@ -44,7 +44,12 @@ class WorshipRepository extends ChangeNotifier {
     Worship w;
 
     try {
-      await collection.orderBy('dateTime').get().then((values) async {
+      // await collection.orderBy('dateTime').get().then((values) async {
+      await collection
+          .orderBy('dateTime', descending: true)
+          .limit(55)
+          .get()
+          .then((values) async {
         for (DocumentSnapshot doc in values.docs) {
           w = Worship.fromDoc(doc);
           await _getUser(w.userId).then((usr) => w.user = usr);
@@ -79,8 +84,9 @@ class WorshipRepository extends ChangeNotifier {
       await collection.add(worship.toMap);
       _worships.add(worship);
       loading = false;
-    } catch (_) {
+    } catch (e) {
       loading = false;
+      debugPrint(e);
     }
   }
 

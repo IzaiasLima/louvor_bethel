@@ -29,14 +29,14 @@ class CustomDrawer extends StatelessWidget {
                 child: ListView(
                   children: [
                     _listtile(context, Icon(Icons.home), 'Início', 'home'),
-                    if (user != null && user.isAdmin)
+                    if (user != null && user.isManager)
                       _listtile(context, Icon(Icons.playlist_add),
                           'Cadastrar músicas', 'lyric_add'),
                     _listtile(context, Icon(Icons.queue_music),
                         'Consultar músicas', 'lyric_list'),
                     if (user != null && user.isAdmin)
-                      _listtile(context, Icon(Icons.post_add),
-                          'Agendar eventos', 'worship_add'),
+                      _listtile(context, Icon(Icons.post_add), 'Agendar evento',
+                          'worship_add'),
                     _listtile(
                         context, Icon(Icons.person), 'Editar Perfil', 'user'),
                     _logout(context, Icon(Icons.exit_to_app), 'Sair', 'login'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/commons/validators.dart';
@@ -140,7 +141,8 @@ class LyricAddPage extends StatelessWidget {
         labelText: 'Tema/estilo',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      onSaved: (value) => lyric.style = value.toUpperCase().split(','),
+      onSaved: (value) =>
+          lyric.styles = StringHelper.toSlash(value).toUpperCase(),
     );
   }
 

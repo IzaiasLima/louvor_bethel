@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 
+import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
@@ -161,14 +162,19 @@ class LyricCard extends StatelessWidget {
         PopupMenuItem(
           value: 4,
           child: InkWell(
-            child: Row(
+            child: Column(
               children: [
-                Icon(
-                  Icons.delete_outlined,
-                  color: Colors.red,
+                Divider(height: 20.0, color: Colors.grey[400]),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.delete_outlined,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 16.0),
+                    Text('Excluir evento', style: Constants.txtDanger),
+                  ],
                 ),
-                SizedBox(width: 16.0),
-                Text('Excluir evento', style: TextStyle(color: Colors.red)),
               ],
             ),
             onTap: () async {
@@ -176,8 +182,8 @@ class LyricCard extends StatelessWidget {
               if (await confirm(
                 context,
                 content: Text('Deseja mesmo excluir este evento?'),
-                textOK: Text('SIM'),
-                textCancel: Text('NÃO'),
+                textOK: Text('SIM', style: Constants.txtDanger),
+                textCancel: Text('NÃO', style: Constants.txtGood),
               )) {
                 await context.read<WorshipRepository>().delete(worship.id,
                     onSucess: () => customSnackBar(

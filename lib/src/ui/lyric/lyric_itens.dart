@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +63,7 @@ class LyricItens extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
-                    if (user.isAdmin) _popUpMenu(context, lyric),
+                    if (user.isManager) _popUpMenu(context, lyric),
                   ],
                 ),
               ),
@@ -104,9 +105,9 @@ class LyricItens extends StatelessWidget {
           child: InkWell(
             child: Row(
               children: [
-                Icon(Icons.delete_outlined),
+                Icon(Icons.delete_outlined, color: Colors.red),
                 SizedBox(width: 16.0),
-                Text('Excluir'),
+                Text('Excluir', style: Constants.txtDanger),
               ],
             ),
             onTap: () async {
@@ -114,8 +115,8 @@ class LyricItens extends StatelessWidget {
               if (await confirm(
                 context,
                 content: Text('Deseja mesmo excluir?'),
-                textOK: Text('SIM'),
-                textCancel: Text('NÃO'),
+                textOK: Text('SIM', style: Constants.txtDanger),
+                textCancel: Text('NÃO', style: Constants.txtGood),
               )) {
                 await context.read<LyricRepository>().delete(lyric.id,
                     onSucess: () => customSnackBar(

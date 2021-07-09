@@ -67,27 +67,28 @@ class ScheduleDetailsPage extends StatelessWidget {
     return LayoutBuilder(
       builder: (_, constrains) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    width: constrains.maxWidth / 3,
+                    width: constrains.maxWidth * 0.4,
                     child: Text(title,
                         style: Theme.of(context).textTheme.bodyText2),
                   ),
-                  Text('|', style: TextStyle(color: Colors.grey[300])),
+                  Text('|',
+                      style: TextStyle(color: Colors.grey[300], fontSize: 18)),
                   Container(
                     padding: EdgeInsets.only(left: 8.0),
-                    width: constrains.maxWidth / 2,
+                    width: constrains.maxWidth * 0.5,
                     child: Text(name ?? '',
                         style: Theme.of(context).textTheme.bodyText2),
                   ),
                 ],
               ),
-              SizedBox(height: 4.0),
+              SizedBox(height: 6.0),
               if (divider) Divider(height: 0.0, color: Colors.grey[400])
             ],
           ),

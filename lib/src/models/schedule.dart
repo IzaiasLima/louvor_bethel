@@ -50,25 +50,21 @@ class Schedule {
     if (txt.startsWith('Schedule')) {
       var list = txt.split(',');
       if (list.length == 10) {
-        leadSinger = list[1];
-        backingVocals = list[2];
-        keyboard = list[3];
-        acoustGuitar = list[4];
-        guitar = list[5];
-        bass = list[6];
-        drums = list[7];
-        backupMusician = list[8];
-        backupVocal = list[9];
+        leadSinger = list[1].trim();
+        backingVocals = list[2].trim();
+        keyboard = list[3].trim();
+        acoustGuitar = list[4].trim();
+        guitar = list[5].trim();
+        bass = list[6].trim();
+        drums = list[7].trim();
+        backupMusician = list[8].trim();
+        backupVocal = list[9].trim();
       }
     }
   }
 
   _(String txt) {
-    return txt.replaceAll(',', '/').replaceAll(' ', '');
-  }
-
-  @override
-  String toString() {
-    return 'Schedule, ${this.leadSinger ?? ''}, ${this.backingVocals ?? ''}, ${this.keyboard ?? ''}, ${this.acoustGuitar ?? ''}, ${this.guitar ?? ''}, ${this.bass ?? ''}, ${this.drums ?? ''}, ${this.backupMusician ?? ''}, ${this.backupVocal ?? ''}';
+    if (txt == null) return;
+    return txt.replaceAll(', ', '/').replaceAll(',', '/');
   }
 }

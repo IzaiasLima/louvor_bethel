@@ -39,7 +39,8 @@ class LyricRepository extends ChangeNotifier {
       filtered.addAll(lyrics.where((l) =>
           l.title.toLowerCase().contains(search) ||
           l.stanza.toLowerCase().contains(search) ||
-          l.chorus.toLowerCase().contains(search)));
+          l.chorus.toLowerCase().contains(search) ||
+          l.styles.toLowerCase().contains(search)));
     }
     return filtered;
   }
@@ -68,7 +69,7 @@ class LyricRepository extends ChangeNotifier {
       _lyrics = [];
       await refLyrics.orderBy('title').get().then((value) {
         for (DocumentSnapshot doc in value.docs) {
-          Lyric lyric = Lyric.fromJson(doc.data());
+          Lyric lyric = Lyric.fromDoc(doc.data());
           lyric.id = doc.reference.id;
           _lyrics.add(lyric);
         }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+
 import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/search_dialog.dart';
-import 'package:provider/provider.dart';
 
 Widget circleAvatar(UserModel user, double radius) {
   try {

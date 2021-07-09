@@ -34,7 +34,8 @@ class LyricEditPage extends StatelessWidget {
     titleFieldController.text = lyric.title;
     stanzaFieldController.text = lyric.stanza;
     chorusFieldController.text = lyric.chorus;
-    styleFieldController.text = StringHelper.listToString(lyric.style);
+    styleFieldController.text = lyric.styles;
+    // StringHelper.listToString(lyric.style);
     toneFieldController.text = lyric.tone;
     linkFieldController.text = lyric.videoUrl;
 
@@ -154,7 +155,8 @@ class LyricEditPage extends StatelessWidget {
         labelText: 'Tema/estilo',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      onSaved: (value) => lyric.style = value.toUpperCase().split(','),
+      onSaved: (value) =>
+          lyric.styles = StringHelper.toSlash(value).toUpperCase(),
     );
   }
 

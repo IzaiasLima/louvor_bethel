@@ -53,37 +53,28 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                 _descriptionFormField(),
                 _dateTimeFormfield(),
                 Container(
-                    alignment: Alignment.topLeft,
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: worship.songs == null
-                        ? Text('Ainda não há músicas selecionadas.',
-                            style: TextStyle(color: Colors.red))
-                        : Container(
-                            height: (worship.songs.length * 50.0),
-                            child: ReorderableListView(
-                              children: worship.songs
-                                  .map((song) => ListTile(
-                                        key: ValueKey(song),
-                                        dense: true,
-                                        minLeadingWidth: 0.1,
-                                        horizontalTitleGap: 0.0,
-                                        leading: Icon(Icons.music_note),
-                                        title: Text('${song['title']}'),
-                                      ))
-                                  .toList(),
-                              onReorder: reorderSongs,
-                            ),
-                          )
-                    // : worship.songs
-                    //     .map((s) => ListTile(
-                    //           minLeadingWidth: 0.1,
-                    //           dense: true,
-                    //           leading: Icon(Icons.music_note),
-                    //           title: Text('${s['title']}'),
-                    //         ))
-                    //     .toList(),
-                    // ),
-                    ),
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: worship.songs == null
+                      ? Text('Ainda não há músicas selecionadas.',
+                          style: TextStyle(color: Colors.red))
+                      : Container(
+                          height: (worship.songs.length * 50.0),
+                          child: ReorderableListView(
+                            children: worship.songs
+                                .map((song) => ListTile(
+                                      key: ValueKey(song),
+                                      dense: true,
+                                      minLeadingWidth: 0.1,
+                                      horizontalTitleGap: 0.0,
+                                      leading: Icon(Icons.music_note),
+                                      title: Text('${song['title']}'),
+                                    ))
+                                .toList(),
+                            onReorder: reorderSongs,
+                          ),
+                        ),
+                ),
                 TextButton(
                     child: Row(
                       children: [
@@ -106,6 +97,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                 Padding(
                   padding: const EdgeInsets.all(26.0),
                   child: ElevatedButton(
+                    child: Text('CADASTRAR'),
                     onPressed: () {
                       final repo = context.read<WorshipRepository>();
                       if (!formKey.currentState.validate() ||
@@ -118,7 +110,6 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text('CADASTRAR'),
                   ),
                 ),
               ],

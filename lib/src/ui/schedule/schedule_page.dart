@@ -64,7 +64,7 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Form(
         key: formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 16.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -91,7 +91,7 @@ class _SchedulePageState extends State<SchedulePage> {
                       context.read<WorshipRepository>().update(worship);
                       Navigator.of(context).pop();
                     },
-                    child: Text('CADASTRAR!'),
+                    child: Text('CADASTRAR'),
                   ),
                 ),
               ],

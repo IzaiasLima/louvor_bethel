@@ -89,9 +89,9 @@ class _HomePageState extends State<HomePage> {
   void onHorizontalDragEnd(DragEndDetails details) {
     setState(() {
       if (details.primaryVelocity > 1.0) {
-        weekOfset++;
-      } else if (details.primaryVelocity < -1.0) {
         weekOfset--;
+      } else if (details.primaryVelocity < -1.0) {
+        weekOfset++;
       }
     });
   }
