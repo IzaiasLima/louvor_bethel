@@ -11,7 +11,6 @@ import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_edit_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/media/pdf_view_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/media/video_play.dart';
-import 'package:louvor_bethel/src/ui/schedule/performer_select.dart';
 import 'package:louvor_bethel/src/ui/schedule/schedule_page.dart';
 import 'package:louvor_bethel/src/ui/schedule/schedule_details_page.dart';
 
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget {
         routes: {
           SchedulePage.routeName: (context) => SchedulePage(),
           ScheduleDetailsPage.routeName: (context) => ScheduleDetailsPage(),
-          PerformerSelect.routeName: (context) => PerformerSelect(),
+          // PerformerSelect.routeName: (context) => PerformerSelect(),
           LyricDetailsPage.routeName: (context) => LyricDetailsPage(),
           LyricEditPage.routeName: (context) => LyricEditPage(),
           PdfViewPage.routeName: (context) => PdfViewPage(),

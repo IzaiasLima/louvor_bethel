@@ -46,16 +46,26 @@ class ScheduleDetailsPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            _scheduleTile(context, 'Ministro de louvor', schedule.leadSinger),
+            _scheduleTile(
+              context,
+              'Ministro de louvor',
+              schedule.leadSinger,
+              divider: false,
+              hide: false,
+            ),
             _scheduleTile(context, 'Backvocais', schedule.backingVocals),
-            _scheduleTile(context, 'Tecladista', schedule.keyboard),
+            _scheduleTile(
+              context,
+              'Tecladista',
+              schedule.keyboard,
+              hide: false,
+            ),
             _scheduleTile(context, 'Baterista', schedule.drums),
             _scheduleTile(context, 'Guitarrista', schedule.guitar),
             _scheduleTile(context, 'Violonista', schedule.acoustGuitar),
             _scheduleTile(context, 'Baixista', schedule.bass),
             _scheduleTile(context, 'Músico reserva', schedule.backupMusician),
-            _scheduleTile(context, 'Cantor reserva', schedule.backupVocal,
-                divider: false),
+            _scheduleTile(context, 'Cantor reserva', schedule.backupVocal),
           ],
         ),
       ),
@@ -63,36 +73,42 @@ class ScheduleDetailsPage extends StatelessWidget {
   }
 
   Widget _scheduleTile(context, String title, String name,
-      {bool divider = true}) {
+      {bool divider = true, hide = true}) {
     return LayoutBuilder(
       builder: (_, constrains) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: constrains.maxWidth * 0.4,
-                    child: Text(title,
-                        style: Theme.of(context).textTheme.bodyText2),
-                  ),
-                  Text('|',
-                      style: TextStyle(color: Colors.grey[300], fontSize: 18)),
-                  Container(
-                    padding: EdgeInsets.only(left: 8.0),
-                    width: constrains.maxWidth * 0.5,
-                    child: Text(name ?? '',
-                        style: Theme.of(context).textTheme.bodyText2),
-                  ),
-                ],
-              ),
-              SizedBox(height: 6.0),
-              if (divider) Divider(height: 0.0, color: Colors.grey[400])
-            ],
-          ),
-        );
+        if (hide && (name == null || name.isEmpty)) {
+          return Container(height: 0.0, width: 0.0);
+        } else {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            //const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: Column(
+              children: [
+                if (divider) Divider(height: 0.0, color: Colors.grey[400]),
+                // SizedBox(height: 6.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: constrains.maxWidth * 0.4,
+                      child: Text(title,
+                          style: Theme.of(context).textTheme.bodyText2),
+                    ),
+                    Text('|',
+                        style:
+                            TextStyle(color: Colors.grey[300], fontSize: 18)),
+                    Container(
+                      padding: EdgeInsets.only(left: 8.0),
+                      width: constrains.maxWidth * 0.5,
+                      child: Text(name ?? '',
+                          style: Theme.of(context).textTheme.bodyText2),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
       },
     );
   }

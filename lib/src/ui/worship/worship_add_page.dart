@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
@@ -22,16 +21,21 @@ class WorshipAddPage extends StatefulWidget {
 class _WorshipAddPageState extends State<WorshipAddPage> {
   final fmt = DateFormat("dd/MM/yyyy HH:mm");
   TextEditingController descController;
-  TextEditingController dateTimeController;
-  DateTime initValue;
+  TextEditingController dateController;
+  TextEditingController timeController;
+  DateTime initialDate;
+  DateTime worshipTime;
+  TimeOfDay initialTime;
   Worship worship;
 
   @override
   void initState() {
     worship = Worship();
     descController = TextEditingController();
-    dateTimeController = TextEditingController();
-    initValue = DateTime.now();
+    dateController = TextEditingController();
+    timeController = TextEditingController();
+    initialDate = DateTime.now();
+    initialTime = TimeOfDay.now();
     super.initState();
   }
 
@@ -51,7 +55,9 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _descriptionFormField(),
-                _dateTimeFormfield(),
+                // _dateTimeFormfield(),
+                _dateFormField(),
+                _timeFormField(),
                 Container(
                   alignment: Alignment.topLeft,
                   padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -84,14 +90,16 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                     ),
                     onPressed: () async {
                       formKey.currentState.save();
-                      await _selLyrics(context, worship).then((value) {
-                        setState(() {
-                          worship = value;
-                          initValue = worship.dateTime;
-                          dateTimeController.text =
-                              fmt.format(worship.dateTime);
-                          descController.text = worship.description;
-                        });
+                      worship = await _selLyrics(context, worship);
+                      //.then((value) {
+                      //final s = value.songs;
+                      setState(() {
+                        // worship.songs.addAll(s);
+                        // worship = value;
+                        //   // initialDate = worship.dateTime;
+                        //   // dateController.text = fmt.format(worship.dateTime);
+                        //   // descController.text = worship.description;
+                        // });
                       });
                     }),
                 Padding(
@@ -145,45 +153,111 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
     return worship;
   }
 
-  _dateTimeFormfield() {
-    return DateTimeField(
-      controller: dateTimeController,
-      initialValue: initValue,
-      decoration: InputDecoration(
-        labelText: 'Data e hora do evento',
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-      ),
-      validator: (value) =>
-          validWorshipDate(value) ? null : Constants.validTime,
-      onSaved: (dateTime) => worship.dateTime = dateTime,
-      format: fmt,
-      onShowPicker: (context, currentValue) async {
-        final date = await showDatePicker(
-          confirmText: 'OK',
-          context: context,
-          firstDate: DateTime.now(),
-          initialDate: currentValue ?? initValue,
-          lastDate: DateTime.now().add(Duration(days: 180)),
-        );
-        if (date != null) {
-          final time = await showTimePicker(
-            confirmText: 'OK',
+  _dateFormField() {
+    // DateTime _dateTime;
+    return TextFormField(
+      keyboardType: TextInputType.datetime,
+      validator: (_) =>
+          validWorshipDate(worship.dateTime) ? null : Constants.validDateTime,
+      autofocus: false,
+      readOnly: true,
+      controller: dateController,
+      onSaved: ((_) => worship.dateTime = worshipTime),
+      onTap: () async {
+        worshipTime = await showDatePicker(
             context: context,
-            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-          );
-          return DateTimeField.combine(date, time);
-        } else {
-          return currentValue;
-        }
+            confirmText: 'OK',
+            initialDate: initialDate,
+            firstDate: initialDate,
+            lastDate: initialDate.add(Duration(days: 180)));
+        setState(() => {
+              dateController.text =
+                  DateFormat('dd/MM/yyyy').format(worshipTime),
+              // worship.dateTime = worshipTime,
+            });
       },
+      decoration: InputDecoration(
+        labelText: 'Data do evento',
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        icon: Icon(
+          Icons.date_range,
+          color: Colors.grey[600],
+        ),
+      ),
     );
   }
+
+  _timeFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.datetime,
+      validator: (value) =>
+          validWorshipTime(value) ? null : Constants.validDateTime,
+      autofocus: false,
+      readOnly: true,
+      controller: timeController,
+      onTap: () async {
+        final _time = await showTimePicker(
+          context: context,
+          initialTime: initialTime,
+          confirmText: 'OK',
+        );
+        setState(() => {
+              timeController.text = _time.format(context),
+              worship.dateTime = _combine(worshipTime, _time),
+            });
+      },
+      decoration: InputDecoration(
+        labelText: 'Hora do evento',
+        icon: Icon(
+          Icons.watch_later_outlined,
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
+  // _dateTimeFormfield() {
+  //   return DateTimeField(
+  //     controller: dateTimeController,
+  //     initialValue: initialDate,
+  //     decoration: InputDecoration(
+  //       labelText: 'Data e hora do evento',
+  //       floatingLabelBehavior: FloatingLabelBehavior.auto,
+  //     ),
+  //     validator: (value) =>
+  //         validWorshipDate(value) ? null : Constants.validTime,
+  //     onSaved: (dateTime) => worship.dateTime = dateTime,
+  //     format: fmt,
+  //     onShowPicker: (context, currentValue) async {
+  //       final date = await showDatePicker(
+  //         confirmText: 'OK',
+  //         context: context,
+  //         firstDate: DateTime.now(),
+  //         initialDate: currentValue ?? initialDate,
+  //         lastDate: DateTime.now().add(Duration(days: 180)),
+  //       );
+  //       if (date != null) {
+  //         final time = await showTimePicker(
+  //           confirmText: 'OK',
+  //           context: context,
+  //           initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+  //         );
+  //         return DateTimeField.combine(date, time);
+  //       } else {
+  //         return currentValue;
+  //       }
+  //     },
+  //   );
+  // }
+
+  DateTime _combine(DateTime date, TimeOfDay time) =>
+      DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
   _descriptionFormField() {
     return TextFormField(
       controller: descController,
       autocorrect: true,
-      // autofocus: true,
+      autofocus: true,
       decoration: InputDecoration(
         labelText: 'Evento / momento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,

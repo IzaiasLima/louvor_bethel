@@ -27,5 +27,5 @@ class Constants {
 
   // Worship
   static String validDescription = 'Dê um nome para o evento ou momento.';
-  static String validTime = 'Informe a data e hora do evento.';
+  static String validDateTime = 'Informe a data e hora do evento.';
 }

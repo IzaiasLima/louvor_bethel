@@ -36,6 +36,9 @@ bool validWorshipField(String field) {
 }
 
 bool validWorshipDate(DateTime field) {
-  print('${field != null && field.isAfter(DateTime.now())}');
   return field != null && field.isAfter(DateTime.now());
+}
+
+bool validWorshipTime(String field) {
+  return field != null && field.isNotEmpty;
 }
