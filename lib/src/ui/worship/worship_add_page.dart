@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
@@ -20,18 +21,19 @@ class WorshipAddPage extends StatefulWidget {
 
 class _WorshipAddPageState extends State<WorshipAddPage> {
   final fmt = DateFormat("dd/MM/yyyy HH:mm");
-  TextEditingController descController;
+  TextEditingController descriptionController;
   TextEditingController dateController;
   TextEditingController timeController;
   DateTime initialDate;
   DateTime worshipTime;
   TimeOfDay initialTime;
   Worship worship;
+  String title = '';
 
   @override
   void initState() {
-    worship = Worship();
-    descController = TextEditingController();
+    worship = Worship()..songs = [];
+    descriptionController = TextEditingController();
     dateController = TextEditingController();
     timeController = TextEditingController();
     initialDate = DateTime.now();
@@ -55,9 +57,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _descriptionFormField(),
-                // _dateTimeFormfield(),
-                _dateFormField(),
-                _timeFormField(),
+                _dateTimeFormfield(),
                 Container(
                   alignment: Alignment.topLeft,
                   padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -90,17 +90,10 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                     ),
                     onPressed: () async {
                       formKey.currentState.save();
-                      worship = await _selLyrics(context, worship);
-                      //.then((value) {
-                      //final s = value.songs;
-                      setState(() {
-                        // worship.songs.addAll(s);
-                        // worship = value;
-                        //   // initialDate = worship.dateTime;
-                        //   // dateController.text = fmt.format(worship.dateTime);
-                        //   // descController.text = worship.description;
-                        // });
-                      });
+                      await _selLyrics(context, worship)
+                          .then((sel) => worship.songs.addAll(sel));
+                      setState(() {});
+                      // });
                     }),
                 Padding(
                   padding: const EdgeInsets.all(26.0),
@@ -130,17 +123,15 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
 
   void reorderSongs(int oldindex, int newindex) {
     setState(() {
-      if (newindex > oldindex) {
-        newindex -= 1;
-      }
+      if (newindex > oldindex) newindex -= 1;
       final song = worship.songs.removeAt(oldindex);
       worship.songs.insert(newindex, song);
     });
   }
 
-  Future<Worship> _selLyrics(context, Worship worship) async {
+  Future<List<Map<String, dynamic>>> _selLyrics(
+      context, Worship worship) async {
     List<Map<String, dynamic>> sel = [];
-    worship.songs = [];
 
     final List<Lyric> result = await Navigator.push(
       context,
@@ -149,117 +140,49 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
       ),
     );
     result.forEach((l) => sel.add(l.toBasicMap()));
-    worship.songs.addAll(sel);
-    return worship;
+    return sel;
   }
 
-  _dateFormField() {
-    // DateTime _dateTime;
-    return TextFormField(
-      keyboardType: TextInputType.datetime,
-      validator: (_) =>
-          validWorshipDate(worship.dateTime) ? null : Constants.validDateTime,
-      autofocus: false,
-      readOnly: true,
+  _dateTimeFormfield() {
+    return DateTimeField(
       controller: dateController,
-      onSaved: ((_) => worship.dateTime = worshipTime),
-      onTap: () async {
-        worshipTime = await showDatePicker(
-            context: context,
-            confirmText: 'OK',
-            initialDate: initialDate,
-            firstDate: initialDate,
-            lastDate: initialDate.add(Duration(days: 180)));
-        setState(() => {
-              dateController.text =
-                  DateFormat('dd/MM/yyyy').format(worshipTime),
-              // worship.dateTime = worshipTime,
-            });
-      },
+      initialValue: initialDate,
       decoration: InputDecoration(
-        labelText: 'Data do evento',
+        labelText: 'Data e hora do evento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
-        icon: Icon(
-          Icons.date_range,
-          color: Colors.grey[600],
-        ),
       ),
-    );
-  }
-
-  _timeFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.datetime,
       validator: (value) =>
-          validWorshipTime(value) ? null : Constants.validDateTime,
-      autofocus: false,
-      readOnly: true,
-      controller: timeController,
-      onTap: () async {
-        final _time = await showTimePicker(
-          context: context,
-          initialTime: initialTime,
+          validWorshipDateTime(value) ? null : Constants.validDateTime,
+      onSaved: (dateTime) => worship.dateTime = dateTime,
+      format: fmt,
+      onShowPicker: (context, currentValue) async {
+        final date = await showDatePicker(
           confirmText: 'OK',
+          context: context,
+          firstDate: DateTime.now(),
+          initialDate: currentValue ?? initialDate,
+          lastDate: DateTime.now().add(Duration(days: 180)),
         );
-        setState(() => {
-              timeController.text = _time.format(context),
-              worship.dateTime = _combine(worshipTime, _time),
-            });
+        if (date != null) {
+          final time = await showTimePicker(
+            confirmText: 'OK',
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+          );
+          return DateTimeField.combine(date, time);
+        } else {
+          return currentValue;
+        }
       },
-      decoration: InputDecoration(
-        labelText: 'Hora do evento',
-        icon: Icon(
-          Icons.watch_later_outlined,
-          color: Colors.grey[600],
-        ),
-      ),
     );
   }
-
-  // _dateTimeFormfield() {
-  //   return DateTimeField(
-  //     controller: dateTimeController,
-  //     initialValue: initialDate,
-  //     decoration: InputDecoration(
-  //       labelText: 'Data e hora do evento',
-  //       floatingLabelBehavior: FloatingLabelBehavior.auto,
-  //     ),
-  //     validator: (value) =>
-  //         validWorshipDate(value) ? null : Constants.validTime,
-  //     onSaved: (dateTime) => worship.dateTime = dateTime,
-  //     format: fmt,
-  //     onShowPicker: (context, currentValue) async {
-  //       final date = await showDatePicker(
-  //         confirmText: 'OK',
-  //         context: context,
-  //         firstDate: DateTime.now(),
-  //         initialDate: currentValue ?? initialDate,
-  //         lastDate: DateTime.now().add(Duration(days: 180)),
-  //       );
-  //       if (date != null) {
-  //         final time = await showTimePicker(
-  //           confirmText: 'OK',
-  //           context: context,
-  //           initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-  //         );
-  //         return DateTimeField.combine(date, time);
-  //       } else {
-  //         return currentValue;
-  //       }
-  //     },
-  //   );
-  // }
-
-  DateTime _combine(DateTime date, TimeOfDay time) =>
-      DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
   _descriptionFormField() {
     return TextFormField(
-      controller: descController,
+      controller: descriptionController,
       autocorrect: true,
-      autofocus: true,
       decoration: InputDecoration(
-        labelText: 'Evento / momento',
+        labelText: 'Nome do evento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
       validator: (value) =>

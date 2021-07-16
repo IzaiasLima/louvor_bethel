@@ -81,6 +81,10 @@ class LyricRepository extends ChangeNotifier {
     loading = false;
   }
 
+  refreshList() {
+    _getList();
+  }
+
   Future<void> save(Lyric lyric,
       {@required Function onSucess, @required Function onError}) async {
     loading = true;

@@ -35,10 +35,6 @@ bool validWorshipField(String field) {
   return field.isNotEmpty && field.length > 1;
 }
 
-bool validWorshipDate(DateTime field) {
-  return field != null && field.isAfter(DateTime.now());
-}
-
-bool validWorshipTime(String field) {
-  return field != null && field.isNotEmpty;
+bool validWorshipDateTime(DateTime field) {
+  return field != null;
 }

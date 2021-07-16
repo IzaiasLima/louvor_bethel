@@ -44,10 +44,9 @@ class WorshipRepository extends ChangeNotifier {
     Worship w;
 
     try {
-      // await collection.orderBy('dateTime').get().then((values) async {
       await collection
           .orderBy('dateTime', descending: true)
-          .limit(55)
+          .limit(100)
           .get()
           .then((values) async {
         for (DocumentSnapshot doc in values.docs) {
@@ -56,13 +55,17 @@ class WorshipRepository extends ChangeNotifier {
           _worships.add(w);
         }
       });
-      // await makeWorship();
     } catch (e) {
       _worships = [];
       loading = false;
       debugPrint('Erro lendo lista de eventos: $e');
     }
     loading = false;
+  }
+
+  refreshList(int ofset) {
+    _getList();
+    getWeekWorships(ofset);
   }
 
   Future<UserModel> _getUser(String userId) async {

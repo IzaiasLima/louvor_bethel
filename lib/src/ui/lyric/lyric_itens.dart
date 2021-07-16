@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/commons/constants.dart';
-import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 
+import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric.dart';
+import 'package:louvor_bethel/src/models/user.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/lyric_edit_page.dart';
 
-class LyricItens extends StatelessWidget {
+class LyricItens extends StatefulWidget {
+  @override
+  _LyricItensState createState() => _LyricItensState();
+}
+
+class _LyricItensState extends State<LyricItens> {
   @override
   Widget build(BuildContext context) {
     return Consumer<LyricRepository>(
@@ -25,11 +30,11 @@ class LyricItens extends StatelessWidget {
                   _buildItem(context, repo.filteredLyrics, index),
             )
           : Container(
-              padding: EdgeInsets.all(16.0),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: Text('Não há músicas cadastradas.'),
-            ),
+              // padding: EdgeInsets.all(16.0),
+              // height: 50,
+              // width: MediaQuery.of(context).size.width,
+              // child: Text('Não há músicas cadastradas.'),
+              ),
     );
   }
 
@@ -53,7 +58,7 @@ class LyricItens extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 8.0),
+                padding: const EdgeInsets.only(left: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -63,7 +68,13 @@ class LyricItens extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
-                    if (user.isManager) _popUpMenu(context, lyric),
+                    if (user.isManager)
+                      _popUpMenu(context, lyric)
+                    else
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Container(height: 16.0),
+                      ),
                   ],
                 ),
               ),

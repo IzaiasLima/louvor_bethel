@@ -42,6 +42,7 @@ class _LyricSelectState extends State<LyricSelect> {
                   Column(
                     children: repo.filteredLyrics
                         .map((l) => CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
                             dense: true,
                             contentPadding: EdgeInsets.zero,
                             title: Text(l.title),
