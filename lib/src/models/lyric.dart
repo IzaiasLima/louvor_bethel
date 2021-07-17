@@ -23,7 +23,7 @@ class Lyric {
     // this.pdfUrl,
     this.videoUrl,
     this.userId,
-    this.hasPdf,
+    this.hasPdf = false,
     this.selected,
   });
 

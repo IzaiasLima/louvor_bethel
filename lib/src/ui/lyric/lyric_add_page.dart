@@ -10,6 +10,7 @@ import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 // ignore: must_be_immutable
 class LyricAddPage extends StatelessWidget {
@@ -42,44 +43,72 @@ class LyricAddPage extends StatelessWidget {
                     // (lyric.id != null) ? _pdfTextField() : Text(''),
                     Padding(
                       padding: const EdgeInsets.all(26.0),
-                      child: repo.loading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              child: Text(lyric.id == null
-                                  ? 'CADASTRAR'
-                                  : 'ENVIAR PDF'),
-                              onPressed: () {
-                                if (!formKey.currentState.validate()) return;
+                      child: (repo.progress > 0 && repo.progress < 100)
+                          ? Center(
+                              child: CircularStepProgressIndicator(
+                                totalSteps: 100,
+                                currentStep: repo.progress,
+                                stepSize: 7,
+                                selectedColor: Constants.redColor,
+                                unselectedColor: Constants.grayColor,
+                                width: 70,
+                                height: 70,
+                                selectedStepSize: 7,
+                                roundedCap: (_, __) => true,
+                              ),
+                            )
+                          : Wrap(
+                              children: [
+                                ElevatedButton(
+                                  child: Text(lyric.id == null
+                                      ? 'CADASTRAR'
+                                      : (lyric.hasPdf
+                                          ? 'REENVIAR PDF'
+                                          : 'ANEXAR PDF')),
+                                  onPressed: () {
+                                    if (!formKey.currentState.validate())
+                                      return;
 
-                                formKey.currentState.save();
+                                    formKey.currentState.save();
 
-                                if (lyric.id == null) {
-                                  repo.save(
-                                    lyric,
-                                    onSucess: (id) {
-                                      lyric.id = id;
-                                      customSnackBar(
-                                        context,
-                                        'Música cadastrada com sucesso.',
+                                    if (lyric.id == null) {
+                                      repo.save(
+                                        lyric,
+                                        onSucess: (id) {
+                                          lyric.id = id;
+                                          customSnackBar(
+                                            context,
+                                            'Música cadastrada com sucesso.',
+                                          );
+                                        },
+                                        onError: (err) =>
+                                            errorSnackBar(context, '$err'),
                                       );
-                                    },
-                                    onError: (err) =>
-                                        errorSnackBar(context, '$err'),
-                                  );
-                                } else {
-                                  repo.uploadPdf(
-                                    lyric,
-                                    onSucess: (_) {
-                                      customSnackBar(
-                                          context, 'PDF anexado com sucesso.');
-                                      Navigator.of(context)
-                                          .popAndPushNamed('lyric_list');
-                                    },
-                                    onError: (err) =>
-                                        errorSnackBar(context, '$err'),
-                                  );
-                                }
-                              },
+                                    } else {
+                                      repo.uploadPdf(
+                                        lyric,
+                                        onSucess: (_) {
+                                          // customSnackBar(
+                                          //     context, 'PDF anexado com sucesso.');
+                                          // if (repo.progress == 100) {
+                                          //   Navigator.of(context)
+                                          //       .popAndPushNamed('lyric_list');
+                                          // }
+                                        },
+                                        onError: (err) =>
+                                            errorSnackBar(context, '$err'),
+                                      );
+                                    }
+                                  },
+                                ),
+                                SizedBox(width: 8.0),
+                                if (lyric.id != null && lyric.hasPdf)
+                                  ElevatedButton(
+                                    child: Text('LISTAR'),
+                                    onPressed: () => Navigator.of(context)
+                                        .popAndPushNamed('lyric_list'),
+                                  ),
+                              ],
                             ),
                     ),
                     // _saveTextButtom(),

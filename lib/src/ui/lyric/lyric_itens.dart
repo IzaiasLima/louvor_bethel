@@ -125,7 +125,8 @@ class _LyricItensState extends State<LyricItens> {
               Navigator.pop(context);
               if (await confirm(
                 context,
-                content: Text('Deseja mesmo excluir?'),
+                content:
+                    Text("Deseja mesmo excluir a música '${lyric.title}' ?"),
                 textOK: Text('SIM', style: Constants.txtDanger),
                 textCancel: Text('NÃO', style: Constants.txtGood),
               )) {

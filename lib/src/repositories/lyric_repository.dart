@@ -17,6 +17,7 @@ class LyricRepository extends ChangeNotifier {
   String _search = '';
   bool _loading = false;
   String _url = '';
+  int _uploadProgress = 0;
 
   final refLyrics = FirebaseFirestore.instance.collection('lyrics');
   final storage = FirebaseStorage.instance;
@@ -25,6 +26,8 @@ class LyricRepository extends ChangeNotifier {
   String get url => _url;
 
   get loading => _loading;
+
+  get progress => _uploadProgress;
 
   List get lyrics => _lyrics;
 
@@ -120,9 +123,14 @@ class LyricRepository extends ChangeNotifier {
               withData: true)
           .then((value) {
         if (value != null) {
-          loading = true;
           Uint8List fileBytes = value.files.first.bytes;
-          storage.ref('lyrics/$pdfName').putData(fileBytes);
+          UploadTask task = storage.ref('lyrics/$pdfName').putData(fileBytes);
+
+          task.snapshotEvents.listen((event) {
+            _uploadProgress =
+                (100 * event.bytesTransferred ~/ event.totalBytes);
+            notifyListeners();
+          });
         } else {
           throw ('Arquivo não selecionado.');
         }
@@ -133,10 +141,9 @@ class LyricRepository extends ChangeNotifier {
       await save(lyric, onSucess: onSucess, onError: onError);
       onSucess(_url);
     } catch (e) {
-      loading = false;
+      _uploadProgress = 0;
       onError('Erro anexando PDF: $e.');
     }
-    loading = false;
   }
 
   Future<void> setUrlPdf(String pdfName) async {

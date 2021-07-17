@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/src/commons/string_helper.dart';
-import 'package:louvor_bethel/src/routes/route_args.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
+import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
@@ -59,40 +60,52 @@ class LyricEditPage extends StatelessWidget {
                     _toneFormField(),
                     _linkFormField(),
                     SizedBox(height: 20.0),
-                    repo.loading
-                        ? CircularProgressIndicator()
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ElevatedButton(
-                                  child: Text('SALVAR'),
-                                  onPressed: () {
-                                    if (!formKey.currentState.validate())
-                                      return;
-                                    formKey.currentState.save();
-                                    repo.save(lyric,
-                                        onSucess: (id) {
-                                          lyric.id = id;
-                                          customSnackBar(context,
-                                              'Música atualizada com sucesso.');
-                                        },
-                                        onError: (err) => errorSnackBar(
-                                            context, err.toString()));
-                                  }),
-                              SizedBox(width: 8.0),
-                              ElevatedButton(
-                                child: Text('ANEXAR PDF'),
-                                onPressed: () {
-                                  repo.uploadPdf(lyric,
-                                      onSucess: (e) => customSnackBar(
-                                          context, 'PDF anexado com sucesso.'),
-                                      onError: (err) =>
-                                          errorSnackBar(context, err));
-                                },
-                              ),
-                            ],
+                    if (repo.progress > 0 && repo.progress < 100)
+                      Center(
+                        child: CircularStepProgressIndicator(
+                          totalSteps: 100,
+                          currentStep: repo.progress,
+                          stepSize: 7,
+                          selectedColor: Constants.redColor,
+                          unselectedColor: Constants.grayColor,
+                          width: 70,
+                          height: 70,
+                          selectedStepSize: 7,
+                          roundedCap: (_, __) => true,
+                        ),
+                      )
+                    else
+                      Wrap(
+                        children: [
+                          ElevatedButton(
+                              child: Text('SALVAR'),
+                              onPressed: () {
+                                if (!formKey.currentState.validate()) return;
+                                formKey.currentState.save();
+                                repo.save(lyric,
+                                    onSucess: (id) {
+                                      lyric.id = id;
+                                      customSnackBar(context,
+                                          'Música atualizada com sucesso.');
+                                    },
+                                    onError: (err) =>
+                                        errorSnackBar(context, err.toString()));
+                              }),
+                          SizedBox(width: 8.0),
+                          ElevatedButton(
+                            child: Text(
+                                lyric.hasPdf ? 'REENVIAR PDF' : 'ANEXAR PDF'),
+                            onPressed: () {
+                              repo.uploadPdf(lyric,
+                                  onSucess: (e) => {},
+                                  // customSnackBar(
+                                  // context, 'PDF anexado com sucesso.'),
+                                  onError: (err) =>
+                                      errorSnackBar(context, err));
+                            },
                           ),
-                    // _saveTextButtom(),
+                        ],
+                      ),
                   ],
                 ),
               );
