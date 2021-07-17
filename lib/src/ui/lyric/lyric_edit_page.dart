@@ -100,6 +100,7 @@ class LyricEditPage extends StatelessWidget {
                               ],
                             ),
                             onPressed: () {
+                              if (repo.isLoading) return null;
                               repo.uploadPdf(lyric,
                                   onSucess: (e) {},
                                   onError: (err) =>

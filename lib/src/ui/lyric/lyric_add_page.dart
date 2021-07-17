@@ -83,6 +83,7 @@ class LyricAddPage extends StatelessWidget {
                           children: [Icon(Icons.upload_outlined), Text('PDF')],
                         ),
                   onPressed: () {
+                    if (repo.isLoading) return null;
                     if (!formKey.currentState.validate()) return;
                     formKey.currentState.save();
 

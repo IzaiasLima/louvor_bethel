@@ -25,7 +25,7 @@ class LyricRepository extends ChangeNotifier {
   String get search => _search.toLowerCase();
   String get url => _url;
 
-  get loading => _loading;
+  get isLoading => _loading;
 
   get progress => _uploadProgress;
 
@@ -48,7 +48,7 @@ class LyricRepository extends ChangeNotifier {
     return filtered;
   }
 
-  set loading(bool state) {
+  set isLoading(bool state) {
     _loading = state;
     notifyListeners();
   }
@@ -67,7 +67,7 @@ class LyricRepository extends ChangeNotifier {
   }
 
   Future<void> _getList() async {
-    loading = true;
+    isLoading = true;
     try {
       _lyrics = [];
       await refLyrics.orderBy('title').get().then((value) {
@@ -78,10 +78,10 @@ class LyricRepository extends ChangeNotifier {
         }
       });
     } catch (e) {
-      loading = false;
+      isLoading = false;
       debugPrint('Erro obtendo a lista: $e');
     }
-    loading = false;
+    isLoading = false;
   }
 
   refreshList() {
@@ -90,7 +90,7 @@ class LyricRepository extends ChangeNotifier {
 
   Future<void> save(Lyric lyric,
       {@required Function onSucess, @required Function onError}) async {
-    loading = true;
+    isLoading = true;
 
     try {
       lyric.userId = user.id ?? '';
@@ -105,15 +105,18 @@ class LyricRepository extends ChangeNotifier {
       _lyrics.add(lyric);
       onSucess(lyric.id);
     } catch (e) {
-      loading = false;
+      isLoading = false;
       onError(e);
     }
-    loading = false;
+    isLoading = false;
   }
 
   Future<void> uploadPdf(Lyric lyric,
       {Function onSucess, Function onError}) async {
+    isLoading = true;
+
     String pdfName = '${lyric.id}.pdf';
+
     try {
       await FilePicker.platform
           .pickFiles(
@@ -134,6 +137,8 @@ class LyricRepository extends ChangeNotifier {
         } else {
           throw ('Arquivo não selecionado.');
         }
+
+        Future.delayed(Duration(seconds: 5)).then((value) => isLoading = false);
       });
 
       await setUrlPdf(pdfName);
@@ -147,13 +152,13 @@ class LyricRepository extends ChangeNotifier {
   }
 
   Future<void> setUrlPdf(String pdfName) async {
-    loading = true;
+    isLoading = true;
     try {
       Reference refPdf = storage.ref().child('lyrics/$pdfName');
       _url = await refPdf.getDownloadURL().then((value) => value);
-      loading = false;
+      isLoading = false;
     } catch (err) {
-      loading = false;
+      isLoading = false;
       debugPrint('Erro obtendo Url do PDF: $err');
     }
   }
@@ -165,7 +170,7 @@ class LyricRepository extends ChangeNotifier {
 
   Future<void> delete(String lyricId,
       {Function onSucess, Function onError}) async {
-    loading = true;
+    isLoading = true;
     try {
       await _deletePdf(lyricId);
       await refLyrics.doc(lyricId).delete().onError((err, _) {
@@ -174,10 +179,10 @@ class LyricRepository extends ChangeNotifier {
       _lyrics.removeWhere((l) => l.id == lyricId);
       onSucess();
     } catch (e) {
-      loading = false;
+      isLoading = false;
       onError(e);
     }
-    loading = false;
+    isLoading = false;
   }
 
   Future<bool> _deletePdf(String lyricId) async {
