@@ -19,7 +19,6 @@ import 'package:louvor_bethel/src/ui/worship/song_itens.dart';
 class LyricCard extends StatelessWidget {
   final fmt = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
   final Worship worship;
-  // Schedule schedule;
 
   LyricCard(this.worship);
 
