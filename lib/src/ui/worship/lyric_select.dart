@@ -14,8 +14,6 @@ class LyricSelect extends StatefulWidget {
 class _LyricSelectState extends State<LyricSelect> {
   @override
   Widget build(BuildContext context) {
-    // List<LyricModel> lyrics = context.read<LyricRepository>().filteredLyrics;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,

@@ -22,6 +22,9 @@
 .settings/
 .vscode/
 
+# Certificado do Firebase
+google-services.json
+
 # Flutter repo-specific
 /bin/cache/
 /bin/internal/bootstrap.bat

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:louvor_bethel/src/models/lyric.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
 import 'package:louvor_bethel/src/repositories/lyric_repository.dart';
 import 'package:louvor_bethel/src/routes/route_args.dart';
+import 'package:louvor_bethel/src/ui/lyric/lyric_details_page.dart';
 import 'package:louvor_bethel/src/ui/lyric/media/pdf_view_page.dart';
 import 'package:louvor_bethel/src/ui/commons/components.dart';
 

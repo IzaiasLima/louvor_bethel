@@ -70,10 +70,8 @@ class _HomePageState extends State<HomePage> {
                                   width: constrains.maxWidth,
                                   child: listAll
                                       ? Text('Lista geral (todos os eventos)')
-                                      : Text(
-                                          DateTimeHelper.getTxtWeek(
-                                              offset: weekOfset),
-                                        ),
+                                      : Text(DateTimeHelper.getTxtWeek(
+                                          offset: weekOfset)),
                                 );
                               },
                             ),

@@ -19,10 +19,8 @@ class LyricAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    // final scafoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      // key: scafoldKey,
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
       body: Form(
@@ -30,7 +28,7 @@ class LyricAddPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Consumer<LyricRepository>(
-            builder: (context, repo, __) {
+            builder: (_, repo, __) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -40,7 +38,6 @@ class LyricAddPage extends StatelessWidget {
                     _styleFormField(),
                     _toneFormField(),
                     _linkTextField(),
-                    // (lyric.id != null) ? _pdfTextField() : Text(''),
                     _buttons(context, formKey, repo),
                   ],
                 ),
@@ -83,14 +80,10 @@ class LyricAddPage extends StatelessWidget {
                       ? Text('CADASTRAR')
                       : Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.upload_outlined),
-                            Text('PDF'),
-                          ],
+                          children: [Icon(Icons.upload_outlined), Text('PDF')],
                         ),
                   onPressed: () {
                     if (!formKey.currentState.validate()) return;
-
                     formKey.currentState.save();
 
                     if (lyric.id == null) {
@@ -99,9 +92,7 @@ class LyricAddPage extends StatelessWidget {
                         onSucess: (id) {
                           lyric.id = id;
                           customSnackBar(
-                            context,
-                            'Música cadastrada com sucesso.',
-                          );
+                              context, 'Música cadastrada com sucesso.');
                         },
                         onError: (err) => errorSnackBar(context, '$err'),
                       );
@@ -115,7 +106,6 @@ class LyricAddPage extends StatelessWidget {
               ],
             ),
     );
-    // _saveTextButtom(),
   }
 
   Widget _titleTextField() {

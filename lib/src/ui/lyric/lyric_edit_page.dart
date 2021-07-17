@@ -36,7 +36,6 @@ class LyricEditPage extends StatelessWidget {
     stanzaFieldController.text = lyric.stanza;
     chorusFieldController.text = lyric.chorus;
     styleFieldController.text = lyric.styles;
-    // StringHelper.listToString(lyric.style);
     toneFieldController.text = lyric.tone;
     linkFieldController.text = lyric.videoUrl;
 
@@ -102,9 +101,7 @@ class LyricEditPage extends StatelessWidget {
                             ),
                             onPressed: () {
                               repo.uploadPdf(lyric,
-                                  onSucess: (e) => {},
-                                  // customSnackBar(
-                                  // context, 'PDF anexado com sucesso.'),
+                                  onSucess: (e) {},
                                   onError: (err) =>
                                       errorSnackBar(context, err));
                             },

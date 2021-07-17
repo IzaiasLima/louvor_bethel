@@ -15,12 +15,10 @@ class LyricDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context).settings.arguments as RouteArgs;
     final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
     final lyric = args.objParam as Lyric;
     return Scaffold(
       appBar: CustomAppBar(),
-      // drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Consumer<LyricRepository>(builder: (context, repo, child) {
           if (repo.lyrics.length > 0) {
