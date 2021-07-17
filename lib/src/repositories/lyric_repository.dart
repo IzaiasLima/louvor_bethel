@@ -180,11 +180,17 @@ class LyricRepository extends ChangeNotifier {
     loading = false;
   }
 
-  Future<void> _deletePdf(String lyricId) async {
+  Future<bool> _deletePdf(String lyricId) async {
+    bool result = false;
     try {
-      await storage.ref('lyrics/$lyricId').delete();
-    } catch (err) {
-      debugPrint('Erro excluindo PDF: $err');
+      storage
+          .ref('lyrics/$lyricId.pdf')
+          .delete()
+          .whenComplete(() => result = true);
+    } catch (e) {
+      debugPrint('Erro excluindo PDF: $e');
+      result = false;
     }
+    return result;
   }
 }

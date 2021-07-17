@@ -29,12 +29,7 @@ class _LyricItensState extends State<LyricItens> {
               itemBuilder: (context, index) =>
                   _buildItem(context, repo.filteredLyrics, index),
             )
-          : Container(
-              // padding: EdgeInsets.all(16.0),
-              // height: 50,
-              // width: MediaQuery.of(context).size.width,
-              // child: Text('Não há músicas cadastradas.'),
-              ),
+          : Container(height: 0.0),
     );
   }
 
@@ -122,7 +117,6 @@ class _LyricItensState extends State<LyricItens> {
               ],
             ),
             onTap: () async {
-              Navigator.pop(context);
               if (await confirm(
                 context,
                 content:
@@ -130,6 +124,7 @@ class _LyricItensState extends State<LyricItens> {
                 textOK: Text('SIM', style: Constants.txtDanger),
                 textCancel: Text('NÃO', style: Constants.txtGood),
               )) {
+                Navigator.pop(context);
                 await context.read<LyricRepository>().delete(lyric.id,
                     onSucess: () => customSnackBar(
                         context, 'Exclusão efetuada com sucesso.'),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
@@ -49,7 +49,7 @@ class LyricEditPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Consumer<LyricRepository>(
-            builder: (context, repo, __) {
+            builder: (_, repo, __) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -66,10 +66,10 @@ class LyricEditPage extends StatelessWidget {
                           totalSteps: 100,
                           currentStep: repo.progress,
                           stepSize: 7,
-                          selectedColor: Constants.redColor,
+                          selectedColor: Constants.darkGray,
                           unselectedColor: Constants.grayColor,
-                          width: 70,
-                          height: 70,
+                          width: 60,
+                          height: 60,
                           selectedStepSize: 7,
                           roundedCap: (_, __) => true,
                         ),
@@ -93,8 +93,13 @@ class LyricEditPage extends StatelessWidget {
                               }),
                           SizedBox(width: 8.0),
                           ElevatedButton(
-                            child: Text(
-                                lyric.hasPdf ? 'REENVIAR PDF' : 'ANEXAR PDF'),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.upload_outlined),
+                                Text('PDF'),
+                              ],
+                            ),
                             onPressed: () {
                               repo.uploadPdf(lyric,
                                   onSucess: (e) => {},

@@ -5,6 +5,7 @@ class Constants {
 
   static const redColor = const Color.fromARGB(255, 210, 20, 45);
   static const grayColor = Color.fromARGB(255, 200, 200, 200);
+  static const darkGray = Color.fromRGBO(98, 95, 90, 1);
 
   static const txtGood =
       TextStyle(fontWeight: FontWeight.bold, color: Colors.green);

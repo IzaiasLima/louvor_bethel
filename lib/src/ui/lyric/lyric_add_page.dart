@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:provider/provider.dart';
 
+import 'package:louvor_bethel/src/commons/string_helper.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/models/lyric.dart';
@@ -52,8 +52,8 @@ class LyricAddPage extends StatelessWidget {
     );
   }
 
-  _buttons(context, formKey, LyricRepository repo) {
-    Padding(
+  Widget _buttons(context, formKey, LyricRepository repo) {
+    return Padding(
       padding: const EdgeInsets.all(26.0),
       child: (repo.progress > 0 && repo.progress < 100)
           ? Center(
@@ -61,20 +61,33 @@ class LyricAddPage extends StatelessWidget {
                 totalSteps: 100,
                 currentStep: repo.progress,
                 stepSize: 7,
-                selectedColor: Constants.redColor,
+                selectedColor: Constants.darkGray,
                 unselectedColor: Constants.grayColor,
-                width: 70,
-                height: 70,
+                width: 60,
+                height: 60,
                 selectedStepSize: 7,
                 roundedCap: (_, __) => true,
               ),
             )
           : Wrap(
               children: [
+                if (lyric.id != null && lyric.hasPdf)
+                  ElevatedButton(
+                    child: Text('LISTAR'),
+                    onPressed: () =>
+                        Navigator.of(context).popAndPushNamed('lyric_list'),
+                  ),
+                SizedBox(width: 8.0),
                 ElevatedButton(
-                  child: Text(lyric.id == null
-                      ? 'CADASTRAR'
-                      : (lyric.hasPdf ? 'REENVIAR PDF' : 'ANEXAR PDF')),
+                  child: lyric.id == null
+                      ? Text('CADASTRAR')
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.upload_outlined),
+                            Text('PDF'),
+                          ],
+                        ),
                   onPressed: () {
                     if (!formKey.currentState.validate()) return;
 
@@ -93,28 +106,12 @@ class LyricAddPage extends StatelessWidget {
                         onError: (err) => errorSnackBar(context, '$err'),
                       );
                     } else {
-                      repo.uploadPdf(
-                        lyric,
-                        onSucess: (_) {
-                          // customSnackBar(
-                          //     context, 'PDF anexado com sucesso.');
-                          // if (repo.progress == 100) {
-                          //   Navigator.of(context)
-                          //       .popAndPushNamed('lyric_list');
-                          // }
-                        },
-                        onError: (err) => errorSnackBar(context, '$err'),
-                      );
+                      repo.uploadPdf(lyric,
+                          onSucess: (_) {},
+                          onError: (err) => errorSnackBar(context, '$err'));
                     }
                   },
                 ),
-                SizedBox(width: 8.0),
-                if (lyric.id != null && lyric.hasPdf)
-                  ElevatedButton(
-                    child: Text('LISTAR'),
-                    onPressed: () =>
-                        Navigator.of(context).popAndPushNamed('lyric_list'),
-                  ),
               ],
             ),
     );
