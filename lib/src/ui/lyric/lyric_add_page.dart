@@ -41,77 +41,7 @@ class LyricAddPage extends StatelessWidget {
                     _toneFormField(),
                     _linkTextField(),
                     // (lyric.id != null) ? _pdfTextField() : Text(''),
-                    Padding(
-                      padding: const EdgeInsets.all(26.0),
-                      child: (repo.progress > 0 && repo.progress < 100)
-                          ? Center(
-                              child: CircularStepProgressIndicator(
-                                totalSteps: 100,
-                                currentStep: repo.progress,
-                                stepSize: 7,
-                                selectedColor: Constants.redColor,
-                                unselectedColor: Constants.grayColor,
-                                width: 70,
-                                height: 70,
-                                selectedStepSize: 7,
-                                roundedCap: (_, __) => true,
-                              ),
-                            )
-                          : Wrap(
-                              children: [
-                                ElevatedButton(
-                                  child: Text(lyric.id == null
-                                      ? 'CADASTRAR'
-                                      : (lyric.hasPdf
-                                          ? 'REENVIAR PDF'
-                                          : 'ANEXAR PDF')),
-                                  onPressed: () {
-                                    if (!formKey.currentState.validate())
-                                      return;
-
-                                    formKey.currentState.save();
-
-                                    if (lyric.id == null) {
-                                      repo.save(
-                                        lyric,
-                                        onSucess: (id) {
-                                          lyric.id = id;
-                                          customSnackBar(
-                                            context,
-                                            'Música cadastrada com sucesso.',
-                                          );
-                                        },
-                                        onError: (err) =>
-                                            errorSnackBar(context, '$err'),
-                                      );
-                                    } else {
-                                      repo.uploadPdf(
-                                        lyric,
-                                        onSucess: (_) {
-                                          // customSnackBar(
-                                          //     context, 'PDF anexado com sucesso.');
-                                          // if (repo.progress == 100) {
-                                          //   Navigator.of(context)
-                                          //       .popAndPushNamed('lyric_list');
-                                          // }
-                                        },
-                                        onError: (err) =>
-                                            errorSnackBar(context, '$err'),
-                                      );
-                                    }
-                                  },
-                                ),
-                                SizedBox(width: 8.0),
-                                if (lyric.id != null && lyric.hasPdf)
-                                  ElevatedButton(
-                                    child: Text('LISTAR'),
-                                    onPressed: () => Navigator.of(context)
-                                        .popAndPushNamed('lyric_list'),
-                                  ),
-                              ],
-                            ),
-                    ),
-                    // _saveTextButtom(),
+                    _buttons(context, formKey, repo),
                   ],
                 ),
               );
@@ -120,6 +50,75 @@ class LyricAddPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _buttons(context, formKey, LyricRepository repo) {
+    Padding(
+      padding: const EdgeInsets.all(26.0),
+      child: (repo.progress > 0 && repo.progress < 100)
+          ? Center(
+              child: CircularStepProgressIndicator(
+                totalSteps: 100,
+                currentStep: repo.progress,
+                stepSize: 7,
+                selectedColor: Constants.redColor,
+                unselectedColor: Constants.grayColor,
+                width: 70,
+                height: 70,
+                selectedStepSize: 7,
+                roundedCap: (_, __) => true,
+              ),
+            )
+          : Wrap(
+              children: [
+                ElevatedButton(
+                  child: Text(lyric.id == null
+                      ? 'CADASTRAR'
+                      : (lyric.hasPdf ? 'REENVIAR PDF' : 'ANEXAR PDF')),
+                  onPressed: () {
+                    if (!formKey.currentState.validate()) return;
+
+                    formKey.currentState.save();
+
+                    if (lyric.id == null) {
+                      repo.save(
+                        lyric,
+                        onSucess: (id) {
+                          lyric.id = id;
+                          customSnackBar(
+                            context,
+                            'Música cadastrada com sucesso.',
+                          );
+                        },
+                        onError: (err) => errorSnackBar(context, '$err'),
+                      );
+                    } else {
+                      repo.uploadPdf(
+                        lyric,
+                        onSucess: (_) {
+                          // customSnackBar(
+                          //     context, 'PDF anexado com sucesso.');
+                          // if (repo.progress == 100) {
+                          //   Navigator.of(context)
+                          //       .popAndPushNamed('lyric_list');
+                          // }
+                        },
+                        onError: (err) => errorSnackBar(context, '$err'),
+                      );
+                    }
+                  },
+                ),
+                SizedBox(width: 8.0),
+                if (lyric.id != null && lyric.hasPdf)
+                  ElevatedButton(
+                    child: Text('LISTAR'),
+                    onPressed: () =>
+                        Navigator.of(context).popAndPushNamed('lyric_list'),
+                  ),
+              ],
+            ),
+    );
+    // _saveTextButtom(),
   }
 
   Widget _titleTextField() {
