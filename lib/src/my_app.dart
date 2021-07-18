@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:louvor_bethel/src/ui/worship/worship_add_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -43,9 +44,9 @@ class MyApp extends StatelessWidget {
         routes: {
           SchedulePage.routeName: (context) => SchedulePage(),
           ScheduleDetailsPage.routeName: (context) => ScheduleDetailsPage(),
-          // PerformerSelect.routeName: (context) => PerformerSelect(),
           LyricDetailsPage.routeName: (context) => LyricDetailsPage(),
           LyricEditPage.routeName: (context) => LyricEditPage(),
+          WorshipAddPage.routeName: (context) => WorshipAddPage(),
           PdfViewPage.routeName: (context) => PdfViewPage(),
           VideoPlay.routeName: (context) => VideoPlay(),
         },

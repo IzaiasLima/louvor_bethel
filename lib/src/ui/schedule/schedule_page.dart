@@ -28,12 +28,10 @@ class _SchedulePageState extends State<SchedulePage> {
   var backupMusicianController = TextEditingController();
   var backupVocalController = TextEditingController();
 
-  // DateTime initValue;
   Worship worship;
 
   @override
   void initState() {
-    // initValue = DateTime.now();
     super.initState();
   }
 
@@ -43,7 +41,6 @@ class _SchedulePageState extends State<SchedulePage> {
     worship = args.objParam as Worship;
     final formKey = GlobalKey<FormState>();
     final DateFormat fmt = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
-    // Schedule schedule;
 
     Clipboard.getData(Clipboard.kTextPlain).then((value) {
       worship.schedule = Schedule.fromText(value.text);

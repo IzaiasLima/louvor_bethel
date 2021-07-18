@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:louvor_bethel/src/ui/worship/worship_add_page.dart';
 import 'package:provider/provider.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 
@@ -102,11 +103,44 @@ class LyricCard extends StatelessWidget {
   }
 
   Widget _popUpAdminMenu(BuildContext context, Worship worship) {
+    bool isFuture =
+        worship.dateTime != null && worship.dateTime.isAfter(DateTime.now());
     return PopupMenuButton<int>(
       padding: EdgeInsets.all(10),
       itemBuilder: (_) => [
         PopupMenuItem(
           value: 1,
+          enabled: worship.schedule != null,
+          child: InkWell(
+            child: isFuture
+                ? Row(
+                    children: [
+                      Icon(Icons.list_outlined),
+                      SizedBox(width: 16.0),
+                      Text('Atualizar evento'),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Icon(Icons.list_outlined, color: Constants.grayColor),
+                      SizedBox(width: 16.0),
+                      Text(
+                        'Evento passado',
+                        style: TextStyle(color: Constants.grayColor),
+                      ),
+                    ],
+                  ),
+            onTap: () async {
+              Navigator.pop(context);
+              if (isFuture) {
+                Navigator.pushNamed(context, WorshipAddPage.routeName,
+                    arguments: RouteObjectArgs(worship));
+              }
+            },
+          ),
+        ),
+        PopupMenuItem(
+          value: 2,
           enabled: worship.schedule != null,
           child: InkWell(
             child: Row(
@@ -126,7 +160,7 @@ class LyricCard extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
-          value: 2,
+          value: 3,
           child: InkWell(
             child: Row(
               children: [
@@ -142,7 +176,7 @@ class LyricCard extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
-          value: 3,
+          value: 4,
           child: InkWell(
             child: Row(
               children: [
@@ -159,7 +193,7 @@ class LyricCard extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
-          value: 4,
+          value: 5,
           child: InkWell(
             child: Column(
               children: [

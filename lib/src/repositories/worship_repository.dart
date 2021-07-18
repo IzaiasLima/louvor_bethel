@@ -82,6 +82,13 @@ class WorshipRepository extends ChangeNotifier {
   }
 
   Future<void> save(Worship worship) async {
+    if (worship.id != null)
+      update(worship);
+    else
+      _save(worship);
+  }
+
+  Future<void> _save(Worship worship) async {
     loading = true;
     try {
       await collection.add(worship.toMap);
