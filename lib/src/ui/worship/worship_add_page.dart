@@ -99,7 +99,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                 Padding(
                   padding: const EdgeInsets.all(26.0),
                   child: ElevatedButton(
-                    child: Text('CADASTRAR'),
+                    child: Text('SALVAR'),
                     onPressed: () {
                       final repo = context.read<WorshipRepository>();
                       if (!formKey.currentState.validate() ||
