@@ -63,9 +63,9 @@ class WorshipRepository extends ChangeNotifier {
     loading = false;
   }
 
-  refreshList(int ofset) {
+  refreshList() {
     _getList();
-    getWeekWorships(ofset);
+    // getWeekWorships(ofset);
   }
 
   Future<UserModel> _getUser(String userId) async {

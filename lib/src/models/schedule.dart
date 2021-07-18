@@ -67,4 +67,10 @@ class Schedule {
     if (txt == null) return;
     return txt.replaceAll(', ', '/').replaceAll(',', '/');
   }
+
+  @override
+  String toString() {
+    // Usado para na funcao copiar/colar
+    return 'Schedule, ${this.leadSinger ?? ''}, ${this.backingVocals ?? ''}, ${this.keyboard ?? ''}, ${this.acoustGuitar ?? ''}, ${this.guitar ?? ''}, ${this.bass ?? ''}, ${this.drums ?? ''}, ${this.backupMusician ?? ''}, ${this.backupVocal ?? ''}';
+  }
 }

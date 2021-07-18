@@ -74,22 +74,23 @@ class LyricEditPage extends StatelessWidget {
                         ),
                       )
                     else
-                      Wrap(
+                      Row(
                         children: [
                           ElevatedButton(
-                              child: Text('SALVAR'),
-                              onPressed: () {
-                                if (!formKey.currentState.validate()) return;
-                                formKey.currentState.save();
-                                repo.save(lyric,
-                                    onSucess: (id) {
-                                      lyric.id = id;
-                                      customSnackBar(context,
-                                          'Música atualizada com sucesso.');
-                                    },
-                                    onError: (err) =>
-                                        errorSnackBar(context, err.toString()));
-                              }),
+                            child: Text('SALVAR'),
+                            onPressed: () {
+                              if (!formKey.currentState.validate()) return;
+                              formKey.currentState.save();
+                              repo.save(lyric,
+                                  onSucess: (id) {
+                                    lyric.id = id;
+                                    customSnackBar(context,
+                                        'Música atualizada com sucesso.');
+                                  },
+                                  onError: (err) =>
+                                      errorSnackBar(context, err.toString()));
+                            },
+                          ),
                           SizedBox(width: 8.0),
                           ElevatedButton(
                             child: Row(

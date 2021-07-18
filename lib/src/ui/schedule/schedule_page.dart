@@ -42,20 +42,6 @@ class _SchedulePageState extends State<SchedulePage> {
     final formKey = GlobalKey<FormState>();
     final DateFormat fmt = DateFormat().addPattern("EEEE, dd/MM H'h'mm");
 
-    Clipboard.getData(Clipboard.kTextPlain).then((value) {
-      worship.schedule = Schedule.fromText(value.text);
-
-      leadSingerController.text = worship.schedule.leadSinger;
-      backingVocalsController.text = worship.schedule.backingVocals;
-      keyboardController.text = worship.schedule.keyboard;
-      acoustGuitarController.text = worship.schedule.acoustGuitar;
-      guitarController.text = worship.schedule.guitar;
-      bassController.text = worship.schedule.bass;
-      drumsController.text = worship.schedule.drums;
-      backupMusicianController.text = worship.schedule.backupMusician;
-      backupVocalController.text = worship.schedule.backupVocal;
-    });
-
     return Scaffold(
       appBar: CustomAppBar(),
       body: Form(
@@ -81,14 +67,29 @@ class _SchedulePageState extends State<SchedulePage> {
                 _backupMusicianFormField(),
                 _backupVocalsFormField(),
                 Padding(
-                  padding: const EdgeInsets.all(26.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      formKey.currentState.save();
-                      context.read<WorshipRepository>().update(worship);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('CADASTRAR'),
+                  padding: const EdgeInsets.symmetric(vertical: 26.0),
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        child: Row(
+                          children: [
+                            Icon(Icons.paste_outlined),
+                            SizedBox(width: 8.0),
+                            Text('COLAR'),
+                          ],
+                        ),
+                        onPressed: () => _paste(),
+                      ),
+                      SizedBox(width: 8.0),
+                      ElevatedButton(
+                        onPressed: () {
+                          formKey.currentState.save();
+                          context.read<WorshipRepository>().update(worship);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('SALVAR'),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -97,6 +98,22 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
       ),
     );
+  }
+
+  void _paste() {
+    Clipboard.getData(Clipboard.kTextPlain).then((value) {
+      worship.schedule = Schedule.fromText(value.text);
+
+      leadSingerController.text = worship.schedule.leadSinger;
+      backingVocalsController.text = worship.schedule.backingVocals;
+      keyboardController.text = worship.schedule.keyboard;
+      acoustGuitarController.text = worship.schedule.acoustGuitar;
+      guitarController.text = worship.schedule.guitar;
+      bassController.text = worship.schedule.bass;
+      drumsController.text = worship.schedule.drums;
+      backupMusicianController.text = worship.schedule.backupMusician;
+      backupVocalController.text = worship.schedule.backupVocal;
+    });
   }
 
   _leadSingerFormField() {
