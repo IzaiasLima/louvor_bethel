@@ -2,9 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:louvor_bethel/src/commons/datetime_helper.dart';
-import 'package:louvor_bethel/src/models/user.dart';
-import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 
 class WorshipRepository extends ChangeNotifier {
   CollectionReference collection =
@@ -21,7 +20,9 @@ class WorshipRepository extends ChangeNotifier {
 
   bool get loading => _loading;
 
-  get weekOfset => null;
+  // get weekOfset => null;
+
+  void refreshList() => _getList();
 
   set loading(bool state) {
     _loading = state;
@@ -38,6 +39,12 @@ class WorshipRepository extends ChangeNotifier {
     return weekWorships;
   }
 
+  void refreshUser() {
+    _worships.forEach((w) async {
+      await UserManager().userById(w.userId).then((usr) => w.user = usr);
+    });
+  }
+
   Future<void> _getList() async {
     loading = true;
     _worships = [];
@@ -50,9 +57,9 @@ class WorshipRepository extends ChangeNotifier {
           .get()
           .then((values) async {
         for (DocumentSnapshot doc in values.docs) {
-          w = Worship.fromDoc(doc);
-          await _getUser(w.userId).then((usr) => w.user = usr);
-          _worships.add(w);
+          // w = Worship.fromDoc(doc);
+          // await getUser(w.userId).then((usr) => w.user = usr);
+          _worships.add(Worship.fromDoc(doc));
         }
       });
     } catch (e) {
@@ -63,23 +70,20 @@ class WorshipRepository extends ChangeNotifier {
     loading = false;
   }
 
-  refreshList() {
-    _getList();
-    // getWeekWorships(ofset);
-  }
-
-  Future<UserModel> _getUser(String userId) async {
-    UserModel user = new UserModel();
-    try {
-      await UserManager().userById(userId).then((usr) {
-        user = usr;
-      });
-    } catch (err) {
-      loading = false;
-      debugPrint(err);
-    }
-    return user;
-  }
+  // Future<UserModel> _getUser(String userId) async {
+  //   // loading = true;
+  //   UserModel user = new UserModel();
+  //   try {
+  //     await UserManager().userById(userId).then((usr) {
+  //       user = usr;
+  //     });
+  //   } catch (err) {
+  //     // loading = false;
+  //     debugPrint(err);
+  //   }
+  //   loading = false;
+  //   return user;
+  // }
 
   Future<void> save(Worship worship) async {
     if (worship.id != null)

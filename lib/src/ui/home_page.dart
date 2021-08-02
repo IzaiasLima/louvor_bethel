@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage> {
           builder: (_, repo, __) {
             worships =
                 listAll ? repo.worships : repo.getWeekWorships(weekOfset);
+            repo.refreshUser();
+
             return RefreshIndicator(
               key: refreshKey,
               onRefresh: () => onRefresh(repo),
@@ -97,9 +99,10 @@ class _HomePageState extends State<HomePage> {
     await Future.delayed(Duration(seconds: 2))
         .then((value) => repo.refreshList());
 
+    await Future.delayed(Duration(seconds: 2))
+        .then((value) => repo.refreshUser());
+
     setState(() {
-      // var repo = context.watch<WorshipRepository>();
-      // worships = listAll ? repo.worships : repo.refreshList(weekOfset);
       worships = listAll ? repo.worships : repo.getWeekWorships(weekOfset);
     });
 
