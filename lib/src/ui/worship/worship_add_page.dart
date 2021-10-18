@@ -6,44 +6,43 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:louvor_bethel/src/commons/constants.dart';
 import 'package:louvor_bethel/src/commons/validators.dart';
 import 'package:louvor_bethel/src/models/lyric.dart';
-import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/models/worship.dart';
+import 'package:louvor_bethel/src/repositories/user_manager.dart';
 import 'package:louvor_bethel/src/repositories/worship_repository.dart';
+import 'package:louvor_bethel/src/routes/route_args.dart';
 import 'package:louvor_bethel/src/ui/commons/app_bar.dart';
 import 'package:louvor_bethel/src/ui/commons/drawer.dart';
 import 'package:louvor_bethel/src/ui/worship/lyric_select.dart';
 
 // ignore: must_be_immutable
 class WorshipAddPage extends StatefulWidget {
+  static const routeName = 'worship_add';
+
   @override
   _WorshipAddPageState createState() => _WorshipAddPageState();
 }
 
 class _WorshipAddPageState extends State<WorshipAddPage> {
   final fmt = DateFormat("dd/MM/yyyy HH:mm");
-  TextEditingController descriptionController;
-  TextEditingController dateController;
-  TextEditingController timeController;
-  DateTime initialDate;
-  DateTime worshipTime;
-  TimeOfDay initialTime;
-  Worship worship;
-  String title = '';
+  var descriptionController = TextEditingController();
+  var dateTimeController = TextEditingController();
+  var worship = Worship()
+    ..dateTime = DateTime.now()
+    ..description = '';
 
   @override
   void initState() {
-    worship = Worship()..songs = [];
-    descriptionController = TextEditingController();
-    dateController = TextEditingController();
-    timeController = TextEditingController();
-    initialDate = DateTime.now();
-    initialTime = TimeOfDay.now();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final args = ModalRoute.of(context).settings.arguments as RouteObjectArgs;
+    var worshipReceived = args?.objParam as Worship;
+    worship = worshipReceived ?? worship;
+    descriptionController.text = worship.description;
+    dateTimeController.text = fmt.format(worship.dateTime);
 
     return Scaffold(
       appBar: CustomAppBar(),
@@ -82,23 +81,25 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
                         ),
                 ),
                 TextButton(
-                    child: Row(
-                      children: [
-                        Icon(Icons.add),
-                        Text('Adicionar músicas'),
-                      ],
-                    ),
-                    onPressed: () async {
-                      formKey.currentState.save();
-                      await _selLyrics(context, worship)
-                          .then((sel) => worship.songs.addAll(sel));
-                      setState(() {});
-                      // });
-                    }),
+                  child: Row(
+                    children: [
+                      Icon(Icons.add),
+                      Text('Adicionar músicas'),
+                    ],
+                  ),
+                  onPressed: () async {
+                    formKey.currentState.save();
+                    await _selLyrics(context, worship).then((sel) {
+                      worship.songs = [];
+                      worship.songs.addAll(sel);
+                    });
+                    setState(() {});
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.all(26.0),
                   child: ElevatedButton(
-                    child: Text('CADASTRAR'),
+                    child: Text('SALVAR'),
                     onPressed: () {
                       final repo = context.read<WorshipRepository>();
                       if (!formKey.currentState.validate() ||
@@ -145,8 +146,8 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
 
   _dateTimeFormfield() {
     return DateTimeField(
-      controller: dateController,
-      initialValue: initialDate,
+      controller: dateTimeController,
+      initialValue: worship.dateTime,
       decoration: InputDecoration(
         labelText: 'Data e hora do evento',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -160,7 +161,7 @@ class _WorshipAddPageState extends State<WorshipAddPage> {
           confirmText: 'OK',
           context: context,
           firstDate: DateTime.now(),
-          initialDate: currentValue ?? initialDate,
+          initialDate: worship.dateTime,
           lastDate: DateTime.now().add(Duration(days: 180)),
         );
         if (date != null) {

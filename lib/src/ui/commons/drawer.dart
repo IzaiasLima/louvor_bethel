@@ -38,7 +38,7 @@ class CustomDrawer extends StatelessWidget {
                       _listtile(context, Icon(Icons.post_add), 'Agendar evento',
                           'worship_add'),
                     _listtile(
-                        context, Icon(Icons.person), 'Editar Perfil', 'user'),
+                        context, Icon(Icons.person), 'Editar Perfil', 'perfil'),
                     _logout(context, Icon(Icons.exit_to_app), 'Sair', 'login'),
                   ],
                 ),

@@ -20,8 +20,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: user == null
-                  ? CircularProgressIndicator()
-                  : circleAvatar(user, 18), // userAvatar(model, 20),
+                  ? Icon(Icons.person_rounded)
+                  : InkWell(
+                      child: circleAvatar(user, 18),
+                      onTap: () => {
+                        Navigator.of(context).pushNamed('perfil'),
+                      },
+                    ),
             )
           ],
           titleSpacing: 0.0,

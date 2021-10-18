@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   bool listAll = false;
   int weekOfset = 0;
 
+<<<<<<< HEAD
   Future refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
     return null;
   }
 
+=======
+>>>>>>> f1621020361d59dfd4c33968189360fbb9257aee
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,14 +46,16 @@ class _HomePageState extends State<HomePage> {
         snackBar: const SnackBar(
           content: Text('Pressione de novo para sair.'),
         ),
-        child: RefreshIndicator(
-          key: refreshKey,
-          onRefresh: refreshList,
-          child: Consumer<WorshipRepository>(
-            builder: (_, repo, __) {
-              worships =
-                  listAll ? repo.worships : repo.getWeekWorships(weekOfset);
-              return SingleChildScrollView(
+        child: Consumer<WorshipRepository>(
+          builder: (_, repo, __) {
+            worships =
+                listAll ? repo.worships : repo.getWeekWorships(weekOfset);
+            repo.refreshUser();
+
+            return RefreshIndicator(
+              key: refreshKey,
+              onRefresh: () => onRefresh(repo),
+              child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics()),
                 child: Column(
@@ -96,12 +101,27 @@ class _HomePageState extends State<HomePage> {
                               ),
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
+  }
+
+  Future<Void> onRefresh(repo) async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 2))
+        .then((value) => repo.refreshList());
+
+    await Future.delayed(Duration(seconds: 2))
+        .then((value) => repo.refreshUser());
+
+    setState(() {
+      worships = listAll ? repo.worships : repo.getWeekWorships(weekOfset);
+    });
+
+    return null;
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {

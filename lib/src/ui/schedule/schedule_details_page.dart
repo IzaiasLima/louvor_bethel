@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -32,6 +33,7 @@ class ScheduleDetailsPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline6,
               ),
               Text('${worship.description}'),
+              SizedBox(height: 16.0),
               _cardSchedule(context, schedule),
             ],
           ),
@@ -41,34 +43,54 @@ class ScheduleDetailsPage extends StatelessWidget {
   }
 
   Widget _cardSchedule(context, Schedule schedule) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            _scheduleTile(
-              context,
-              'Ministro de louvor',
-              schedule.leadSinger,
-              divider: false,
-              hide: false,
+    return Column(
+      // crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _scheduleTile(
+                  context,
+                  'Ministro de louvor',
+                  schedule.leadSinger,
+                  divider: false,
+                  hide: false,
+                ),
+                _scheduleTile(context, 'Backvocais', schedule.backingVocals),
+                _scheduleTile(
+                  context,
+                  'Tecladista',
+                  schedule.keyboard,
+                  hide: false,
+                ),
+                _scheduleTile(context, 'Baterista', schedule.drums),
+                _scheduleTile(context, 'Guitarrista', schedule.guitar),
+                _scheduleTile(context, 'Violonista', schedule.acoustGuitar),
+                _scheduleTile(context, 'Baixista', schedule.bass),
+                _scheduleTile(
+                    context, 'Músico reserva', schedule.backupMusician),
+                _scheduleTile(context, 'Cantor reserva', schedule.backupVocal),
+              ],
             ),
-            _scheduleTile(context, 'Backvocais', schedule.backingVocals),
-            _scheduleTile(
-              context,
-              'Tecladista',
-              schedule.keyboard,
-              hide: false,
-            ),
-            _scheduleTile(context, 'Baterista', schedule.drums),
-            _scheduleTile(context, 'Guitarrista', schedule.guitar),
-            _scheduleTile(context, 'Violonista', schedule.acoustGuitar),
-            _scheduleTile(context, 'Baixista', schedule.bass),
-            _scheduleTile(context, 'Músico reserva', schedule.backupMusician),
-            _scheduleTile(context, 'Cantor reserva', schedule.backupVocal),
-          ],
+          ),
         ),
-      ),
+        SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: () =>
+              Clipboard.setData(ClipboardData(text: schedule.toString())),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.copy_outlined),
+              SizedBox(width: 8.0),
+              Text('COPIAR'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
