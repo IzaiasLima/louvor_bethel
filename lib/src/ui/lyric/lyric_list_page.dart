@@ -1,4 +1,4 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,7 +18,7 @@ class LyricListPage extends StatefulWidget {
 class _LyricListPageState extends State<LyricListPage> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  Future<Void> refreshList() async {
+  Future refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration.zero);
 

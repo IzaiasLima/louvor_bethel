@@ -50,6 +50,8 @@ dev_dependencies:
 
   # permite construir os icones do App (no terminal, digite : flutter pub run flutter_launcher_icons:main)
   flutter_launcher_icons: ^0.9.0
+  build_web_compilers: ^3.0.0
+  build_runner: ^2.1.2
 
 flutter_icons:
   image_path: 'assets/images/bethel.png'  # usado pelo app e pelo 'flutter_launcher_icons'
